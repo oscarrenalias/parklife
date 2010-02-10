@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{{ message }}
+<form action="/settings" method="post">
+	Twitter user: <input type="text" name="twitter_user" id="twitter_user" value="{{ twitter_user }}" /><br/>
+	Delicious user: <input type="text" name="delicious_user" id="delicious_user" value="{{ delicious_user }}"/><br/>
+	<input type="submit" value="Update" />
+</form>
+{% endblock %}
