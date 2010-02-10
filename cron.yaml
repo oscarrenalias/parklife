@@ -1,0 +1,4 @@
+cron:
+- description: Update configured sources
+  url: /tasks/update
+  schedule: every 1 hours
