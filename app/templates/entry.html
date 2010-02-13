@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class='item_wrapper'>	
+	<div class='item_left'>
+		<a href="http://www.renalias.net/entry/meta-meat-cake-four-types-of-sausage-bratwurst-chorizo-ground-3-40.html">
+			<img class="icon" src="/images/{{entry.source}}.png" width='16' height='16' />
+		</a>
+		<span id='item_time_3_40' class='time'>TBD</span>		
+	</div>
+	<div class='item_right'>		
+		<div class="item_content">
+			<div class="{{ entry.source }}">
+				{% ifequal entry.source 'delicious' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
+				<div class="note">{{entry.text}}</div>
+				{% else %}
+				<div class="title">{{ entry.text }}</div>					
+				{% endifequal %}
+			</div>
+			<div class="footnote">
+				<span class="author">
+					
+				</span>										
+			</div>
+			<div class="footnote">
+				<a href="/entry/{{ entry.slug }}#disqus_thread">No comments</a>	
+			</div>
+		</div>		
+	</div>	
+</div>
+
+{% endblock %}
