@@ -14,25 +14,13 @@ class TwitterSource(Source):
 		# fetch all tweets, up to 3200 as per the current API restrictions
 		# maximum amount of records per page is 200
 		print 'TwitterSource.getAll not implemented'
-		
-	#
-	# returns true if an entry with the same twitter id already exists
-	#
-	def isDuplicate( self, twitter_id ):
-		query = Entry.gql( 'WHERE external_id = :external_id AND source = :source', external_id = str(twitter_id), source = 'twitter' )
-		value = False;
-		if query.count() > 0: 
-			value = True
-
-		logging.debug( 'duplicate check: ' + str(twitter_id) + ' result: ' + str(value))
-		return value
 
 	# 
 	# return the Entry object that corresponds to the newest tweet
 	# REturns None if none is found
 	#
 	def getNewestTweet(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY external_id DESC', source='twitter')
+		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source='twitter')
 		if query.count() == 0:
 			return None
 			
@@ -72,12 +60,13 @@ class TwitterSource(Source):
 			
 			# is the entry a duplicate?
 			logging.debug( 'processing entry ' + str(s['id']))
-			if self.isDuplicate( s['id'] ) == True:
+			if self.isDuplicate( s['id'], 'twitter' ) == True:
 				logging.debug( 'Skipping entry with id ' + str(s['id']) + ' because it is duplicate' )
 			else:
 				e = Entry(external_id = str(s['id']),
 				source = 'twitter',
 				text = s['text'],
+				title = s['text'],
 				url = 'http://twitter.com/' + str(s['user']['screen_name'])+'/statuses/' + str(s['id']) )
 				e.created = parse(s['created_at'])
 				e.put()

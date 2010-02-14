@@ -12,6 +12,18 @@ indexes:
 
 - kind: Entry
   properties:
+  - name: created
+  - name: __key__
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: source
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
   - name: source
   - name: external_id
     direction: desc

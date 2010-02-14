@@ -4,7 +4,17 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /css
+  static_dir: public/css
+- url: /images
+  static_dir: public/images
 - url: /tasks/.*
   script: tasks.py
+- url: /settings
+  script: settings.py  
+  login: admin
+- url: /blog
+  script: blog.py  
+  login: admin  
 - url: .*
   script: main.py

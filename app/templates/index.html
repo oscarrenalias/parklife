@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 	{% for entry in entries %}
-		{{entry.text}}<br/>
+      {% include "entry_data.html" %}
 	{% endfor %}
+{% endblock %}
+
+{% block pagination %}
+{% if prev %}
+	<a href="{{ base_url }}?b={{ prev }}">Prev</a>
+{% endif %}
+{% if next %}
+	<a href="{{ base_url }}?b={{ next }}">Next</a>
+{% endif %}
 {% endblock %}

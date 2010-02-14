@@ -1,7 +1,68 @@
-<html>
-  <body>
-   {% block content %}
-   <!-- nothing -->
-   {% endblock %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>Parklife</title>
+	<link href="/css/style.css" media="screen" rel="stylesheet" type="text/css" >
+</head>	
+<body>
+	<div id="pagewrapper">
+		<div class="lifestream" id="page">
+		<div id="header-wrapper">
+			<div id="header">
+				<div class="titlewrapper">
+					<h1 class="title">Oscar Renalias</h1>
+				</div>
+				<div class="descriptionwrapper">
+					<div class="description"></div>
+				</div>
+				<div class="tabMenu">
+					<table class="tabMenu" cellspacing="0">
+						<tr>
+							<td class="spacer">&nbsp;</td>
+							<td class="active"><a href="/">Stream</a></td>
+							<td class="spacer">&nbsp;</td>
+							<td class="inactive"><a href="/">Blog</a></td>
+							<td class="spacer">&nbsp;</td>
+							<td class="inactive"><a href="/pages/about-me">About Me</a></td>
+							<td class="spacer">&nbsp;</td>
+							<td class="inactive"><a href="/pages/projects">Projects</a></td>
+							<td class="last">&nbsp;</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="right_column">
+		</div>
+		<div class="clear"></div>
+
+
+		<div id="left-column-wrapper">
+			<div id="left-column">
+			<div id="status_messages">
+						</div>
+			<div id="error_messages">
+						</div>		
+			<div id="content">
+   				{% block content %}
+   				<!-- nothing -->
+   				{% endblock %}
+		</div>		
+		<div class="bottom_nav">
+			<div class="pagination">
+				{% block pagination %}
+				{% endblock %}
+			</div>
+		</div>		
+		<div id="footer-wrapper">
+			<div id="footer">
+				Web site powered by <a href="http://github.com/phunkphorce/parklife">Parklife</a>
+			</div>
+		</div>		
+		</div>
+	</div>	
+	<br class="fix"/>	
+	</div>
   </body>
 </html>

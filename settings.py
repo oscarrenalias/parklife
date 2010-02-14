@@ -22,6 +22,13 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from app.models.config import Config
 from app.source.twitter import TwitterSource
+from django import newforms as forms
+
+class UserSettingsForm(forms.Form):
+	twitter_user = forms.CharField(required=False, label='Twitter user', widget=forms.widgets.TextInput(attrs={'size':60}))
+	delicious_user = forms.CharField(required=False, label='Delicious user', widget=forms.widgets.TextInput(attrs={'size':60}))
+	delicious_password = forms.CharField(required=False, label='Delicious password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
+	youtube_user = forms.CharField(required=False, label='YouTube user', widget=forms.widgets.TextInput(attrs={'size':60}))	
 
 #
 # updates the twitter source
@@ -29,19 +36,42 @@ from app.source.twitter import TwitterSource
 class UserSettings( webapp.RequestHandler ):
 	
 	def get(self):	
-		# show the form to update the user settings
-		twitter_user = Config.getKey( 'twitter_user' )
-		delicious_user = Config.getKey( 'delicious_user' )
-		self.response.out.write(View.render( 'settings.html', { 'twitter_user': twitter_user, 'delicious_user': delicious_user }))
+		initial_data = {
+			'twitter_user': Config.getKey( 'twitter_user' ),
+			'delicious_user': Config.getKey( 'delicious_user' ),
+			'delicious_password': Config.getKey( 'delicious_password' ),
+			'youtube_user': Config.getKey( 'youtube_user' )
+		}
+	
+		self.response.out.write( View.render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
 		
 	def post(self):
-		# get the values from the request and save them to the database
-		Config.setKey('twitter_user', self.request.get('twitter_user'))
-		Config.setKey('delicious_user', self.request.get('delicious_user'))		
-		twitter_user = Config.getKey( 'twitter_user' )
-		delicious_user = Config.getKey( 'delicious_user' )		
+
+		form = UserSettingsForm( self.request )		
+		if form.is_valid():		
+			# get the values from the request and save them to the database
+			Config.setKey('twitter_user', form.clean_data['twitter_user'])
+			Config.setKey('delicious_user', form.clean_data['delicious_user'])
+			Config.setKey('delicious_password', form.clean_data['delicious_password'])
+			Config.setKey('youtube_user', form.clean_data['youtube_user'])		
 		
-		self.response.out.write(View.render( 'settings.html', { 'twitter_user': twitter_user, 'delicious_user': delicious_user, 'message': 'Settings sucessfully updated' }))
+			initial_data = {
+				'twitter_user': Config.getKey( 'twitter_user' ),
+				'delicious_user': Config.getKey( 'delicious_user' ),
+				'delicious_password': Config.getKey( 'delicious_password' ),
+				'youtube_user': Config.getKey( 'youtube_user' )
+			}
+		
+			self.response.out.write( View.render( 'settings.html', { 
+				'form': UserSettingsForm( initial_data ), 
+				'message': 'Settings saved successfully'
+			} ))
+		else:
+			# form not valid, must show again with the errors
+			self.response.out.write( View.render( 'settings.html', { 
+				'form': form,
+				'message': 'There were some errors'
+			} ))
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)		

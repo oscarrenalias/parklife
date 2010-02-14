@@ -19,27 +19,39 @@
 import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
-from app.models.config import Config
-from app.source.twitter import TwitterSource
 
 #
 # updates the twitter source
 #
 class UpdateSources( webapp.RequestHandler ):
 	
-	def get(self):	
-		logging.debug('updating twitter')
+	def get(self, source):	
+		total = 0		
 		
-		twitterSource = TwitterSource()
-		total = 0
-		total = twitterSource.getLatest()
+		if source == "twitter":
+			from app.source.twitter import TwitterSource			
+			logging.debug('updating twitter')		
+			twitterSource = TwitterSource()
+			total = twitterSource.getLatest()
+		elif source == "delicious":
+			from app.source.delicious import DeliciousSource						
+			logging.debug('updating delicious')
+			deliciousSource = DeliciousSource()
+			total = deliciousSource.getLatest()
+		elif source == "youtube":
+			from app.source.youtube import YouTubeSource						
+			logging.debug('updating youtube')
+			ytSource = YouTubeSource()
+			total = ytSource.getLatest()			
+		else:
+			raise Exception('unrecognized source')
 		
-		logging.debug( str(total) + ' entries updated' )
+		logging.debug( 'source ' + str(source) + ': ' + str(total) + ' entries updated' )
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)		
 	
-  application = webapp.WSGIApplication([('/tasks/update', UpdateSources)],
+  application = webapp.WSGIApplication([('/tasks/update/(.*)', UpdateSources)],
                                        debug=True)
   util.run_wsgi_app(application)
 

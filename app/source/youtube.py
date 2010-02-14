@@ -6,6 +6,7 @@ from app.google.gdata.alt import appengine
 from app.models.config import Config
 from app.models.entry import Entry
 from app.dateutil.parser import *
+from defaults import Defaults
 import logging
 
 class YouTubeSource(Source):
@@ -31,7 +32,7 @@ class YouTubeSource(Source):
 		return code
 	
 	def getAll(self):
-		client = gdata.youtube.service.YouTubeService()		
+		client = gdata.youtube.service.YouTubeService(client_id='Parklife', developer_key=Defaults.YOUTUBE_API_KEY)		
 		gdata.alt.appengine.run_on_appengine(client)		
 		
 		# retrieve the favorites

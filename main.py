@@ -25,43 +25,62 @@ from app.source.delicious import DeliciousSource
 from app.twitter import Twitter
 from app.models.config import Config
 from app.source.twitter import TwitterSource
-import os
-from google.appengine.ext.webapp import template
+from app.view.view import View
+from defaults import Defaults
+from app.pager.pager import PagerQuery
+from google.appengine.ext import db
 
-class MainHandler(webapp.RequestHandler):
+class MainHandler(webapp.RequestHandler):	
 
-  def get(self):
+	def get(self ):	
+
+	    # Build a paginated query.
+		query = PagerQuery(Entry).order('-created')
+
+	    # Fetch results for the current page and bookmarks for previous and next
+	    # pages.
+		bookmark = self.request.get( 'b' )
+		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+
+		if self.request.get( 'f') == 'json':
+			import app.simplejson as json
+			self.response.out.write( json.dumps( { 'payload': [entry.__dict__ for entry in entries], 'prev': prev, 'next': next } ))
+		else:
+			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))
+			
+class EntryHandler(webapp.RequestHandler):
 	
-	# 
-	# retrieve the most recent entries
-	#
-	entries = Entry.getRecent()
-	
-	template_values = { 'entries': entries }
-	
-	path = os.path.join(os.path.dirname(__file__), 'app/templates/index.html')
-	self.response.out.write(template.render(path, template_values))
-	
-#
-# updates the twitter source
-#
-class UpdateTwitter( webapp.RequestHandler ):
-	
-	def get(self):
-		print 'updating twitter'
+	def get(self, entry_slug):
 		
-		twitterSource = TwitterSource()
-		total = 0
-		total = twitterSource.getLatest()
+		# see if we can find the entry
+		entry = Entry.all().filter('slug =', entry_slug ).get()
 		
-		print str(total) + ' entries updated'
+		# entry not found
+		if entry == None:
+			self.response.out.write( View.render ('error.html', { 'message': 'Entry could not be found '} ))
+			return
+			
+		# if found, display it	
+		self.response.out.write( View.render ('entry.html', { 'entry': entry }))
+		
+class SourceHandler(webapp.RequestHandler):
+	
+	def get(self, source):
+		
+		query = PagerQuery(Entry).filter('source =', source).order('-created')
+		bookmark = self.request.get( 'b' )
+		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+
+		if self.request.get( 'f') == 'json':
+			import app.simplejson as json
+			self.response.out.write( json.dumps( { 'payload': [entry.__dict__ for entry in entries], 'prev': prev, 'next': next } ))
+		else:
+			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))		
 
 def main():
-	
-  
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/', MainHandler), ('/update/twitter', UpdateTwitter), ('/update/twitter/all', UpdateTwitter) ],
+  application = webapp.WSGIApplication([('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler)],
                                        debug=True)
   util.run_wsgi_app(application)
 

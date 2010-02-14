@@ -3,7 +3,7 @@ import datetime
 
 class Entry(db.Model):
 	# creation date
-	created = db.DateTimeProperty()
+	created = db.DateTimeProperty(auto_now_add=True)
 	
 	# external id - can be used to store the source's own identifier, e.g
 	# twitter's own tweet id
@@ -11,6 +11,9 @@ class Entry(db.Model):
 	
 	# source identifier/name
 	source = db.StringProperty()
+	
+	# title of the entry
+	title = db.StringProperty()
 	
 	# text of the entry
 	text = db.TextProperty()
@@ -20,15 +23,55 @@ class Entry(db.Model):
 	
 	# tags, for those sources that support them
 	tags = db.StringProperty()
+
+	# slug
+	slug = db.StringProperty()
 	
-	# 
-	# returns the 20 most recent entries
-	#
-	def getRecent():
-		query = db.GqlQuery( "SELECT * FROM Entry ORDER BY created DESC" )
-		results = query.fetch( 20 )
+	def _make_slug(self, append=""):
+		# It is possible to change the format of the slugs by modifying this
+		# method.
+		import re
+		alphaspaces = re.compile(r"[^\w\s]")
+		spaces = re.compile(r"\s")
+		slug = spaces.sub("-", alphaspaces.sub(r"", self.title.lower()))
+		slug = (slug + append).rstrip('-')
+
+		return slug + append
+
+	def _add_slug(self, slug_value):
+		"Add a slug to the given datastore entity."
+
+		query = self.gql ("WHERE slug = :slug", slug = slug_value )
+		existing_slug = (query.count() > 0)
+
+		if existing_slug:
+			raise Exception
+
+		return slug_value
+
+	def set_slug(self):
+
+		slug_try = self._make_slug()
+		slug_iter = 0
+		slug_good = False
 		
-		return( results )
-		
-	getRecent = staticmethod( getRecent )
+		while not slug_good and slug_iter <= 10:
+			# There will only be ten attempts to make the slug unique by
+			# appending digits to it.  More than that probably indicates that
+			# field specified in the call to slug_field_is does not have enough
+			# differentiation.
+			try:
+				slug = self._add_slug(self._make_slug("_" + str(slug_iter) if slug_iter > 0 else ""))
+				self.slug = slug
+				slug_good = True
+			except Exception:
+				slug_iter += 1
+			
+		if slug_iter == 11:
+			# We have exceeded the maximum number of allowable attempts to de-dupe the slug, so throw
+			# an exception.
+			raise Exception, "Could not create a unique slug value."			
 	
+	def put(self):
+		self.set_slug()
+		return(super(Entry, self).put())
