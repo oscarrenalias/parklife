@@ -23,7 +23,7 @@ class Entry(db.Model):
 	
 	# tags, for those sources that support them
 	tags = db.StringProperty()
-
+	
 	# slug
 	slug = db.StringProperty()
 	
@@ -74,4 +74,19 @@ class Entry(db.Model):
 	
 	def put(self):
 		self.set_slug()
+		#self.tag_list = self.getTasList()
 		return(super(Entry, self).put())
+		
+	#
+	# for this specific model, the value of tag_list is calculated dynamically
+	# so we need to ensure that its value is calcualted when the model is loaded
+	# and mapped from its db entity
+	#
+  	@classmethod	
+	def from_entity(cls, entity):
+		val = super(Entry, cls).from_entity(entity)
+		if val.tags != None: 
+			val.tag_list = val.tags.split()
+		else: 
+			val.tag_list = []
+		return val

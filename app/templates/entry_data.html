@@ -21,7 +21,13 @@
 			<div class="footnote">
 				<span class="author">
 					Author
-				</span>										
+				</span>	
+				{% if entry.tags %}
+				Tags: 
+					{% for tag in entry.tag_list %}
+						<a href="/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
+					{% endfor %}
+				{% endif %}
 			</div>
 			<div class="footnote">
 				<a href="/entry/{{ entry.slug }}#disqus_thread">No comments</a>	

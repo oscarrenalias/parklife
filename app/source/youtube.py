@@ -37,24 +37,34 @@ class YouTubeSource(Source):
 		
 		# retrieve the favorites
 		videos = client.GetYouTubeVideoFeed( self.getFeedUri( user=Config.getKey('youtube_user'), feed='favorites', count='11'))
+		total = 0
+		processed = 0
 		for video in videos.entry:
 
+			total = total + 1
 			if self.isDuplicate(video.id.text, 'youtube') == False:
+				processed = processed + 1
 				e = Entry()
 				if video.title != None:
 					e.title = video.title.text.decode('UTF-8')
 				if video.content != None:
-					e.text = video.content.text.decode('UTF-8')
+					e.text = '<div class="video">' + self.getFlashPlayerHTML( video.media.content[0].url ) + '</div>' + video.content.text.decode('UTF-8')
 				e.source = 'youtube'
 				e.external_id = video.id.text
 				e.created = parse( video.published.text )
+				e.url = video.link[0].href
 			
 				if video.media.keywords != None:
-					tag_lst = video.media.keywords.text.split(',')
+					# split the tags (we use spaces) 
+					tag_lst = video.media.keywords.text.replace(' ','').split(',')
 					e.tags = ' '.join(tag_lst)
 				e.put()
 			else:
-				print 'video is duplicate: ' + video.id.text
+				logging.debug( 'video is duplicate: ' + video.id.text )
+				
+		logging.info( 'YouTube Source: ' + str(total) + ' videos, ' + str(processed) + ' processed' )
+		
+		return processed
 		
 	def getLatest(self):
 		return self.getAll()
