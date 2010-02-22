@@ -7,9 +7,9 @@
 
 {% block pagination %}
 {% if prev %}
-	<a href="{{ base_url }}?b={{ prev }}">Prev</a>
+	<a href="{{ base_url }}?p={{ prev }}">Prev</a>
 {% endif %}
 {% if next %}
-	<a href="{{ base_url }}?b={{ next }}">Next</a>
+	<a href="{{ base_url }}?p={{ next }}">Next</a>
 {% endif %}
 {% endblock %}
