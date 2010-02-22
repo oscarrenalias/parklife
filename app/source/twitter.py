@@ -3,6 +3,7 @@ from app.models.config import Config
 from app.models.entry import Entry
 from app.twitter import Twitter
 from app.dateutil.parser import *
+from app.utils import Utils
 import logging
 
 class TwitterSource(Source):
@@ -65,7 +66,7 @@ class TwitterSource(Source):
 			else:
 				e = Entry(external_id = str(s['id']),
 				source = 'twitter',
-				text = s['text'],
+				text = Utils.links_to_anchors(Utils.twitpic_to_img(s['text'])),
 				title = s['text'],
 				url = 'http://twitter.com/' + str(s['user']['screen_name'])+'/statuses/' + str(s['id']) )
 				e.created = parse(s['created_at'])
