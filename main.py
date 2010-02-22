@@ -39,7 +39,7 @@ class MainHandler(webapp.RequestHandler):
 
 	    # Fetch results for the current page and bookmarks for previous and next
 	    # pages.
-		bookmark = self.request.get( 'b' )
+		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
 
 		if self.request.get( 'f') == 'json':
@@ -68,7 +68,7 @@ class SourceHandler(webapp.RequestHandler):
 	def get(self, source):
 		
 		query = PagerQuery(Entry).filter('source =', source).order('-created')
-		bookmark = self.request.get( 'b' )
+		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
 
 		if self.request.get( 'f') == 'json':
