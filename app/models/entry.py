@@ -27,6 +27,12 @@ class Entry(db.Model):
 	# slug
 	slug = db.StringProperty()
 	
+	# latitude
+	lat = db.StringProperty()
+	
+	# longitude
+	lng = db.StringProperty()
+	
 	def _make_slug(self, append=""):
 		# It is possible to change the format of the slugs by modifying this
 		# method.
