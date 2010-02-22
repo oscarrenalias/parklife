@@ -11,12 +11,19 @@
 
 				{% ifequal entry.source 'delicious' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
-				{%else%}
-				<div class="title">{{entry.title}}</a></div>
 				{%endifequal%}
-				{% ifnotequal entry.text entry.title %}
+				
+				{% ifequal entry.source 'twitter' %}
+				<div class="title">{{entry.text}}</a></div>				
+				{%endifequal%}
+				
+				{% ifequal entry.source 'delicious' %}
 				<div class="note">{{ entry.text }}</div>
-				{% endifnotequal %}
+				{% endifequal %}
+				
+				{% ifequal entry.source 'youtube' %}
+				<div class="note">{{ entry.text }}</div>
+				{% endifequal %}				
 			</div>
 			<div class="footnote">
 				<span class="author">
