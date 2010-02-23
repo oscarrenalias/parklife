@@ -1,11 +1,10 @@
--Implement getAll support for the Twitter source
--Implement getAll support for the Delicious source
--Implement getAll support for the YouTube source
--Add support for geolocated entries
--Add support for deleting and updating entries
--Add support for Delicious tags
--Add support for Twitter tags
--Automatically expand twitpic.com pictures
--Add the Last.fm source
--Add the Picasa source
--Implement nicer support for pagination
+- Implement getAll support for the Twitter source
+- Implement getAll support for the Delicious source
+- Implement getAll support for the YouTube source
+- Add support for geolocated entries
+- Add support for deleting and updating entries
+- Add support for Delicious tags
+- Add support for Twitter tags
+- Add the Last.fm source
+x Implement support for Google Reader
+- Implement nicer support for pagination
