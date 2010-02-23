@@ -22,6 +22,7 @@
 				{% endifequal %}
 				
 				{% ifequal entry.source 'youtube' %}
+				<div class="title"><a href="/entry/{{entry.slug}}">{{ entry.title }}</a></div>
 				<div class="note">{{ entry.text }}</div>
 				{% endifequal %}
 				
@@ -29,6 +30,11 @@
 				<div class="title"><a href="/entry/{{entry.slug}}">{{ entry.title }}</a></div>				
 				<div class="note">{{ entry.text }}</div>
 				{% endifequal %}								
+				
+				{% ifequal entry.source 'googlereader' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
+				<div class="note">{% if entry.text %}{{ entry.text }}{% endif %}</div>
+				{% endifequal %}				
 			</div>
 			<div class="footnote">
 				<span class="author">
