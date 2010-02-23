@@ -43,6 +43,11 @@ class UpdateSources( webapp.RequestHandler ):
 			logging.debug('updating youtube')
 			ytSource = YouTubeSource()
 			total = ytSource.getLatest()			
+		elif source == "googlereader":
+			from app.source.googlereader import GoogleReaderSource						
+			logging.debug('updating google reader')
+			grSource = GoogleReaderSource()
+			total = grSource.getLatest()			
 		else:
 			raise Exception('unrecognized source')
 		

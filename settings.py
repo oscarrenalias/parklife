@@ -29,6 +29,7 @@ class UserSettingsForm(forms.Form):
 	delicious_user = forms.CharField(required=False, label='Delicious user', widget=forms.widgets.TextInput(attrs={'size':60}))
 	delicious_password = forms.CharField(required=False, label='Delicious password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
 	youtube_user = forms.CharField(required=False, label='YouTube user', widget=forms.widgets.TextInput(attrs={'size':60}))	
+	google_reader_feed = forms.CharField(required=False, label='Google Reader shared items RSS feed', widget=forms.widgets.TextInput(attrs={'size':80}))		
 
 #
 # updates the twitter source
@@ -40,7 +41,8 @@ class UserSettings( webapp.RequestHandler ):
 			'twitter_user': Config.getKey( 'twitter_user' ),
 			'delicious_user': Config.getKey( 'delicious_user' ),
 			'delicious_password': Config.getKey( 'delicious_password' ),
-			'youtube_user': Config.getKey( 'youtube_user' )
+			'youtube_user': Config.getKey( 'youtube_user' ),
+			'google_reader_feed': Config.getKey( 'google_reader_feed' )			
 		}
 	
 		self.response.out.write( View.render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
@@ -54,12 +56,14 @@ class UserSettings( webapp.RequestHandler ):
 			Config.setKey('delicious_user', form.clean_data['delicious_user'])
 			Config.setKey('delicious_password', form.clean_data['delicious_password'])
 			Config.setKey('youtube_user', form.clean_data['youtube_user'])		
+			Config.setKey('google_reader_feed', form.clean_data['google_reader_feed'])					
 		
 			initial_data = {
 				'twitter_user': Config.getKey( 'twitter_user' ),
 				'delicious_user': Config.getKey( 'delicious_user' ),
 				'delicious_password': Config.getKey( 'delicious_password' ),
-				'youtube_user': Config.getKey( 'youtube_user' )
+				'youtube_user': Config.getKey( 'youtube_user' ),
+				'google_reader_feed': Config.getKey( 'google_reader_feed' )
 			}
 		
 			self.response.out.write( View.render( 'settings.html', { 
