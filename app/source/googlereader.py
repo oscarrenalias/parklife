@@ -44,7 +44,7 @@ class GoogleReaderSource(Source):
 				
 				added = added + 1
 			else:
-				logging.debug( 'Skipping link ' + post['hash'] + ' because it is duplicate')
+				logging.debug( 'Skipping item' + entry.id + ' because it is duplicate')
 		
 		logging.debug('GoogleReaderSource.__processEntries(): Processed ' + str(total) + ' links, ' + str(added) + ' updated' )
 		return added
