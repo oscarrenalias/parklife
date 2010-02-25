@@ -1,4 +1,5 @@
-<div class='item_wrapper'>	
+<div id="item_wrapper_{{entry.key}}" class="item_wrapper">	
+  <div id="item_{{entry.key}}" class="item">
 	<div class='item_left'>
 	<a href="{{entry.url}}">
 			<img class="icon" src="/images/{{entry.source}}.png" width='16' height='16' />
@@ -7,8 +8,10 @@
 	</div>
 	<div class='item_right'>		
 		<div class="item_content">
+			<div class="item_actions">			
+				<!-- empty for now -->
+			</div>
 			<div class="{{ entry.source }}">
-
 				{% ifequal entry.source 'delicious' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
 				{%endifequal%}
@@ -37,9 +40,6 @@
 				{% endifequal %}				
 			</div>
 			<div class="footnote">
-				<span class="author">
-					Author
-				</span>	
 				{% if entry.tags %}
 				Tags: 
 					{% for tag in entry.tag_list %}
@@ -52,4 +52,5 @@
 			</div>
 		</div>		
 	</div>	
+  </div>
 </div>
