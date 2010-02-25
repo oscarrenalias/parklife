@@ -55,6 +55,7 @@ class TwitterSource(Source):
 		return self._saveTweets( statuses )
 
 	def _saveTweets( self, statuses ):	
+		from app.utils import StringHelper
 		total = 0
 		for s in statuses:
 			# create Entry objects out of tweets, but we'll be careful not to add duplicates
@@ -70,6 +71,10 @@ class TwitterSource(Source):
 				title = s['text'],
 				url = 'http://twitter.com/' + str(s['user']['screen_name'])+'/statuses/' + str(s['id']) )
 				e.created = parse(s['created_at'])
+				
+				# extract the tags
+				e.tags = ' '.join(StringHelper().extract_twitter_tags(s['text']))
+				
 				e.put()
 				total = total+1
 			

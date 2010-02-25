@@ -34,3 +34,17 @@ class Utils:
 			text = text.replace('http://twitpic.com/<div', '<div')
 	
 		return text
+		
+#
+# string helper class, with some utility methods
+#
+class StringHelper:
+	
+	str = ''
+
+	#
+	# returns an array with all the twitter tags as a list
+	#
+	def extract_twitter_tags(self, str=None):
+		if str: self.str = str
+		return(re.findall("\ #([\w-]+)", str, re.I ))

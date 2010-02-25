@@ -74,6 +74,8 @@ class DeliciousSource(Source):
 				e.text = post['extended']
 				e.source = 'delicious'
 				e.created = parse( post['time'] )
+				e.tags = post['tag']				
+				
 				e.put()
 				
 				added = added + 1

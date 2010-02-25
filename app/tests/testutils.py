@@ -31,6 +31,21 @@ class TestUtils(unittest.TestCase):
 		self._runTests( data, f1 )
 		self._runTests( data, f2 )
 		
+	#
+	# tests the StringHelper extract_twitter_tags
+	#
+	def test_StringHelper_extract_twitter_tags(self):
+		data = [
+			{'input': 'this is a test', 'expected': [] },
+			{'input': 'this is a #test', 'expected': ['test'] },
+			{'input': 'test: #these #are #many #tags, or not?', 'expected': ['these', 'are', 'many', 'tags' ]}			
+		]
+		from app.utils import StringHelper		
+		str_helper = StringHelper()
+		
+		for test in data:
+			self.assertEqual( test['expected'], str_helper.extract_twitter_tags(test['input']))
+		
 	def _runTests(self, test_data, func ):
 		for test in test_data:
 			self.assertEqual( test['expected'], func( test['input'] ))

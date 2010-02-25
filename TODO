@@ -3,8 +3,14 @@
 - Implement getAll support for the YouTube source
 - Add support for geolocated entries
 - Add support for deleting and updating entries
-- Add support for Delicious tags
-- Add support for Twitter tags
+x Add support for Delicious tags
+x Add support for Twitter tags
 - Add the Last.fm source
 x Implement support for Google Reader
 - Implement nicer support for pagination
+x Grouping of entries based on the date
+- Add a parameter to configure the number of entries per page
+- support for alternative outputs: json and rss/atom
+- support for /tag/ urls
+- support for displaying archived data, e.g. /archive/2010/02
+- support for free text searching
