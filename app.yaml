@@ -6,6 +6,8 @@ api_version: 1
 handlers:
 - url: /css
   static_dir: public/css
+- url: /js
+  static_dir: public/js
 - url: /images
   static_dir: public/images
 - url: /tasks/.*
