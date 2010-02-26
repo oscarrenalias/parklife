@@ -48,7 +48,7 @@ class BlogHandler(webapp.RequestHandler):
 			e = Entry()
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
-			e.tags = form.clean_data['tags']
+			e.tags = form.clean_data['tags'].split(' ')
 			e.source = 'blog'
 			e.put()
 			
