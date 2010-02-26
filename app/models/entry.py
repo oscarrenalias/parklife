@@ -22,7 +22,7 @@ class Entry(db.Model):
 	url = db.LinkProperty()
 	
 	# tags, for those sources that support them
-	tags = db.StringProperty()
+	tags = db.StringListProperty()
 	
 	# slug
 	slug = db.StringProperty()
@@ -88,11 +88,11 @@ class Entry(db.Model):
 	# so we need to ensure that its value is calcualted when the model is loaded
 	# and mapped from its db entity
 	#
-  	@classmethod	
-	def from_entity(cls, entity):
-		val = super(Entry, cls).from_entity(entity)
-		if val.tags != None: 
-			val.tag_list = val.tags.split()
-		else: 
-			val.tag_list = []
-		return val
+  	#@classmethod	
+	#def from_entity(cls, entity):
+	#	val = super(Entry, cls).from_entity(entity)
+	#	if val.tags != None: 
+	#		val.tag_list = val.tags.split()
+	#	else: 
+	#		val.tag_list = []
+	#	return val

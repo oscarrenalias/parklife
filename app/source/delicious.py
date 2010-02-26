@@ -74,7 +74,10 @@ class DeliciousSource(Source):
 				e.text = post['extended']
 				e.source = 'delicious'
 				e.created = parse( post['time'] )
-				e.tags = post['tag']				
+				if post['tag'] != '':
+					e.tags = post['tag'].split(' ')	
+				else:
+					e.tags = []
 				
 				e.put()
 				

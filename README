@@ -1,0 +1,7 @@
+How to remove the entire data store
+-----
+from app.models.entry import Entry
+
+t=Entry().all().fetch(1000)
+for tt in t:
+  tt.delete()

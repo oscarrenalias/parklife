@@ -61,9 +61,8 @@ class YouTubeSource(Source):
 				e.url = video.link[0].href
 			
 				if video.media.keywords != None:
-					# split the tags (we use spaces) 
-					tag_lst = video.media.keywords.text.replace(' ','').split(',')
-					e.tags = ' '.join(tag_lst)
+					# split the tags 
+					e.tags = video.media.keywords.text.replace(' ','').split(',')
 
 				if save:
 					e.put()

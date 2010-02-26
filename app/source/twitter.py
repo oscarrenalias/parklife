@@ -65,15 +65,17 @@ class TwitterSource(Source):
 			if self.isDuplicate( s['id'], 'twitter' ) == True:
 				logging.debug( 'Skipping entry with id ' + str(s['id']) + ' because it is duplicate' )
 			else:
+				#print ('name = ' + str(s['user']['screen_name']))
+				#print ('id = ' + str(s['id']))
 				e = Entry(external_id = str(s['id']),
 				source = 'twitter',
 				text = Utils.links_to_anchors(Utils.twitpic_to_img(s['text'])),
-				title = s['text'],
+				title = StringHelper().remove_new_lines(s['text']),
 				url = 'http://twitter.com/' + str(s['user']['screen_name'])+'/statuses/' + str(s['id']) )
 				e.created = parse(s['created_at'])
 				
 				# extract the tags
-				e.tags = ' '.join(StringHelper().extract_twitter_tags(s['text']))
+				e.tags = StringHelper().extract_twitter_tags(s['text'])
 				
 				e.put()
 				total = total+1

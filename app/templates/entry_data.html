@@ -42,7 +42,7 @@
 			<div class="footnote">
 				{% if entry.tags %}
 				Tags: 
-					{% for tag in entry.tag_list %}
+					{% for tag in entry.tags %}
 						<a href="/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
 					{% endfor %}
 				{% endif %}

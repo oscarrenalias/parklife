@@ -48,3 +48,10 @@ class StringHelper:
 	def extract_twitter_tags(self, str=None):
 		if str: self.str = str
 		return(re.findall("\ #([\w-]+)", str, re.I ))
+		
+	#
+	# removes new-line characters from strings
+	#
+	def remove_new_lines(self, str=None):
+		if str: self.str = str
+		return str.replace( '\n', '' )
