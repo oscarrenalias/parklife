@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {{ message }}
-<form action="/settings" method="post">
+<form action="/admin/settings" method="post">
 	{{ form.as_p }}
 	<input type="submit" value="Update" />
 </form>

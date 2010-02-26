@@ -77,10 +77,32 @@ class UserSettings( webapp.RequestHandler ):
 				'message': 'There were some errors'
 			} ))
 
+class AdminMaintenance(webapp.RequestHandler):
+	def get(self):
+		self.response.out.write( View.render( 'admin_maintenance.html' ))
+
+class DoAdminMaintenance(webapp.RequestHandler):
+	def get(self, op):
+		if op == "empty":
+			# empty the data store
+			from app.models.entry import Entry
+			# it's a bit crude but it works :)
+			data = Entry().all().fetch(1000)
+			total = 0
+			for entry in data:
+				total += 1
+				entry.delete()
+
+			message = str(total) + ' entries deleted'
+		else:
+			message = 'Unknown operation'
+
+		self.response.out.write( View.render( 'admin_maintenance.html', { 'message': message } ))
+
 def main():
   logging.getLogger().setLevel(logging.DEBUG)		
 	
-  application = webapp.WSGIApplication([('/settings', UserSettings)],
+  application = webapp.WSGIApplication([('/admin/settings', UserSettings), ('/admin/maintenance', AdminMaintenance), ('/admin/maintenance/(.*)', DoAdminMaintenance)],
                                        debug=True)
   util.run_wsgi_app(application)
 

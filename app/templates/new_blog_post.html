@@ -21,7 +21,7 @@ tinyMCE.init({
 </script>	</head>
 {% endblock %}
 {% block content %}
-<form name="new_blog_entry" action="/blog" method="post">
+<form name="new_blog_entry" action="/admin/blog" method="post">
 {{ form.as_p }}
 <input type="submit" name="submit" value="Post" />
 </form>

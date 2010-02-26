@@ -61,7 +61,7 @@ class BlogHandler(webapp.RequestHandler):
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/blog', BlogHandler)], debug=True)
+  application = webapp.WSGIApplication([('/admin/blog', BlogHandler)], debug=True)
   util.run_wsgi_app(application)
 
 if __name__ == '__main__':

@@ -12,11 +12,17 @@ handlers:
   static_dir: public/images
 - url: /tasks/.*
   script: tasks.py
-- url: /settings
+- url: /admin/settings
   script: settings.py  
   login: admin
-- url: /blog
+- url: /admin/blog
   script: blog.py  
+  login: admin
+- url: /admin/maintenance
+  script: settings.py
+  login: admin    
+- url: /admin/maintenance/(.*)
+  script: settings.py
   login: admin  
 - url: .*
   script: main.py
