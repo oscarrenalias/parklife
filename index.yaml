@@ -41,3 +41,9 @@ indexes:
   - name: source
   - name: external_id
     direction: desc
+
+- kind: Entry
+  properties:
+  - name: tags
+  - name: created
+    direction: desc

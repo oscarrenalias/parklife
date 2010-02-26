@@ -76,12 +76,20 @@ class SourceHandler(webapp.RequestHandler):
 			self.response.out.write( json.dumps( { 'payload': [entry.__dict__ for entry in entries], 'prev': prev, 'next': next } ))
 		else:
 			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))		
+			
+class TagHandler(webapp.RequestHandler):
+	
+	def get(self, tag):
+			query = PagerQuery(Entry).filter('tags = ', tag).order( '-created' )
+			bookmark = self.request.get( 'p' )
+			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
+			
+			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))			
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler)],
-                                       debug=True)
+  application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler)], debug=True)
   util.run_wsgi_app(application)
 
 
