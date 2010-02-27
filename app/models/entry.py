@@ -84,6 +84,13 @@ class Entry(db.Model):
 		return(super(Entry, self).put())
 		
 	#
+	# returns a permanent link to the entry
+	#
+	def permalink(self):
+		from defaults import Defaults
+		return( Defaults.site['base_url'] + '/entry/' + self.slug )
+				
+	#
 	# for this specific model, the value of tag_list is calculated dynamically
 	# so we need to ensure that its value is calcualted when the model is loaded
 	# and mapped from its db entity

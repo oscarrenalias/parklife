@@ -15,7 +15,7 @@ def _py26OrGreater():
 if _py26OrGreater():
     import json
 else:
-    import app.simplejson as json
+    import app.json.simplejson as json
 
 class TwitterError(Exception):
     """

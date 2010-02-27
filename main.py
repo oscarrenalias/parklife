@@ -21,10 +21,7 @@ import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from app.models.entry import Entry
-from app.source.delicious import DeliciousSource
-from app.twitter import Twitter
 from app.models.config import Config
-from app.source.twitter import TwitterSource
 from app.view.view import View
 from defaults import Defaults
 from app.pager.pager import PagerQuery
@@ -41,12 +38,10 @@ class MainHandler(webapp.RequestHandler):
 	    # pages.
 		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+		
+		data = {'entries': entries, 'prev': prev, 'next': next }
 
-		if self.request.get( 'f') == 'json':
-			import app.simplejson as json
-			self.response.out.write( json.dumps( { 'payload': [entry.__dict__ for entry in entries], 'prev': prev, 'next': next } ))
-		else:
-			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))
+		self.response.out.write(View(self.request).render('index.html', data ))
 			
 class EntryHandler(webapp.RequestHandler):
 	
@@ -57,11 +52,11 @@ class EntryHandler(webapp.RequestHandler):
 		
 		# entry not found
 		if entry == None:
-			self.response.out.write( View.render ('error.html', { 'message': 'Entry could not be found '} ))
+			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
 			return
 			
 		# if found, display it	
-		self.response.out.write( View.render ('entry.html', { 'entry': entry }))
+		self.response.out.write( View(self.request).render('entry.html', { 'entry': entry }))
 		
 class SourceHandler(webapp.RequestHandler):
 	
@@ -71,11 +66,7 @@ class SourceHandler(webapp.RequestHandler):
 		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
 
-		if self.request.get( 'f') == 'json':
-			import app.simplejson as json
-			self.response.out.write( json.dumps( { 'payload': [entry.__dict__ for entry in entries], 'prev': prev, 'next': next } ))
-		else:
-			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))		
+		self.response.out.write(View(self.request).render('index.html', {'entries': entries, 'prev': prev, 'next': next }))		
 			
 class TagHandler(webapp.RequestHandler):
 	
@@ -84,13 +75,15 @@ class TagHandler(webapp.RequestHandler):
 			bookmark = self.request.get( 'p' )
 			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
 			
-			self.response.out.write(View.render('index.html', {'entries': entries, 'prev': prev, 'next': next }))			
+			self.response.out.write(View(self.request).render('index.html', {'entries': entries, 'prev': prev, 'next': next }))			
 
 def main():
-  logging.getLogger().setLevel(logging.DEBUG)	
+
 	
-  application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler)], debug=True)
-  util.run_wsgi_app(application)
+	logging.getLogger().setLevel(logging.DEBUG)	
+	
+	application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler)], debug=True)
+	util.run_wsgi_app(application)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,12 @@
+<entry>
+	<title>{{entry.title}}</title>
+	<link rel="alternate" type="text/html" href="{{entry.url}}"/>
+	<link rel="related" type="text/html" href="{{entry|permalink}}"/>	
+	<id>{{entry.url}}</id>
+	<updated>{{entry.created}}</updated>
+	{% if entry.text %}
+	<content type="hhtml">
+		{{entry.text|escape}}
+	</content>
+	{% endif %}
+</entry>

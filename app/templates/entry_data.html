@@ -25,12 +25,12 @@
 				{% endifequal %}
 				
 				{% ifequal entry.source 'youtube' %}
-				<div class="title"><a href="/entry/{{entry.slug}}">{{ entry.title }}</a></div>
+				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
 				<div class="note">{{ entry.text }}</div>
 				{% endifequal %}
 				
 				{% ifequal entry.source 'blog' %}
-				<div class="title"><a href="/entry/{{entry.slug}}">{{ entry.title }}</a></div>				
+				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>				
 				<div class="note">{{ entry.text }}</div>
 				{% endifequal %}								
 				
@@ -48,7 +48,7 @@
 				{% endif %}
 			</div>
 			<div class="footnote">
-				<a href="/entry/{{ entry.slug }}#disqus_thread">View comments</a>	
+				<a href="{{ entry|permalink }}#disqus_thread">View comments</a>	
 			</div>
 		</div>		
 	</div>	

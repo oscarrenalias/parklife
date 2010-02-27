@@ -39,7 +39,7 @@ class BlogHandler(webapp.RequestHandler):
 
 	def get(self):	
 		# display the form
-		self.response.out.write( View.render( 'new_blog_post.html', { 'form': BlogPostForm() } ))
+		self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': BlogPostForm() } ))
 
 	def post(self):
 		form = BlogPostForm( self.request )
@@ -56,7 +56,7 @@ class BlogHandler(webapp.RequestHandler):
 			self.redirect( '/' )
 		else:
 			# form not valid, must show again with the errors
-			self.response.out.write( View.render( 'new_blog_post.html', { 'form': form } ))
+			self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': form } ))
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	

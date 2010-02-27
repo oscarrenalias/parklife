@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>{{site.title}}</title>
+	<subtitle>{{site.subtitle}}</subtitle>
+	<link href="{{site.base_url}}" />
+	<id>{{site.base_url}}</id>
+	<updated>{{site.last_updated}}</updated>
+	<author>
+		<name>{{site.author}}</name>
+		<email>{{site.email}}</email>
+	</author>
+	{%if entry %} 
+		{% include "atom_entry.xml" %}	
+	{% endif %}
+	{% for entry in entries %}
+		{% include "atom_entry.xml" %}
+	{% endfor %}
+</feed>

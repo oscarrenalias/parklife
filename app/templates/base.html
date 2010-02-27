@@ -4,6 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>Parklife</title>
 	<link href="/css/style.css" media="screen" rel="stylesheet" type="text/css" >
+	{% block feeds %}
+	<link href="{{site.base_url}}/?f=atom" type="application/atom+xml" rel="alternate" title="Atom 1.0 feed" />
+	{% endblock %}
 	{% block admin_scripts %}
 	{% endblock %}	
 </head>	

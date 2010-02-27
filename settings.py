@@ -45,7 +45,7 @@ class UserSettings( webapp.RequestHandler ):
 			'google_reader_feed': Config.getKey( 'google_reader_feed' )			
 		}
 	
-		self.response.out.write( View.render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
+		self.response.out.write( View(self.request).render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
 		
 	def post(self):
 
@@ -66,20 +66,20 @@ class UserSettings( webapp.RequestHandler ):
 				'google_reader_feed': Config.getKey( 'google_reader_feed' )
 			}
 		
-			self.response.out.write( View.render( 'settings.html', { 
+			self.response.out.write( View(self.request).render( 'settings.html', { 
 				'form': UserSettingsForm( initial_data ), 
 				'message': 'Settings saved successfully'
 			} ))
 		else:
 			# form not valid, must show again with the errors
-			self.response.out.write( View.render( 'settings.html', { 
+			self.response.out.write( View(self.request).render( 'settings.html', { 
 				'form': form,
 				'message': 'There were some errors'
 			} ))
 
 class AdminMaintenance(webapp.RequestHandler):
 	def get(self):
-		self.response.out.write( View.render( 'admin_maintenance.html' ))
+		self.response.out.write( View(self.request).render( 'admin_maintenance.html' ))
 
 class DoAdminMaintenance(webapp.RequestHandler):
 	def get(self, op):
@@ -97,7 +97,7 @@ class DoAdminMaintenance(webapp.RequestHandler):
 		else:
 			message = 'Unknown operation'
 
-		self.response.out.write( View.render( 'admin_maintenance.html', { 'message': message } ))
+		self.response.out.write( View(self.request).render( 'admin_maintenance.html', { 'message': message } ))
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)		
