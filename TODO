@@ -10,7 +10,7 @@ x Implement support for Google Reader
 - Implement nicer support for pagination
 x Grouping of entries based on the date
 - Add a parameter to configure the number of entries per page
-- support for alternative outputs: json and rss/atom
+x support for alternative outputs: json and rss/atom
 x support for /tag/ urls
 - support for displaying archived data, e.g. /archive/2010/02
 - support for free text searching
