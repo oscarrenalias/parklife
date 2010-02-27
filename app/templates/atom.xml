@@ -4,7 +4,7 @@
 	<subtitle>{{site.subtitle}}</subtitle>
 	<link href="{{site.base_url}}" />
 	<id>{{site.base_url}}</id>
-	<updated>{{site.last_updated}}</updated>
+	<updated>{{site.last_updated|atom_date}}</updated>
 	<author>
 		<name>{{site.author}}</name>
 		<email>{{site.email}}</email>
