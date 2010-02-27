@@ -5,7 +5,7 @@
 	<id>{{entry.url}}</id>
 	<updated>{{entry.created}}</updated>
 	{% if entry.text %}
-	<content type="hhtml">
+	<content type="html">
 		{{entry.text|escape}}
 	</content>
 	{% endif %}
