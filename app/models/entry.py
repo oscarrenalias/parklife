@@ -33,6 +33,9 @@ class Entry(db.Model):
 	# longitude
 	lng = db.StringProperty()
 	
+	# whether the object shouldn't be displayed
+	deleted = db.BooleanProperty(default=False)
+	
 	def _make_slug(self, append=""):
 		# It is possible to change the format of the slugs by modifying this
 		# method.
