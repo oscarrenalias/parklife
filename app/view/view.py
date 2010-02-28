@@ -47,11 +47,14 @@ class View:
 		   'atom': AtomView
 		}
 	
-	def render(self, template, view_values = []):
-		if self.__request == None or self.__request.get('f') == '':
-			output = 'html'
+	def render(self, template, view_values = {}, **params):
+		if 'force_renderer' in params:
+			output = params['force_renderer']
 		else:
-			output = self.__request.get('f')
+			if self.__request == None or self.__request.get('f') == '':
+				output = 'html'
+			else:
+				output = self.__request.get('f')
 			
 		# is the renderer valid?
 		if output not in self.renderers:
@@ -60,6 +63,9 @@ class View:
 		# merge some of the configuration data into the view data, in case it's needed
 		from defaults import Defaults
 		view_values['site'] = Defaults.site
+		# reference to the currently logged in user, if any
+		from google.appengine.api import users
+		view_values['user'] = users.get_current_user()
 			
 		# call the renderer
 		return( self.renderers[output]().render(template, view_values ))
