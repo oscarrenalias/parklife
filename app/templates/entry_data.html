@@ -1,15 +1,24 @@
 <div id="item_wrapper_{{entry.key}}" class="item_wrapper">	
   <div id="item_{{entry.key}}" class="item">
 	<div class='item_left'>
-	<a href="{{entry.url}}">
-			<img class="icon" src="/images/{{entry.source}}.png" width='16' height='16' />
+		<a href="{{site.base_url}}/source/{{entry.source}}">
+			<img class="icon" src="{{site.base_url}}/images/{{entry.source}}.png" width='16' height='16' />
 		</a>
 		<span id='item_time_3_40' class='time'>{{entry.created}}</span>		
 	</div>
 	<div class='item_right'>		
 		<div class="item_content">
-			<div class="item_actions">			
-				<!-- empty for now -->
+			<div class="item_actions" id="item_actions_{{entry.key}}">			
+				{% if user %}
+				  <div id="item_actions_wrapper_{{entry.key}}">
+					<a href="#" rel="{{entry.key}}'))" class="edit_entry""">
+						<img src="/images/icon-edit.png" alt="edit" height="12" width="12" />
+					</a>
+					<a href="#" rel="{{entry.key}}" class="delete_entry">
+						<img src="/images/icon-delete.png" alt="delete" height="12" width="12" />
+					</a>					
+				  </div>
+				{% endif %}
 			</div>
 			<div class="{{ entry.source }}">
 				{% ifequal entry.source 'delicious' %}
@@ -43,7 +52,7 @@
 				{% if entry.tags %}
 				Tags: 
 					{% for tag in entry.tags %}
-						<a href="/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
+						<a href="{{site.base_url}}/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
 					{% endfor %}
 				{% endif %}
 			</div>

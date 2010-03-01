@@ -32,7 +32,7 @@ class MainHandler(webapp.RequestHandler):
 	def get(self ):	
 
 	    # Build a paginated query.
-		query = PagerQuery(Entry).order('-created')
+		query = PagerQuery(Entry).filter('deleted = ', False).order('-created')
 
 	    # Fetch results for the current page and bookmarks for previous and next
 	    # pages.
@@ -48,7 +48,7 @@ class EntryHandler(webapp.RequestHandler):
 	def get(self, entry_slug):
 		
 		# see if we can find the entry
-		entry = Entry.all().filter('slug =', entry_slug ).get()
+		entry = Entry.all().filter('slug =', entry_slug ).filter('deleted = ', False).get()
 		
 		# entry not found
 		if entry == None:
@@ -62,7 +62,7 @@ class SourceHandler(webapp.RequestHandler):
 	
 	def get(self, source):
 		
-		query = PagerQuery(Entry).filter('source =', source).order('-created')
+		query = PagerQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
 		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
 
@@ -71,7 +71,7 @@ class SourceHandler(webapp.RequestHandler):
 class TagHandler(webapp.RequestHandler):
 	
 	def get(self, tag):
-			query = PagerQuery(Entry).filter('tags = ', tag).order( '-created' )
+			query = PagerQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
 			bookmark = self.request.get( 'p' )
 			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
 			

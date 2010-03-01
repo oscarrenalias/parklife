@@ -2,6 +2,7 @@ import datetime
 import time 
 import app.json.simplejson
 from google.appengine.ext import db
+from google.appengine.api import users
 
 class JSONHelper(simplejson.JSONEncoder): 
 

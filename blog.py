@@ -57,11 +57,28 @@ class BlogHandler(webapp.RequestHandler):
 		else:
 			# form not valid, must show again with the errors
 			self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': form } ))
+			
+class EntryHandler(webapp.RequestHandler):
+	
+	#
+	# deletes an entry
+	#
+	def delete(self, entry_id):
+		e = Entry.get( entry_id )
+		
+		if e == None:
+			# entry not found
+			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			
+		# otherwise, mark it as deleted and return success
+		e.deleted = True
+		e.put()
+		self.response.out.write( View(self.request).render( None, {'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/admin/blog', BlogHandler)], debug=True)
+  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/admin/entry/(.*)', EntryHandler)], debug=True)
   util.run_wsgi_app(application)
 
 if __name__ == '__main__':

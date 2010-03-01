@@ -25,6 +25,19 @@ indexes:
 
 - kind: Entry
   properties:
+  - name: deleted
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: deleted
+  - name: source
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
   - name: source
   - name: created
   - name: __key__

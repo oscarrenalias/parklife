@@ -14,8 +14,8 @@ class Defaults:
 	site = {
 	  'base_url': '',
 	  'author': 'Oscar Renalias',
-	  'email': '',
+	  'email': 'oscar+lifestream@renalias.net',
 	  'title': 'Oscar Renalias',
-	  'subtitle': ''
+	  'subtitle': 'Oscar Renalias'
 	}
 	
