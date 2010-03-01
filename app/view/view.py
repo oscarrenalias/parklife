@@ -65,7 +65,8 @@ class View:
 		view_values['site'] = Defaults.site
 		# reference to the currently logged in user, if any
 		from google.appengine.api import users
-		view_values['user'] = users.get_current_user()
+		view_values['user'] = users.get_current_user();
+		view_values['user_is_admin'] = users.is_current_user_admin();
 			
 		# call the renderer
 		return( self.renderers[output]().render(template, view_values ))

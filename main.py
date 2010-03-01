@@ -65,8 +65,16 @@ class SourceHandler(webapp.RequestHandler):
 		query = PagerQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
 		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+		
+		from app.utils import StringHelper
+		view_data = {
+			'entries': entries, 
+			'prev': prev, 
+			'next': next,
+			'source': StringHelper.remove_html_tags(source)
+		}
 
-		self.response.out.write(View(self.request).render('index.html', {'entries': entries, 'prev': prev, 'next': next }))		
+		self.response.out.write(View(self.request).render('index.html', view_data ))		
 			
 class TagHandler(webapp.RequestHandler):
 	
@@ -74,8 +82,16 @@ class TagHandler(webapp.RequestHandler):
 			query = PagerQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
 			bookmark = self.request.get( 'p' )
 			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
+
+			from app.utils import StringHelper			
+			view_data = {
+				'entries': entries, 
+				'prev': prev, 
+				'next': next,
+				'tag': StringHelper.remove_html_tags(tag)
+			}			
 			
-			self.response.out.write(View(self.request).render('index.html', {'entries': entries, 'prev': prev, 'next': next }))			
+			self.response.out.write(View(self.request).render('index.html', view_data ))
 
 def main():
 

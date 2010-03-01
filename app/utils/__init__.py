@@ -55,3 +55,12 @@ class StringHelper:
 	def remove_new_lines(self, str=None):
 		if str: self.str = str
 		return str.replace( '\n', '' )
+		
+	#
+	# remove html tags from string
+	#
+	@staticmethod
+	def remove_html_tags(data):
+		import re
+		x = re.compile(r'<[^<]*?/?>')
+		return x.sub('', data)
