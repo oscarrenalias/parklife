@@ -26,6 +26,7 @@ from app.view.view import View
 from defaults import Defaults
 from app.pager.pager import PagerQuery
 from google.appengine.ext import db
+from google.appengine.ext.db import BadKeyError
 
 class MainHandler(webapp.RequestHandler):	
 
@@ -47,16 +48,21 @@ class EntryHandler(webapp.RequestHandler):
 	
 	def get(self, entry_slug):
 		
-		# see if we can find the entry
+		# see if we can find the entry by slug
 		entry = Entry.all().filter('slug =', entry_slug ).filter('deleted = ', False).get()
-		
-		# entry not found
+		# entry not found, let's try by id
 		if entry == None:
-			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
-			return
+			try: 
+				entry = Entry.get(entry_slug)
+			except BadKeyError:
+				entry = None
+				
+			if entry == None:
+				self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
+				return
 					
+		# check if we need to return the entire body or just the html code for the entry
 		if self.request.get('b'):
-			# return only the body
 			template = 'entry_data.html'
 		else:
 			template = 'entry.html'
