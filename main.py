@@ -54,9 +54,15 @@ class EntryHandler(webapp.RequestHandler):
 		if entry == None:
 			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
 			return
+					
+		if self.request.get('b'):
+			# return only the body
+			template = 'entry_data.html'
+		else:
+			template = 'entry.html'
 			
 		# if found, display it	
-		self.response.out.write( View(self.request).render('entry.html', { 'entry': entry }))
+		self.response.out.write( View(self.request).render(template, { 'entry': entry } ))
 		
 class SourceHandler(webapp.RequestHandler):
 	
