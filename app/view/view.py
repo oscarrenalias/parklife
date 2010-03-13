@@ -63,6 +63,7 @@ class View:
 		# merge some of the configuration data into the view data, in case it's needed
 		from defaults import Defaults
 		view_values['site'] = Defaults.site
+		view_values['google_api_key'] = Defaults.GOOGLE_API_KEY
 		# reference to the currently logged in user, if any
 		from google.appengine.api import users
 		view_values['user'] = users.get_current_user();

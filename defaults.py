@@ -10,6 +10,9 @@ class Defaults:
 	# YouTube API key
 	YOUTUBE_API_KEY = 'AI39si4eYUVgiR7wTB5h4BL9XvQWO1VkQn9B9x_bZKZMC00y8SMfS66aky8qzmOYyifLiF-e-dFhW3n1VrgBAp62O_4GOKyObw'
 	
+	# Google Search Ajax API key
+	GOOGLE_API_KEY = 'ABQIAAAAlefqhB0S3KPTMC9Eyh9uPRRyzxWefuPwDWzRUAiaxlmoyqrEThQ5HlU0jq4VYv1d914ChLVitmcZYQ'
+	
 	# site data
 	site = {
 	  'base_url': '',

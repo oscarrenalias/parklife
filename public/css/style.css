@@ -501,3 +501,71 @@ div#breadcrumb {
 #dsq-content .dsq-dc-logo {
 display:none;
 }
+
+/** styles for the sidebar **/
+div.widgetwrapper {
+	width: 300px;
+}
+
+#sidebar ul, #sidebar ul ol {
+	margin: 0;
+	padding: 0;
+}
+
+#sidebar ul.categories, #sidebar ul.comments {
+	padding-left: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#sidebar ul.comments {
+	padding-left: 15px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#sidebar ul.categories li {
+	list-style-type: square;
+	list-style-image: none;
+}
+
+/* for styling search results */
+#searchresults-container {
+	
+}
+
+#searchresults {
+	
+}
+
+.search-result {
+	margin-bottom: 10px;	
+	padding-left: 25px;
+}
+
+.search-result-title {
+	margin-bottom: 5px;
+	margin-top: 5px;	
+	font-weight: bold;		
+}
+
+.search-result-content {
+	margin: 15px 0;
+	background-position: 10px 10px;	
+}
+
+.search-results-pager {
+	
+}
+
+.search-powered-by {
+	
+}
+
+#search-results-close {
+	padding-bottom: 10px;
+}
+
+.search-cursor-page-link {
+	margin: 4px;
+}

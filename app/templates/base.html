@@ -19,6 +19,9 @@
 	<script type="text/javascript" src="/js/jquery/jquery.rest.js"></script>		
 	<script type="text/javascript" src="/js/jquery/jquery.easing.1.3.js"></script>			
 	<script type="text/javascript" src="/js/parklife/core.js"></script>			
+	<script type="text/javascript">
+		parklife.config.GOOGLE_API_KEY = '{{google_api_key}}';
+	</script>	
 	{% endblock %}	
 </head>	
 <body>
@@ -50,10 +53,18 @@
 			</div>
 		</div>
 		<div id="right_column">
+			<div class="sidebar">
+				<div class="widget search">
+					<h2 class="title">Search</h2>
+					<div class="widget-content">
+						  <input type="text" name="searchTerms" value="" id="searchTerms" />
+						  <input type="submit" name="search" value="Search" onClick="javascript:parklife.showSearch()" id="submitSearchButton"/>
+						  <br class="fix" />
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="clear"></div>
-
-
 		<div id="left-column-wrapper">
 			<div id="left-column">
 			<div id="status_messages">
@@ -64,21 +75,35 @@
    				{% block content %}
    				<!-- nothing -->
    				{% endblock %}
+			</div>
+			<div id="searchresults-container" style="display:none">
+				<div class="date">Search Results</div>
+				<div id="search-results-close">
+					<a href="#" onClick="parklife.closeSearch();return(false);">Close Search</a><br/>
+				</div>
+				<div id="searchresults" />
+				<div class="search-powered-by">
+					Search powered by <a href="http://www.google.com">Google</a>
+				</div>
+			</div>
 		</div>		
-		<div class="bottom_nav">
-			<div class="pagination">
+		<div class="bottom_nav"">
+			<div class="pagination" id="pager">
 				{% block pagination %}
 				{% endblock %}
 			</div>
-		</div>		
+		</div>
+		
 		<div id="footer-wrapper">
 			<div id="footer">
-				Web site powered by <a href="http://github.com/phunkphorce/parklife">Parklife</a>
+				Web site powered by <a href="http://github.com/phunkphorce/parklife">Parklife</a><br/>
+				Own content licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution Share Alike 3.0</a>
 			</div>
 		</div>		
-		</div>
+			
+		</div>					
 	</div>	
-	<br class="fix"/>	
+	<br class="fix"/>			
 	</div>
   </body>
 </html>

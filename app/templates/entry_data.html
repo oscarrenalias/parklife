@@ -11,7 +11,7 @@
 			<div class="item_actions" id="item_actions_{{entry.key}}">			
 				{% if user %}
 				  <div id="item_actions_wrapper_{{entry.key}}">
-					<a href="#" rel="{{entry.key}}'))" class="edit_entry""">
+					<a href="#" rel="{{entry.key}}" class="edit_entry""">
 						<img src="/images/icon-edit.png" alt="edit" height="12" width="12" />
 					</a>
 					<a href="#" rel="{{entry.key}}" class="delete_entry">
@@ -23,29 +23,26 @@
 			<div class="{{ entry.source }}">
 				{% ifequal entry.source 'delicious' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
+				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>				
 				{%endifequal%}
 				
 				{% ifequal entry.source 'twitter' %}
 				<div class="title">{{entry.text}}</a></div>				
 				{%endifequal%}
 				
-				{% ifequal entry.source 'delicious' %}
-				<div class="note">{{ entry.text }}</div>
-				{% endifequal %}
-				
 				{% ifequal entry.source 'youtube' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
-				<div class="note">{{ entry.text }}</div>
+				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>
 				{% endifequal %}
 				
 				{% ifequal entry.source 'blog' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>				
-				<div class="note">{{ entry.text }}</div>
-				{% endifequal %}								
+				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>
+				{% endifequal %}				
 				
 				{% ifequal entry.source 'googlereader' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
-				<div class="note">{% if entry.text %}{{ entry.text }}{% endif %}</div>
+				<div class="note" id="item_text_{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
 				{% endifequal %}				
 			</div>
 			<div class="footnote">
