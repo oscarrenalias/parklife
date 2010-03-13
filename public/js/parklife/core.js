@@ -120,7 +120,7 @@ parklife.search = function(start)
 		
 	$.ajax({
 		url: "http://ajax.googleapis.com/ajax/services/search/web",
-		data: { "v": "1.0", "q": terms, "cx": "011990932543207137146:wcze-5xmxso", "start": start, "rsz": "large", "key": parklife.config.GOOGLE_API_KEY },
+		data: { "v": "1.0", "q": terms, "cx": parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY, "start": start, "rsz": "large", "key": parklife.config.GOOGLE_API_KEY },
 		dataType: "jsonp",
 		jsonpCallback: "parklife.callbacks.googleSearchCallback",
 		success: parklife.callbacks.googleSearchCallback,
