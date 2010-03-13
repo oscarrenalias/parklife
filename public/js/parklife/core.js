@@ -73,26 +73,36 @@ parklife.callbacks.googleSearchCallback = function(resp)
 {	
 	// show the results
 	var resultData = '';
-	$.each(resp.responseData.results, function(i, result) {			
-		code = '<div class="search-result" id="search-result-' + i + '">\
-		<div class="search-result-title"><a href="' + result.url + '">' + result.title + '</a></div>\
-		<div class="search-result-content">' + result.content +'</div>\
-		</div>\n';
-		resultData += code;
-	});
+	
+	if( resp.responseData.results.length > 0 ) {
+		$.each(resp.responseData.results, function(i, result) {			
+			code = '<div class="search-result" id="search-result-' + i + '">\
+			<div class="search-result-title"><a href="' + result.url + '">' + result.title + '</a></div>\
+			<div class="search-result-content">' + result.content +'</div>\
+			</div>\n';
+			resultData += code;
+		});
+	}
+	else {
+		resultData += 'No results found';
+	}
+	
 	// and show the cursor
-  	var cursor = resp.responseData.cursor;
-	pagerCode = '<div class="search-results-pager">';
-	$.each(cursor.pages, function(i, page) {
-    	if (cursor.currentPageIndex == i) { // if we are on the curPage, then don't make a link
-			pagerCode += page.label;
-    	} else {
-			pagerCode += '<a href="javascript:parklife.search(' + page.start +')" class="search-cursor-page-link">' + page.label + '</a>';
-    	}
-  	});
-	// add a link to the page with more results
-	pagerCode += ' › <a href="' + resp.responseData.cursor.moreResultsUrl + ' ">More results</a>';
-	pagerCode += '</div>';
+	var pagerCode = '';
+	if( resp.responseData.cursor.pages != undefined ) {
+	  	var cursor = resp.responseData.cursor;
+		pagerCode = '<div class="search-results-pager">';
+		$.each(cursor.pages, function(i, page) {
+	    	if (cursor.currentPageIndex == i) { // if we are on the curPage, then don't make a link
+				pagerCode += page.label;
+	    	} else {
+				pagerCode += '<a href="javascript:parklife.search(' + page.start +')" class="search-cursor-page-link">' + page.label + '</a>';
+	    	}
+	  	});
+		// add a link to the page with more results
+		pagerCode += ' › <a href="' + resp.responseData.cursor.moreResultsUrl + ' ">More results</a>';
+		pagerCode += '</div>';
+	}
 
   	$('#searchresults').html(resultData + pagerCode );
 }
@@ -141,6 +151,7 @@ parklife.closeSearch = function()
 	$('#pager').show();	
 	// and show the container for the search results
 	$('#searchresults-container').hide();
+	$('#searchresults').html('');	
 }
 
 parklife.events.searchKeyHandler = function(event)
