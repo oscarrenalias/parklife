@@ -154,14 +154,6 @@ parklife.closeSearch = function()
 	$('#searchresults').html('');	
 }
 
-parklife.events.searchKeyHandler = function(event)
-{	
-	if(event.keyCode == 13) {
-		$('#submitSearchButton').click();
-		event.preventDefault();
-	}
-}
-
 $(document).ready(function(){
 	// set the event handler for the deletion of entries
 	$(".delete_entry").each(function(index) {
@@ -185,4 +177,12 @@ $(document).ready(function(){
 			return(false) 
 		});
 	});	
+	
+	// key handlder for submitting searches via the return key
+	$('#searchTerms').keypress(function(event) {
+		if(event.keyCode == 13) {
+			$('#submitSearchButton').click();
+			event.preventDefault();
+		}		
+	});
 });
