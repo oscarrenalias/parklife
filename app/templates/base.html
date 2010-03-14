@@ -37,17 +37,41 @@
 					<div class="description"></div>
 				</div>
 				<div class="tabMenu">
-					<table class="tabMenu" cellspacing="0">
+					<table class="tabMenu" cellspacing="0">						
 						<tr>
-							<td class="spacer">&nbsp;</td>
-							<td class="active"><a href="/">Stream</a></td>
-							<td class="spacer">&nbsp;</td>
-							<td class="inactive"><a href="/source/blog">Blog</a></td>
-							<td class="spacer">&nbsp;</td>
-							<td class="inactive"><a href="/pages/about-me">About Me</a></td>
-							<td class="spacer">&nbsp;</td>
-							<td class="inactive"><a href="/pages/projects">Projects</a></td>
-							<td class="last">&nbsp;</td>
+							<td class="spacer">
+								&nbsp;
+							</td>
+							<td class="inactive">
+								<a href="http://www.renalias.net/index.html" onfocus="this.blur()">Home</a>
+							</td>
+							<td class="spacer">
+								&nbsp;
+							</td>
+							<td {% ifequal source "blog" %}class="active"{% endifequal %}{% ifnotequal source "blog" %}class="inactive"{% endifnotequal %}>
+								<a href="http://stream.renalias.net/source/blog" onfocus="this.blur()">Blog</a>
+							</td>
+							<td class="spacer">
+								&nbsp;
+							</td>
+							<td {% ifnotequal source "blog" %}class="active"{% endifnotequal %}{% ifequal source "blog" %}class="inactive"{% endifequal %}>
+								<a href="http://stream.renalias.net" onfocus="this.blur()">Stream</a>
+							</td>
+							<td class="spacer">
+								&nbsp;
+							</td>
+							<td class="inactive">
+								<a href="http://www.renalias.net/projects.html" onfocus="this.blur()">Projects</a>
+							</td>
+							<td class="spacer">
+								&nbsp;
+							</td>
+							<td class="inactive">
+								<a href="http://picasaweb.google.com/phunkphorce/" onfocus="this.blur()">Pictures</a>
+							</td>									
+							<td class="last">
+								&nbsp;
+							</td>
 						</tr>
 					</table>
 				</div>
