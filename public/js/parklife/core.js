@@ -76,7 +76,9 @@ parklife.callbacks.googleSearchCallback = function(resp)
 	
 	if( resp.responseData.results.length > 0 ) {
 		$.each(resp.responseData.results, function(i, result) {			
-			code = '<div class="search-result" id="search-result-' + i + '">\
+			code = '\
+			<div class="search-result-icon"><img class="icon" src="/images/google.png" height="16" width="16"></div>\
+			<div class="search-result" id="search-result-' + i + '">\
 			<div class="search-result-title"><a href="' + result.url + '">' + result.title + '</a></div>\
 			<div class="search-result-content">' + result.content +'</div>\
 			</div>\n';

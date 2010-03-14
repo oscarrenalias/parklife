@@ -275,6 +275,10 @@ div.pagination {
 	padding:4px 15px;
 }
 
+#content p {
+	margin-bottom:12px;
+}
+
 #footer-wrapper {
     text-align: center;
     margin-top: 12px;
@@ -568,4 +572,10 @@ div.widgetwrapper {
 
 .search-cursor-page-link {
 	margin: 4px;
+}
+
+.search-result-icon {
+	float: left;
+	width: 12px;
+	margin-top: 2px;	
 }
