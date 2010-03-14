@@ -13,6 +13,9 @@ class Defaults:
 	# Google Search Ajax API key
 	GOOGLE_API_KEY = 'ABQIAAAAlefqhB0S3KPTMC9Eyh9uPRRyzxWefuPwDWzRUAiaxlmoyqrEThQ5HlU0jq4VYv1d914ChLVitmcZYQ'
 	
+	# Custom searh engine key
+	GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '011990932543207137146:wcze-5xmxso';
+	
 	# site data
 	site = {
 	  'base_url': '',
