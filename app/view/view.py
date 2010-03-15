@@ -64,6 +64,7 @@ class View:
 		from defaults import Defaults
 		view_values['site'] = Defaults.site
 		view_values['google_api_key'] = Defaults.GOOGLE_API_KEY
+		view_values['google_maps_api_key'] = Defaults.GOOGLE_MAPS_API_KEY		
 		view_values['google_custom_search_engine_key'] = Defaults.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY
 		# reference to the currently logged in user, if any
 		from google.appengine.api import users

@@ -46,6 +46,13 @@
 				{% endifequal %}				
 			</div>
 			<div class="footnote">
+				{% if entry.lat %}
+				<span class="geotag-data" id="geotag-data-{{entry.key}}" data="[{{entry.lat}},{{entry.lng}}]">
+				<a href="#" class="geotag-link">					
+					<img src="/images/geotag.png" width="12" height="12" class="geotag-icon" alt="Geotag" />
+				</a>
+				</span>
+				{% endif %}
 				{% if entry.tags %}
 				Tags: 
 					{% for tag in entry.tags %}

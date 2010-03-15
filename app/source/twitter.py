@@ -46,11 +46,11 @@ class TwitterSource(Source):
 		if newest_tweet == None:
 			# get everything
 			logging.debug('no newest tweet found - requesting all')
-			statuses = twitter.statuses.user_timeline(user=twitter_user)			
+			statuses = twitter.statuses.user_timeline(user=twitter_user,count=40)			
 		else:
 			# get only tweets with an id higher than the newest one
 			logging.debug('requesting tweets with id greater than ' + str(newest_tweet.external_id))			
-			statuses = twitter.statuses.user_timeline(user=twitter_user,since_id=newest_tweet.external_id)
+			statuses = twitter.statuses.user_timeline(user=twitter_user,since_id=newest_tweet.external_id,count=40)
 			
 		return self._saveTweets( statuses )
 
@@ -76,6 +76,11 @@ class TwitterSource(Source):
 				
 				# extract the tags
 				e.tags = StringHelper().extract_twitter_tags(s['text'])
+				
+				# process the location coordinates if they're available
+				if s['coordinates'] != None:
+					e.lat = str(s['coordinates']['coordinates'][1])
+					e.lng = str(s['coordinates']['coordinates'][0])					
 				
 				e.put()
 				total = total+1

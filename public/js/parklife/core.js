@@ -187,4 +187,70 @@ $(document).ready(function(){
 			event.preventDefault();
 		}		
 	});
+	
+	// event handler for geotag links 
+	$('.geotag-data').click(function(e) {
+		
+		//hackish, but we don't need someone else's events...
+		if(!$(e.target).hasClass('geotag-icon')) {
+			e.preventDefault();
+			return( false );
+		}
+		
+		if( this['mapAlreadyBuilt'] == true ) {
+			mapDiv = $(this).find('.geotag-map-container');
+			if($(mapDiv).css("display") == "none" ) {
+				// we may need to reposition the map, if for some reason
+				// the page scrolled since the last time we showed it
+				// but only if the map is currently hidden				
+				if((e.clientY + 300) > window.innerHeight) {
+					$(mapDiv).css( "top", (Math.round($(this).position()['top']) - (300 + 10)) + 'px');
+					$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
+				}
+				else {
+					$(mapDiv).css( "top", (Math.round($(this).position()['top']) + 15) + 'px');
+					$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
+				}										
+				$(mapDiv).fadeIn(200);				
+			}
+			else
+				$(mapDiv).fadeOut(200);
+		}
+		else {
+			// build the map
+			var mapDiv = document.createElement( 'div' );
+			$(mapDiv).addClass('geotag-map-container');
+		
+			// if there's enough space, we'll show it on top of the icon
+			// and if not, below
+			if((e.clientY + 300) > window.innerHeight) {
+				//mapDiv.style.top = '-315px';
+				$(mapDiv).css( "top", (Math.round($(this).position()['top']) - (300 + 10)) + 'px');
+				$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
+			}
+			else {
+				$(mapDiv).css( "top", (Math.round($(this).position()['top']) + 15) + 'px');
+				$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
+			}
+			$(mapDiv).hide();
+			$(this).append(mapDiv);
+			
+			// create and display the map
+			var map = new GMap2(mapDiv);
+			var coords = eval($(this).attr('data'));
+			point = new GLatLng(coords[0], coords[1]);
+			map.setCenter(point, 13);
+	  		map.setUIToDefault();
+			// add the marker
+			var marker = new GMarker(point);
+			map.addOverlay(marker);
+		
+			// and mark it as visible
+			this['mapAlreadyBuilt'] = true;
+			
+			$(mapDiv).fadeIn(200);
+		}
+		
+		return(false);
+	});
 });

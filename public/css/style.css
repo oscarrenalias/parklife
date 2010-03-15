@@ -579,3 +579,9 @@ div.widgetwrapper {
 	width: 12px;
 	margin-top: 2px;	
 }
+
+.geotag-map-container {
+	width:300px;
+	height:300px;
+	position:absolute;
+}
