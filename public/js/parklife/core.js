@@ -232,7 +232,7 @@ $(document).ready(function(){
 				$(mapDiv).css( "top", (Math.round($(this).position()['top']) + 15) + 'px');
 				$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
 			}
-			$(mapDiv).hide();
+			/*$(mapDiv).hide();*/
 			$(this).append(mapDiv);
 			
 			// create and display the map
@@ -247,7 +247,6 @@ $(document).ready(function(){
 		
 			// and mark it as visible
 			this['mapAlreadyBuilt'] = true;
-			
 			$(mapDiv).fadeIn(200);
 		}
 		
