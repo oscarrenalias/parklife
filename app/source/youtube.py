@@ -63,6 +63,11 @@ class YouTubeSource(Source):
 				if video.media.keywords != None:
 					# split the tags 
 					e.tags = video.media.keywords.text.replace(' ','').split(',')
+					
+				# save the location data if available
+				if video.geo:
+					e.lat = str(video.geo.latitude())
+					e.lng = str(video.geo.longitude())
 
 				if save:
 					e.put()
