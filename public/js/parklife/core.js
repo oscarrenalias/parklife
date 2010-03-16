@@ -211,10 +211,14 @@ $(document).ready(function(){
 					$(mapDiv).css( "top", (Math.round($(this).position()['top']) + 15) + 'px');
 					$(mapDiv).css( "left", Math.round($(this).position()['left']) + 'px');
 				}										
-				$(mapDiv).fadeIn(200);				
+				$(mapDiv).fadeIn(200, function() {$(this).dropShadow()});
+				//$(mapDiv).dropShadow();				
+				
 			}
-			else
+			else {
+				$(mapDiv).removeShadow();
 				$(mapDiv).fadeOut(200);
+			}
 		}
 		else {
 			// build the map
@@ -247,7 +251,8 @@ $(document).ready(function(){
 		
 			// and mark it as visible
 			this['mapAlreadyBuilt'] = true;
-			$(mapDiv).fadeIn(200);
+			
+			$(mapDiv).fadeIn(200, function() {$(this).dropShadow()});
 		}
 		
 		return(false);
