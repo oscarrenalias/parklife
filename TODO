@@ -1,7 +1,7 @@
 - Implement getAll support for the Twitter source
 - Implement getAll support for the Delicious source
 - Implement getAll support for the YouTube source
-- Add support for geolocated entries
+x Add support for geolocated entries
 - Add support for deleting and updating entries
 x Add support for Delicious tags
 x Add support for Twitter tags
@@ -13,4 +13,8 @@ x Grouping of entries based on the date
 x support for alternative outputs: json and rss/atom
 x support for /tag/ urls
 - support for displaying archived data, e.g. /archive/2010/02
-- support for free text searching
+x support for free text searching
+- Implement reduced templates for mobile access, both for posting new entries (a simplified "new blog entry" screen) and for displaying the stream content
+- Ignore @ replies (pull them into the db but don't show them)
+- Possibility to update blog entries
+- Possibility to update the current location via javascript location services when adding a new post
