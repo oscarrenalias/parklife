@@ -53,7 +53,22 @@ indexes:
 - kind: Entry
   properties:
   - name: deleted
+  - name: source
+  - name: twitter_reply
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: deleted
   - name: tags
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: deleted
+  - name: twitter_reply
   - name: created
     direction: desc
 

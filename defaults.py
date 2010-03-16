@@ -17,7 +17,10 @@ class Defaults:
 	GOOGLE_MAPS_API_KEY = 'ABQIAAAAlefqhB0S3KPTMC9Eyh9uPRQ07NP0L6lw46OYIIZDiaOMe_2IihQskZS8kMpydvEAAgkw1rcZMzCoBQ'
 	
 	# Custom searh engine key
-	GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '011990932543207137146:wcze-5xmxso';
+	GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '011990932543207137146:wcze-5xmxso'
+	
+	# ignore twitter @ replies?
+	TWITTER_IGNORE_AT_REPLIES = True
 	
 	# site data
 	site = {

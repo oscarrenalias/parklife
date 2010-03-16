@@ -15,7 +15,7 @@ x support for /tag/ urls
 - support for displaying archived data, e.g. /archive/2010/02
 x support for free text searching
 - Implement reduced templates for mobile access, both for posting new entries (a simplified "new blog entry" screen) and for displaying the stream content
-- Ignore @ replies (pull them into the db but don't show them)
+x Ignore @ replies (pull them into the db but don't show them)
 - Possibility to update blog entries
 - Possibility to update the current location via javascript location services when adding a new post
-- Geolocated Youtube entries
+x Geolocated Youtube entries

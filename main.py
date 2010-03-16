@@ -34,6 +34,9 @@ class MainHandler(webapp.RequestHandler):
 
 	    # Build a paginated query.
 		query = PagerQuery(Entry).filter('deleted = ', False).order('-created')
+		
+		if Defaults.TWITTER_IGNORE_AT_REPLIES:
+			query = query.filter('twitter_reply = ', False )
 
 	    # Fetch results for the current page and bookmarks for previous and next
 	    # pages.
@@ -75,6 +78,10 @@ class SourceHandler(webapp.RequestHandler):
 	def get(self, source):
 		
 		query = PagerQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
+		
+		if Defaults.TWITTER_IGNORE_AT_REPLIES:
+			query = query.filter('twitter_reply = ', False )		
+		
 		bookmark = self.request.get( 'p' )
 		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
 		
@@ -92,6 +99,10 @@ class TagHandler(webapp.RequestHandler):
 	
 	def get(self, tag):
 			query = PagerQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
+			
+			if Defaults.TWITTER_IGNORE_AT_REPLIES:
+				query = query.filter('twitter_reply = ', False )			
+			
 			bookmark = self.request.get( 'p' )
 			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
 

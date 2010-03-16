@@ -80,7 +80,11 @@ class TwitterSource(Source):
 				# process the location coordinates if they're available
 				if s['coordinates'] != None:
 					e.lat = str(s['coordinates']['coordinates'][1])
-					e.lng = str(s['coordinates']['coordinates'][0])					
+					e.lng = str(s['coordinates']['coordinates'][0])	
+					
+				# is this entry a reply-to?
+				logging.debug(e.text[0])
+				e.twitter_reply = (e.text[0] == '@')
 				
 				e.put()
 				total = total+1
