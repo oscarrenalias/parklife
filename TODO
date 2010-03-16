@@ -18,3 +18,4 @@ x support for free text searching
 - Ignore @ replies (pull them into the db but don't show them)
 - Possibility to update blog entries
 - Possibility to update the current location via javascript location services when adding a new post
+- Geolocated Youtube entries
