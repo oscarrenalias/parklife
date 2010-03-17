@@ -19,3 +19,4 @@ x Ignore @ replies (pull them into the db but don't show them)
 - Possibility to update blog entries
 - Possibility to update the current location via javascript location services when adding a new post
 x Geolocated Youtube entries
+- add the gelocation data back into the Atom feed template
