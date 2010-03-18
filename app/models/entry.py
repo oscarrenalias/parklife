@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from app.db import CalculatedProperty
 import datetime
 
 class Entry(db.Model):
@@ -38,6 +39,19 @@ class Entry(db.Model):
 	
 	# attribute specific to the twitter source
 	twitter_reply = db.BooleanProperty(default=False)
+	
+	# for date handling
+	@CalculatedProperty
+	def month(self):
+		return self.created.month
+		
+	@CalculatedProperty
+	def year(self):
+		return self.created.year
+		
+	@CalculatedProperty
+	def day(self):
+		return self.created.day
 	
 	def _make_slug(self, append=""):
 		# It is possible to change the format of the slugs by modifying this
