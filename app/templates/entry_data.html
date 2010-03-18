@@ -23,7 +23,7 @@
 			<div class="{{ entry.source }}">
 				{% ifequal entry.source 'delicious' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
-				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>				
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
 				{%endifequal%}
 				
 				{% ifequal entry.source 'twitter' %}
@@ -32,17 +32,17 @@
 				
 				{% ifequal entry.source 'youtube' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
-				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
 				{% endifequal %}
 				
 				{% ifequal entry.source 'blog' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>				
-				<div class="note" id="item_text_{{entry.key}}">{{ entry.text }}</div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
 				{% endifequal %}				
 				
 				{% ifequal entry.source 'googlereader' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
-				<div class="note" id="item_text_{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
 				{% endifequal %}				
 			</div>
 			<div class="footnote">

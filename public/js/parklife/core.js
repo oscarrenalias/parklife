@@ -170,16 +170,7 @@ $(document).ready(function(){
 			return(false) 
 		});
 	});
-	// set the event handler for editing entries
-	$(".edit_entry").each(function(index) {
-		$(this).click(function(e) {
-			if(e.target.tagName.toLowerCase()=='img') id = e.target.parentNode.rel;
-			else id = e.target.rel;
-			parklife.editEntry(id); 
-			return(false) 
-		});
-	});	
-	
+
 	// key handlder for submitting searches via the return key
 	$('#searchTerms').keypress(function(event) {
 		if(event.keyCode == 13) {
@@ -257,4 +248,63 @@ $(document).ready(function(){
 		
 		return(false);
 	});
+	
+	/*$('.edit_entry').click(function(e) {
+		// fetch the entry data
+		$.Read('/admin/entry/{id}', { id: this['rel'] }, parklife.callbacks.editEntry )
+	});*/
+	
+	$('.note').each(function(i, e) {
+		$(e).editable('/admin/entry/' + $(e).attr('data-entry-id'), {
+	      indicator : "<img src='/images/spinner.gif'>",
+		  ajaxoptions: {type: 'PUT', dataType: 'json'},
+	      type   : 'autogrow',
+		  method: 'PUT',
+	      select : true,
+	      submit : 'OK',
+	      cancel : 'cancel',
+	      cssclass : "editable",
+		  tooltip   : "Click to edit...",
+		  onblur    : "ignore",
+		  name: "text",
+		  autogrow : {
+		  	lineHeight : 16,
+		    minHeight  : 32
+		  },
+		  callback: function(self,data) {
+			// our restful services always return json 
+			$(this).html(self.entry.text);
+		  }
+		})
+	});
+	
+	//$('.title').editable('http://localhost:8081');	
+	
 });
+
+parklife.callbacks.editEntry = function(resp)
+{
+	// hide the current entry
+	$('#item_' + resp.entry_id).hide();
+	
+	// and now make the needed fields editable
+	$("#item_wrapper_" + resp.entry_id).html('<div class="inline-editor-container">\
+	  <textarea class="mceEditor inline-editor">' + resp.entry.text + '</textarea>\
+	  </div>');	
+	
+	tinyMCE.init({
+			theme : "advanced",
+			mode : "specific_textareas",
+			editor_selector : "mceEditor",
+			plugins : "emotions, inlinepopups",
+			theme_advanced_buttons1 : "bold,italic,underline,separator,strikethrough,bullist,numlist,outdent, indent,undo,redo,link,unlink,image, charmap, code",
+			theme_advanced_buttons2 : "",
+			theme_advanced_buttons3 : "",
+			theme_advanced_toolbar_location : "top",
+			theme_advanced_toolbar_align : "left",
+			extended_valid_elements : "div[id,class,style],iframe[src|width|height|frameborder],object[width|height|type|data],embed[src|type|width|height|wmode|flashvars], param[name|value], a[name|href|target|title|onclick],img[width|class|src|border=0|alt|title|hspace|vspace|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],span[class|align|style], p",
+			cleanup: "true",
+			convert_urls : false,
+			debug : false
+	});	
+}

@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block admin_scripts %}
+<script type="text/javascript" src="/js/jquery/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/js/jquery/json2.js"></script>	
+<script type="text/javascript" src="/js/jquery/jquery.rest.js"></script>		
+<script type="text/javascript" src="/js/jquery/jquery.easing.1.3.js"></script>			
+<script type="text/javascript" src="/js/jquery/jquery.dropshadow.js"></script>	
+<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.js"></script>
+<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.forms.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
-    //<!--
+    /*<!--
 tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -17,13 +24,16 @@ tinyMCE.init({
 		cleanup: "true",
 		convert_urls : false,
 		debug : false
-});    //-->
+});    //-->*/
 </script>	</head>
 {% endblock %}
 {% block content %}
-<form name="new_blog_entry" action="/admin/blog" method="post">
-{{ form.as_p }}
-<input type="submit" name="submit" value="Post" />
-</form>
+<div id="blog_entry_form">
+	<div id="form_messages"></div>
+	<form name="new_blog_entry" id="id_new_blog_entry" method="post">
+		{{ form.as_p }}
+		<input type="submit" name="submit" value="Post" id="submit_blog_entry" />
+	</form>
+</div>
 {{ message }}
 {% endblock %}

@@ -585,3 +585,25 @@ div.widgetwrapper {
 	height:300px;
 	position:absolute;
 }
+
+.inline-editor-container {
+	width:100%;
+	padding-left: 14px;	
+}
+
+.inline-editor {
+	width:100%;
+}
+
+ul.field_errors {
+	list-style-type: none;
+	padding: 0px;
+	margin:0px;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	color:#CC3333;
+}
+
+.success_message {
+	color:green;
+}

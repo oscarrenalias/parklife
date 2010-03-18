@@ -61,6 +61,64 @@ class BlogHandler(webapp.RequestHandler):
 class EntryHandler(webapp.RequestHandler):
 	
 	#
+	# returns an entry
+	#
+	def get(self, entry_id):
+		e = Entry.get( entry_id )
+		
+		if e == None:
+			# entry not found
+			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			
+		self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
+		
+	#
+	# update an entry
+	#
+	def put(self, entry_id):
+		e = Entry.get( entry_id )
+		
+		if e == None:
+			# entry not found
+			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			
+		e.text = self.request.get('text')
+		e.put()
+			
+		self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))
+		
+	#
+	# create an entry
+	#
+	def post(self, entry_id):
+		form = BlogPostForm( self.request )
+		if form.is_valid():
+			# validation successful, we can save the data
+			e = Entry()
+			e.title = form.clean_data['title']
+			e.text = form.clean_data['text']
+			e.tags = form.clean_data['tags'].split(' ')
+			e.source = 'blog'
+			e.put()
+			
+			e = Entry.get(e.key())
+
+			# return successful creation
+			self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e}, force_renderer='json'))
+
+		else:
+			# form not valid, must show again with the errors
+			data = { 'error': True, 'errors': {}}
+			# (the Form object is actually iterable)
+			for field in form:
+				if field.errors:
+					data['errors'][field.name] = field.errors
+			#for error in form.errors:
+			#	data['errors'][]
+
+			self.response.out.write( View(self.request).render( None, data, force_renderer='json'))
+	
+	#
 	# deletes an entry
 	#
 	def delete(self, entry_id):
