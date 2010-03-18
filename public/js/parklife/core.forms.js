@@ -14,7 +14,9 @@ parklife.forms.callbacks.submitBlogForm = function(resp)
 {
 	// before anything, hide any previous errors
 	$('.field_errors').hide('fast');		
-	$('.field_errors').remove();
+	$('.field_errors').remove();	
+	// hide the spinner
+	$('#spinner').remove();
 	
 	if( resp.error ) {		
 		// there were errors, show them in the correct place
@@ -41,6 +43,8 @@ parklife.forms.callbacks.submitBlogForm = function(resp)
 parklife.forms.blogClickHandler = function()
 {
 	$.post("/admin/entry/", parklife.forms._getBlogFormData(), parklife.forms.callbacks.submitBlogForm, "json" );	
+	// show the spinner
+	$('#submit_blog_entry').after('<img src="/images/spinner.gif" id="spinner" />');
 	return( false );
 }
 
