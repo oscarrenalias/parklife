@@ -41,6 +41,7 @@ class BlogHandler(webapp.RequestHandler):
 		# display the form
 		self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': BlogPostForm() } ))
 
+	# this code is only called if for some reason javascript isn't available
 	def post(self):
 		form = BlogPostForm( self.request )
 		if form.is_valid():
@@ -57,6 +58,20 @@ class BlogHandler(webapp.RequestHandler):
 		else:
 			# form not valid, must show again with the errors
 			self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': form } ))
+			
+class EditEntryHandler(webapp.RequestHandler):
+	
+	def get(self, entry_id):
+		try:
+			entry = Entry.get(entry_id)
+		except BadKeyError:
+			entry = None
+				
+		if entry == None:
+			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
+		else:			
+			# if found, display it	
+			self.response.out.write( View(self.request).render('new_blog_post', { 'entry': entry } ))		
 			
 class EntryHandler(webapp.RequestHandler):
 	
@@ -136,7 +151,7 @@ class EntryHandler(webapp.RequestHandler):
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/admin/entry/(.*)', EntryHandler)], debug=True)
+  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/service/entry/(.*)', EntryHandler)], debug=True)
   util.run_wsgi_app(application)
 
 if __name__ == '__main__':

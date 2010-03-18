@@ -27,5 +27,8 @@ handlers:
 - url: /admin/entry/.*
   script: blog.py
   login: admin
+- url: /service/entry/.*
+  script: blog.py
+  login: admin  
 - url: .*
   script: main.py

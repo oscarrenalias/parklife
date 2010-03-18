@@ -56,7 +56,7 @@ parklife.getSpinnerCode = function(id)
 
 parklife.deleteEntry = function(entry_id)
 {
-	$.Delete('/admin/entry/{id}', { id: entry_id }, parklife.callbacks.deleteEntry )
+	$.Delete('/service/entry/{id}', { id: entry_id }, parklife.callbacks.deleteEntry )
 	// show the ajax spinner
 	item_actions_div = '#item_actions_' + entry_id;
 	item_actions_wrapper_div = '#item_actions_wrapper_' + entry_id;	
@@ -251,11 +251,11 @@ $(document).ready(function(){
 	
 	/*$('.edit_entry').click(function(e) {
 		// fetch the entry data
-		$.Read('/admin/entry/{id}', { id: this['rel'] }, parklife.callbacks.editEntry )
+		$.Read('/service/entry/{id}', { id: this['rel'] }, parklife.callbacks.editEntry )
 	});*/
 	
 	$('.note').each(function(i, e) {
-		$(e).editable('/admin/entry/' + $(e).attr('data-entry-id'), {
+		$(e).editable('/service/entry/' + $(e).attr('data-entry-id'), {
 	      indicator : "<img src='/images/spinner.gif'>",
 		  ajaxoptions: {type: 'PUT', dataType: 'json'},
 	      type   : 'autogrow',

@@ -42,7 +42,7 @@ parklife.forms.callbacks.submitBlogForm = function(resp)
 
 parklife.forms.blogClickHandler = function()
 {
-	$.post("/admin/entry/", parklife.forms._getBlogFormData(), parklife.forms.callbacks.submitBlogForm, "json" );	
+	$.post("/service/entry/", parklife.forms._getBlogFormData(), parklife.forms.callbacks.submitBlogForm, "json" );	
 	// show the spinner
 	$('#submit_blog_entry').after('<img src="/images/spinner.gif" id="spinner" />');
 	return( false );
