@@ -78,7 +78,7 @@ class EditEntryHandler(webapp.RequestHandler):
 			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
 		else:			
 			# if found, display it	
-			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'form': self.EntryForm(instance=entry) } ))		
+			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'form':EntryForm(instance=entry) } ))		
 			
 class EntryHandler(webapp.RequestHandler):
 	
@@ -113,7 +113,7 @@ class EntryHandler(webapp.RequestHandler):
 	# create an entry
 	#
 	def post(self, entry_id):
-		form = BlogPostForm( self.request )
+		form = EntryForm( self.request )
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
