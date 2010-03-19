@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
       {% include "entry_data.html" %}
+      {% if defaults.COMMENTS_ENABLED %}
 	<!-- for the disqus functionality -->
-	<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/renaliasnet/embed.js"></script><noscript><a href="http://disqus.com/forums/renaliasnet/?url=ref">View the discussion thread.</a></noscript><!-- a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a-->	
+	<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/renaliasnet/embed.js"></script><noscript><a href="http://disqus.com/forums/{{defaults.DISQUS_USER}}/?url=ref">View the discussion thread.</a></noscript><!-- a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a-->	
 	<script type="text/javascript">
 	//<![CDATA[
 	(function() {
@@ -13,8 +14,9 @@
 			query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
 		}
 		}
-		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/renaliasnet/get_num_replies.js' + query + '"></' + 'script>');
+		document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/{{defaults.DISQUS_USER}}/get_num_replies.js' + query + '"></' + 'script>');
 	})();
 	//]]>
 	</script>
+	{% endif %}
 {% endblock %}

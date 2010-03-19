@@ -24,10 +24,10 @@
 	<script type="text/javascript" src="/js/jquery/jquery.editable.autogrow.js"></script>
 	<script type="text/javascript" src="/js/parklife/core.js"></script>				
 	<script type="text/javascript">
-		parklife.config.GOOGLE_API_KEY = '{{google_api_key}}';
-		parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '{{google_custom_search_engine_key}}';
+		parklife.config.GOOGLE_API_KEY = '{{defaults.GOOGLE_API_KEY}}';
+		parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '{{defaults.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY}}';
 	</script>	
-	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{google_maps_api_key}}&amp;sensor=false" type="text/javascript">
+	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{defaults.GOOGLE_MAPS_API_KEY}}&amp;sensor=false" type="text/javascript">
 	</script>	
 	{% endblock %}	
 </head>	

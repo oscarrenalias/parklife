@@ -22,6 +22,10 @@ class Defaults:
 	# ignore twitter @ replies?
 	TWITTER_IGNORE_AT_REPLIES = True
 	
+	# enable or disable comments, as well as the disqus key
+	COMMENTS_ENABLED = True
+	DISQUS_USER = 'renaliasnet'
+	
 	# site data
 	site = {
 	  'base_url': '',

@@ -7,6 +7,7 @@
 			{% include "entry_data.html" %}
 	    {% endfor %}
 	{% endfor %}
+	{% if defaults.COMMENTS_ENABLED %}
 	<!-- for disqus.com functionality -->  
 	<script type="text/javascript">
 	//<![CDATA[
@@ -18,10 +19,11 @@
 	                               query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
 	                       }
 	               }
-	               document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/renaliasnet/get_num_replies.js' + query + '"></' + 'script>');
+	               document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/{{defaults.DISQUS_USER}}/get_num_replies.js' + query + '"></' + 'script>');
 	       })();
 	//]]>
-	</script>	
+	</script>
+	{% endif %}
 {% endblock %}
 
 {% block pagination %}

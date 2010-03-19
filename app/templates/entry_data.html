@@ -61,7 +61,7 @@
 				{% endif %}
 			</div>
 			<div class="footnote">
-				<a href="{{ entry|permalink }}#disqus_thread">View comments</a>	
+				<a href="{{ entry|permalink }}{%if defaults.COMMENTS_ENABLED %}#disqus_thread">View comments{% else %}">Link to entry{% endif %}</a>
 			</div>
 		</div>		
 	</div>	
