@@ -68,6 +68,14 @@ indexes:
 - kind: Entry
   properties:
   - name: deleted
+  - name: tags
+  - name: twitter_reply
+  - name: created
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: deleted
   - name: twitter_reply
   - name: created
     direction: desc
@@ -94,13 +102,5 @@ indexes:
 - kind: Entry
   properties:
   - name: tags
-  - name: created
-    direction: desc
-
-- kind: Entry
-  properties:
-  - name: deleted
-  - name: tags
-  - name: twitter_reply
   - name: created
     direction: desc
