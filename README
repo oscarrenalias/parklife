@@ -1,15 +1,1 @@
-Remove the entire data store
------
-from app.models.entry import Entry
-
-t=Entry().all().fetch(1000)
-for tt in t:
-  tt.delete()
-
-Mark all entries as non-deleted
-------
-from app.models.entry import Entry
-t=Entry().all().fetch(1000)
-for tt in t:
-  tt.deleted = False
-  tt.put()
+Parklife is a life stream application built on Python, designed to run on the Google App Engine platform. See http://stream.renalias.net for an example.

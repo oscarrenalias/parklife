@@ -1,0 +1,17 @@
+These are some code snippets that I need to type from time to time in the interactive console of the GAE dev environment
+
+Remove the entire data store
+-----
+from app.models.entry import Entry
+
+t=Entry().all().fetch(1000)
+for tt in t:
+  tt.delete()
+
+Mark all entries as non-deleted
+------
+from app.models.entry import Entry
+t=Entry().all().fetch(1000)
+for tt in t:
+  tt.deleted = False
+  tt.put()
