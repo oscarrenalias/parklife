@@ -24,7 +24,7 @@ handlers:
 - url: /admin/maintenance/(.*)
   script: settings.py
   login: admin  
-- url: /admin/entry/.*
+- url: /admin/edit/.*
   script: blog.py
   login: admin
 - url: /service/entry/.*

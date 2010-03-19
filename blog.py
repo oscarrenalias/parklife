@@ -25,25 +25,32 @@ from app.models.config import Config
 from app.view.view import View
 from defaults import Defaults
 from django import newforms as forms
+from google.appengine.ext.db import BadKeyError
+from google.appengine.ext.db import djangoforms
 
 #
 # form object for the new blog entry
-#
-class BlogPostForm(forms.Form):
+#	
+class EntryForm(djangoforms.ModelForm):
+	
 	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':80}))
 	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 80, 'class': 'mceEditor' }))
-	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':80}))
+	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':80}))					
+	
+	class Meta:			
+		model = Entry
+		fields = [ 'title', 'text', 'tags' ]
 	
 
 class BlogHandler(webapp.RequestHandler):	
 
 	def get(self):	
 		# display the form
-		self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': BlogPostForm() } ))
+		self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': EntryForm() } ))
 
 	# this code is only called if for some reason javascript isn't available
 	def post(self):
-		form = BlogPostForm( self.request )
+		form = EntryForm( self.request )
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
@@ -60,7 +67,7 @@ class BlogHandler(webapp.RequestHandler):
 			self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': form } ))
 			
 class EditEntryHandler(webapp.RequestHandler):
-	
+		
 	def get(self, entry_id):
 		try:
 			entry = Entry.get(entry_id)
@@ -71,7 +78,7 @@ class EditEntryHandler(webapp.RequestHandler):
 			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
 		else:			
 			# if found, display it	
-			self.response.out.write( View(self.request).render('new_blog_post', { 'entry': entry } ))		
+			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'form': self.EntryForm(instance=entry) } ))		
 			
 class EntryHandler(webapp.RequestHandler):
 	
@@ -151,7 +158,7 @@ class EntryHandler(webapp.RequestHandler):
 def main():
   logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/service/entry/(.*)', EntryHandler)], debug=True)
+  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/admin/edit/(.*)', EditEntryHandler), ('/service/entry/(.*)', EntryHandler)], debug=True)
   util.run_wsgi_app(application)
 
 if __name__ == '__main__':
