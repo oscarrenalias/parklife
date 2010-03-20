@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 from app.db import CalculatedProperty
 import datetime
+import logging
 
 class Entry(db.Model):
 	# creation date
@@ -64,16 +65,23 @@ class Entry(db.Model):
 
 		return slug + append
 
-	def _add_slug(self, slug_value):
-		"Add a slug to the given datastore entity."
+	def _slug_exists(self, slug_value):
+		if self.is_saved() == False:
+			query = self.gql ("WHERE slug = :slug", slug = slug_value )
+			existing_slug = (query.count() > 0)
+		else:
+			query = self.gql ("WHERE slug = :slug", slug = slug_value)
+			if query.count() == 1:
+				# is it ourselves?
+				entry = query.fetch(1)
+				if entry[0].key() == self.key():
+					existing_slug = False
+				else:
+					existing_slug = True
+			else:
+				existing_slug = False
 
-		query = self.gql ("WHERE slug = :slug", slug = slug_value )
-		existing_slug = (query.count() > 0)
-
-		if existing_slug:
-			raise Exception
-
-		return slug_value
+		return existing_slug	
 
 	def set_slug(self):
 
@@ -86,18 +94,19 @@ class Entry(db.Model):
 			# appending digits to it.  More than that probably indicates that
 			# field specified in the call to slug_field_is does not have enough
 			# differentiation.
-			try:
-				slug = self._add_slug(self._make_slug("_" + str(slug_iter) if slug_iter > 0 else ""))
-				self.slug = slug
-				slug_good = True
-			except Exception:
+			
+			slug = self._make_slug("_" + str(slug_iter) if slug_iter > 0 else "")
+			if self._slug_exists(slug):
 				slug_iter += 1
+			else:
+				self.slug = slug
+				slug_good = True				
 			
 		if slug_iter == 11:
 			# We have exceeded the maximum number of allowable attempts to de-dupe the slug, so throw
 			# an exception.
 			raise Exception, "Could not create a unique slug value."			
-	
+			
 	def put(self):
 		self.set_slug()
 		#self.tag_list = self.getTasList()
