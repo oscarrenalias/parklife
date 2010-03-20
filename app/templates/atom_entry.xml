@@ -4,6 +4,13 @@
 	<link rel="related" type="text/html" href="{{entry|permalink}}"/>	
 	<id>{{entry.url|escape}}</id>
 	<updated>{{entry.created|atom_date}}</updated>
+	{% if entry.lat %}
+      <georss:where>
+         <gml:Point>
+            <gml:pos>{{entry.lat}} {{entry.lng}}</gml:pos>
+         </gml:Point>
+      </georss:where>
+	{% endif %}
 	{% if entry.text %}
 	<content type="html">
 		{{entry.text|escape}}
