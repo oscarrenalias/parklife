@@ -7,6 +7,7 @@
 <script type="text/javascript" src="/js/jquery/jquery.dropshadow.js"></script>	
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.forms.js"></script>
+<script type="text/javascript" src="{{site.base_url}}/js/parklife/jquery.parklife.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
     /*<!--
@@ -32,6 +33,9 @@ tinyMCE.init({
 	<div id="form_messages"></div>
 	<form name="new_blog_entry" id="id_new_blog_entry" method="post">
 		{{ form.as_p }}
+		{% if entry_id %}
+		<input type="hidden" name="entry" id="id_entry" value="{{entry_id}}" />
+		{% endif %}
 		<input type="submit" name="submit" value="Post" id="submit_blog_entry" />
 	</form>
 </div>

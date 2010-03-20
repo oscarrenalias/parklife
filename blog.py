@@ -1,20 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2007 Google Inc.
+# Copyright 2010 Oscar Renalias
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+# Licensed under the General Public License version 3
+
 
 import sys
 import logging
@@ -33,9 +23,9 @@ from google.appengine.ext.db import djangoforms
 #	
 class EntryForm(djangoforms.ModelForm):
 	
-	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':80}))
-	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 80, 'class': 'mceEditor' }))
-	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':80}))					
+	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':60}))
+	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor' }))
+	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':60}))					
 	
 	class Meta:			
 		model = Entry
@@ -78,8 +68,13 @@ class EditEntryHandler(webapp.RequestHandler):
 			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
 		else:			
 			# if found, display it	
-			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'form':EntryForm(instance=entry) } ))		
+			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'entry_id': entry.key(), 'form':EntryForm(instance=entry) } ))		
 			
+#
+# RESTful handler for entries. Supports creation (POST), deletion (DELETE),
+# updates (UPDATE) and retrieval (GET) of entries
+# Results are always returned as JSON responses
+#
 class EntryHandler(webapp.RequestHandler):
 	
 	#
@@ -95,25 +90,9 @@ class EntryHandler(webapp.RequestHandler):
 		self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
 		
 	#
-	# update an entry
-	#
-	def put(self, entry_id):
-		e = Entry.get( entry_id )
-		
-		if e == None:
-			# entry not found
-			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
-			
-		e.text = self.request.get('text')
-		e.put()
-			
-		self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))
-		
-	#
-	# create an entry
-	#
-	def post(self, entry_id):
-		form = EntryForm( self.request )
+	# add an entry
+	#		
+	def _addNewEntry(self, form):
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
@@ -126,7 +105,11 @@ class EntryHandler(webapp.RequestHandler):
 			e = Entry.get(e.key())
 
 			# return successful creation
-			self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e}, force_renderer='json'))
+			self.response.out.write( View(self.request).render( None, {
+				'message': 'New blog entry added successfully', 
+				'error': False, 
+				'entry': e
+			}, force_renderer='json'))
 
 		else:
 			# form not valid, must show again with the errors
@@ -135,10 +118,56 @@ class EntryHandler(webapp.RequestHandler):
 			for field in form:
 				if field.errors:
 					data['errors'][field.name] = field.errors
-			#for error in form.errors:
-			#	data['errors'][]
 
 			self.response.out.write( View(self.request).render( None, data, force_renderer='json'))
+
+	#
+	# update an entry
+	#			
+	def _updateEntry(self, form, entry_id):
+		logging.debug("query string: " + self.request.query_string)
+		logging.debug("query body: " + self.request.body)
+		e = Entry.get( entry_id )
+		
+		if e == None:
+			# entry not found
+			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			
+		form = EntryForm( data=self.request.POST )
+		if form.is_valid():
+			# validation succesful
+			e.title = form.clean_data['title']
+			e.text = form.clean_data['text']
+			e.tags = form.clean_data['tags'].split(' ')
+			e.put()
+			
+			data = {
+				'error': False, 
+				'entry': e, 
+				'entry_id': entry_id,
+				'message': 'Entry successfully updated'
+			}
+		else:
+			# form not valid, must show again with the errors
+			data = { 'error': True, 'errors': {}}
+			# (the Form object is actually iterable)
+			for field in form:
+				if field.errors:
+					data['errors'][field.name] = field.errors
+
+		# return the view
+		self.response.out.write( View(self.request).render( None, data, force_renderer='json'))			
+			
+	#
+	# create an entry
+	#
+	def post(self, entry_id):
+		form = EntryForm( self.request )
+		
+		if entry_id == None or entry_id == "":
+			self._addNewEntry(form)
+		else:
+			self._updateEntry(form, entry_id)
 	
 	#
 	# deletes an entry
