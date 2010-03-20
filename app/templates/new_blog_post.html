@@ -32,7 +32,7 @@ tinyMCE.init({
 <div id="blog_entry_form">
 	<div id="form_messages"></div>
 	<form name="new_blog_entry" id="id_new_blog_entry" method="post">
-		{{ form.as_p }}
+		{{ form.render }}
 		{% if entry_id %}
 		<input type="hidden" name="entry" id="id_entry" value="{{entry_id}}" />
 		{% endif %}

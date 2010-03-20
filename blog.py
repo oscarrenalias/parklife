@@ -17,6 +17,7 @@ from defaults import Defaults
 from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext.db import djangoforms
+from app.forms import Forms as parklifeforms
 
 #
 # form object for the new blog entry
