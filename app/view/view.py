@@ -13,9 +13,8 @@ class HTMLView(BaseView):
 		
 class JSONView(BaseView):
 	def render(self, template, view_values = []):
-		from app.json import JSONHelper
-		
-		# we need to figure out when the stream was updated last
+		from app.json import JSONHelper		
+		del view_values['defaults']
 		return( JSONHelper().encode(view_values))
 		
 class AtomView(BaseView):
