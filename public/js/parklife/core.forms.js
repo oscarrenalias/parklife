@@ -3,9 +3,16 @@ parklife.forms.callbacks = Object();
 
 parklife.forms._getBlogFormData = function()
 {
+	// depending on whether tinymce is running or not
+	// text needs to be extracted differently
+	if(tinyMCE) 
+		text = tinyMCE.get('id_text').getContent();
+	else
+		text = $('#id_text').val();
+	
 	return({
 		'title': $('#id_title').val(),
-		'text': $('#id_text').val(),
+		'text': text,
 		'tags': $('#id_tags').val()
 	});
 }
@@ -30,8 +37,7 @@ parklife.forms.callbacks.submitBlogForm = function(resp)
 			$('#id_' + fieldName).after(fieldErrors);
 		}
 	}
-	else {
-		
+	else {		
 		// show an acknowledgement message
 		$('#form_messages').html('<div class="success_message" style="display:none">' + resp.message + '</div>');
 		// the message will hide itself after 5 seconds, should be enough
@@ -49,7 +55,8 @@ parklife.forms.blogClickHandler = function()
 		       parklife.forms._getBlogFormData(),
 		       function(resp) {
 		          parklife.forms.callbacks.submitBlogForm(resp);
-		          $('#id_new_blog_entry')[0].reset();
+		          if( !resp.error) 
+		          	$('#id_new_blog_entry')[0].reset();
 		       }, 
 		       "json" );	
 	else 
