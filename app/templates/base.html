@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>	
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<title>Parklife</title>
+	<title>{% block page_title %}Parklife{% endblock %}</title>
 	<link href="/css/style.css" media="screen" rel="stylesheet" type="text/css" >
 	{% block feeds %}
 	<link href="{{site.base_url}}/?f=atom" type="application/atom+xml" rel="alternate" title="Atom 1.0 feed of the stream" />
@@ -37,7 +37,7 @@
 		<div id="header-wrapper">
 			<div id="header">
 				<div class="titlewrapper">
-					<h1 class="title">Oscar Renalias</h1>
+					<h1 class="title">{{site.title}}</h1>
 				</div>
 				<div class="descriptionwrapper">
 					<div class="description"></div>

@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block  page_title %}
+Parklife | {{entry.title}}
+{% endblock %}
 {% block content %}
       {% include "entry_data.html" %}
       {% if defaults.COMMENTS_ENABLED %}
