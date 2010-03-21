@@ -21,4 +21,4 @@ x Possibility to update blog entries
 x Geolocated Youtube entries
 x add the gelocation data back into the Atom feed template
 x Possibility to switch comments on and off, and configurable disqus support
-- support TinyMCE as the text editor
+x support TinyMCE as the text editor
