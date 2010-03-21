@@ -16,4 +16,7 @@
 		{{entry.text|escape}}
 	</content>
 	{% endif %}
+	{% for tag in entry.tags %}
+		<category label="Tag: {{tag}}" term="{{tag}}"/>
+	{% endfor %}	
 </entry>
