@@ -116,12 +116,17 @@ class TagHandler(webapp.RequestHandler):
 			
 			self.response.out.write(View(self.request).render('index.html', view_data ))
 
+class NotFoundPageHandler(webapp.RequestHandler):
+	def get(self):
+		self.error(404)
+		self.response.out.write(View(self.request).render('error.html', {'message': 'The page could not be found'} ))
+
 def main():
 
 	
 	logging.getLogger().setLevel(logging.DEBUG)	
 	
-	application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler)], debug=True)
+	application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler), ('/.*', NotFoundPageHandler)], debug=True)
 	util.run_wsgi_app(application)
 
 
