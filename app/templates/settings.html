@@ -2,7 +2,7 @@
 {% block content %}
 {{ message }}
 <form action="/admin/settings" method="post">
-	{{ form.as_p }}
+	{{ form.render }}
 	<input type="submit" value="Update" />
 </form>
 {% endblock %}
