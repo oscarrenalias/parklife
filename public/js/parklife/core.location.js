@@ -3,12 +3,13 @@ parklife.location = Object();
 $(document).ready(function() {
 	if( navigator.geolocation ) {
 		$('#location_update_button').toggle();
-		$('#use_location_data').click(function() {
-			$('#location_data_controls').toggle();
-			parklife.location.showMap(null);
-			$('#use_location_data').toggle();
-		});
 	}
+	
+	$('#use_location_data').click(function() {
+		$('#location_data_controls').toggle();
+		parklife.location.showMap(null);
+		$('#use_location_data').toggle();
+	});	
 	
 	$('#location_update_button').click(function() { 
 		$(this).toggle();
