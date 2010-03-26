@@ -612,3 +612,7 @@ ul.field_errors {
 	width:200px;
 	height:200px;
 }
+
+.full-width {
+	width:100%;
+}
