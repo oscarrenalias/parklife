@@ -35,3 +35,6 @@ class Defaults:
 	  'subtitle': 'Oscar Renalias'
 	}
 	
+	@staticmethod
+	def isDevelopmentServer():
+		return False
