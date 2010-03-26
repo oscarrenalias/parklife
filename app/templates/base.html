@@ -85,6 +85,7 @@
 		</div>
 		<div id="right_column">
 			<div class="sidebar">
+				{%block search %}
 				<div class="widget search">
 					<h2 class="title">Search</h2>
 					<div class="widget-content">
@@ -93,6 +94,9 @@
 						  <br class="fix" />
 					</div>
 				</div>
+				{% endblock %}
+				{% block sidebarcontent %}
+				{%endblock %}
 			</div>
 		</div>
 		<div class="clear"></div>

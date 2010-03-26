@@ -308,3 +308,16 @@ parklife.callbacks.editEntry = function(resp)
 			debug : false
 	});	
 }
+
+parklife.spinner = Object();
+parklife.spinner.show = function(elem)
+{	
+	$(elem).hide();
+	$(elem).parent().append('<img src="/images/spinner.gif" class="spinner" />');
+}
+
+parklife.spinner.hide = function(elem)
+{	
+	$('.spinner').remove();
+	$(elem).show;
+}

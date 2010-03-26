@@ -13,7 +13,9 @@ parklife.forms._getBlogFormData = function()
 	return({
 		'title': $('#id_title').val(),
 		'text': text,
-		'tags': $('#id_tags').val()
+		'tags': $('#id_tags').val(),
+		'lat': $('#id_lat').val(),
+		'lng': $('#id_lng').val()
 	});
 }
 

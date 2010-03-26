@@ -607,3 +607,8 @@ ul.field_errors {
 .success_message {
 	color:green;
 }
+
+#map-container {
+	width:200px;
+	height:200px;
+}

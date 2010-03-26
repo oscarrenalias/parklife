@@ -26,11 +26,13 @@ class EntryForm(djangoforms.ModelForm):
 	
 	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':60}))
 	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor' }))
-	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':60}))					
+	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':60}))
+	lat = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
+	lng = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
 	
 	class Meta:			
 		model = Entry
-		fields = [ 'title', 'text', 'tags' ]
+		fields = [ 'title', 'text', 'tags', 'lat', 'lng' ]
 	
 
 class BlogHandler(webapp.RequestHandler):	
@@ -48,6 +50,8 @@ class BlogHandler(webapp.RequestHandler):
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
+			e.lat = form.clean_data['lat']
+			e.lng = form.clean_data['lng']
 			e.source = 'blog'
 			e.put()
 			
@@ -100,6 +104,8 @@ class EntryHandler(webapp.RequestHandler):
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
+			e.lat = form.clean_data['lat']
+			e.lng = form.clean_data['lng']			
 			e.source = 'blog'
 			e.put()
 			
@@ -140,6 +146,8 @@ class EntryHandler(webapp.RequestHandler):
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
+			e.lat = form.clean_data['lat']
+			e.lng = form.clean_data['lng']			
 			e.put()
 			
 			data = {
@@ -160,7 +168,7 @@ class EntryHandler(webapp.RequestHandler):
 		self.response.out.write( View(self.request).render( None, data, force_renderer='json'))			
 			
 	#
-	# create an entry
+	# create or update an entry
 	#
 	def post(self, entry_id):
 		form = EntryForm( self.request )

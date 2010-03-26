@@ -7,10 +7,15 @@
 <script type="text/javascript" src="/js/jquery/jquery.dropshadow.js"></script>	
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.forms.js"></script>
+<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.location.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/jquery.parklife.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
-    
+	parklife.config.GOOGLE_API_KEY = '{{defaults.GOOGLE_API_KEY}}';
+	parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '{{defaults.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY}}';
+</script>	
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{defaults.GOOGLE_MAPS_API_KEY}}&amp;sensor=false" type="text/javascript"></script>
+<script type="text/javascript">    
 tinyMCE.init({
 		theme : "advanced",
 		mode : "specific_textareas",
@@ -29,6 +34,8 @@ tinyMCE.init({
 </script>	
 </head>
 {% endblock %}
+{%block search %}
+{% endblock %}
 {% block content %}
 <div id="blog_entry_form">
 	<div id="form_messages"></div>
@@ -37,8 +44,16 @@ tinyMCE.init({
 		{% if entry_id %}
 		<input type="hidden" name="entry" id="id_entry" value="{{entry_id}}" />
 		{% endif %}
-		<input type="submit" name="submit" value="Post" id="submit_blog_entry" />
+		<input type="submit" name="submit" value="Post" id="submit_blog_entry" />		
 	</form>
 </div>
 {{ message }}
 {% endblock %}
+{% block sidebarcontent %}
+<h2 class="title">Geolocation</h2>	
+<input type="button" id="use_location_data" value="Use location data" />
+<div id="location_data_controls" style="display:none">
+	<div class="geotag-admin-map-container" id="map-container"></div>
+	<input style="display:none" type="button" id="location_update_button" value="Current location" />	
+</div>
+{%endblock %}
