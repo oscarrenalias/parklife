@@ -19,8 +19,11 @@
 <body>
   <div id="page_wrapper">
 	<div id="header">
+		<div class="admin_login">
+			{% if user %}<a href="{{logout_url}}">Admin Logout</a>{% else %}<a href="{{login_url}}">Admin Login</a>{% endif %}
+		</div>		
 		<div class="titlewrapper">
-			<h1 class="title"><a href="/">{{site.title}}</a></h1>
+			<h1 class="title"><a href="/">{{site.title}}</a></h1>			
 		</div>
 		<div class="descriptionwrapper">
 			<div class="description"></div>

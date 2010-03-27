@@ -4,21 +4,30 @@ import re
 class BaseView:
 	
 	is_iphone = False
+	request = None
 	
 	def render(self, template, view_values = []):
 		raise Exception( 'BaseView.render is an abstract method!' )
 
 class HTMLView(BaseView):	
 	def render(self, template, view_values = []):		
-		from google.appengine.ext.webapp import template as t		
+		from google.appengine.ext.webapp import template as t
+		from google.appengine.api import users
 		import django.template 
 		import os
+		
+		# create the login and logout urls in case they are needed in the template
+		
+		view_values['login_url'] = users.create_login_url(self.request.url);
+		view_values['logout_url'] = users.create_logout_url(self.request.url)		
 
+		# if the device is an iphone, try to load the iphone template for the given page
 		if self.is_iphone:
 			path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
 		else:
 			path = os.path.join(os.path.dirname(__file__), '../templates/' + template)
 			
+		# if the iphone cannot be found then fallback on the normal HTML one
 		try:
 			data = t.render(path, view_values)
 		except django.template.TemplateDoesNotExist:
@@ -90,6 +99,7 @@ class View:
 		# call the renderer
 		renderer = self.renderers[output]()
 		renderer.is_iphone = self.is_iphone()
+		renderer.request = self.request
 		return( renderer.render(template, view_values ))
 						
 	def is_iphone(self):

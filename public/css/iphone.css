@@ -49,3 +49,8 @@ div.item_right {
 	padding-top: 5px;
 	text-align:center;
 }
+
+.admin_login {
+	float:right;
+	text-align:right
+}

@@ -131,7 +131,8 @@
 		
 		<div id="footer-wrapper">
 			<div id="footer">
-				Web site powered by <a href="http://github.com/phunkphorce/parklife">Parklife</a><br/>
+				Web site powered by <a href="http://github.com/phunkphorce/parklife">Parklife</a> | 
+				{% if user %}<a href="{{logout_url}}">Admin Logout</a>{% else %}<a href="{{login_url}}">Admin Login</a>{% endif %}<br/>
 				Own content licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution Share Alike 3.0</a>
 			</div>
 		</div>		
