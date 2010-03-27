@@ -8,6 +8,7 @@
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.forms.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/core.location.js"></script>
+<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.iphone.js"></script>
 <script type="text/javascript" src="{{site.base_url}}/js/parklife/jquery.parklife.js"></script>
 <script type="text/javascript">
 	parklife.config.GOOGLE_API_KEY = '{{defaults.GOOGLE_API_KEY}}';
@@ -19,11 +20,16 @@
 	<div id="form_messages"></div>
 	<form name="new_blog_entry" id="id_new_blog_entry" method="post">
 		{{ form.render }}
+		<div id="iphone_location_data">
+		Location data:
+		<input style="display:none" type="button" id="location_update_button" value="Use current location" />
+		</div>
 		{% if entry_id %}
 		<input type="hidden" name="entry" id="id_entry" value="{{entry_id}}" />
 		{% endif %}
 		<input type="submit" name="submit" value="Post" id="submit_blog_entry" />		
 	</form>
+</div>
 </div>
 {{ message }}
 {% endblock %}
