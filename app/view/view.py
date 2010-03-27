@@ -1,15 +1,32 @@
 from app.utils import templatehelpers
+import re
 
 class BaseView:
+	
+	is_iphone = False
+	
 	def render(self, template, view_values = []):
 		raise Exception( 'BaseView.render is an abstract method!' )
 
 class HTMLView(BaseView):	
 	def render(self, template, view_values = []):		
-		from google.appengine.ext.webapp import template as t
-		import os		
-		path = os.path.join(os.path.dirname(__file__), '../templates/' + template)
-		return t.render(path, view_values)
+		from google.appengine.ext.webapp import template as t		
+		import django.template 
+		import os
+
+		if self.is_iphone:
+			path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
+		else:
+			path = os.path.join(os.path.dirname(__file__), '../templates/' + template)
+			
+		try:
+			data = t.render(path, view_values)
+		except django.template.TemplateDoesNotExist:
+			if self.is_iphone:
+				# if we were trying to render the mobile view, try without...
+				data = t.render(os.path.join(os.path.dirname(__file__), '../templates/' + template), view_values )
+				
+		return( data )
 		
 class JSONView(BaseView):
 	def render(self, template, view_values = []):
@@ -31,13 +48,15 @@ class AtomView(BaseView):
 		path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
 		return t.render(path, view_values)
 		
+_IPHONE_UA = re.compile(r'Mobile.*Safari')		
+		
 class View:
 	
 	# list of renderers
 	renderers = {}
 	
 	def __init__(self, request = None):
-		self.__request = request
+		self.request = request
 		
 		# set up the list of available view renderers
 		self.renderers = {
@@ -50,10 +69,10 @@ class View:
 		if 'force_renderer' in params:
 			output = params['force_renderer']
 		else:
-			if self.__request == None or self.__request.get('f') == '':
+			if self.request == None or self.request.get('f') == '':
 				output = 'html'
 			else:
-				output = self.__request.get('f')
+				output = self.request.get('f')
 			
 		# is the renderer valid?
 		if output not in self.renderers:
@@ -69,4 +88,9 @@ class View:
 		view_values['user_is_admin'] = users.is_current_user_admin();
 			
 		# call the renderer
-		return( self.renderers[output]().render(template, view_values ))
+		renderer = self.renderers[output]()
+		renderer.is_iphone = self.is_iphone()
+		return( renderer.render(template, view_values ))
+						
+	def is_iphone(self):
+		return _IPHONE_UA.search(self.request.headers['user-agent']) is not None

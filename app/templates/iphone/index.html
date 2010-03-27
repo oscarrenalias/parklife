@@ -1,0 +1,19 @@
+{% extends "iphone_base.html" %}
+{% block content %}
+	{% regroup entries by created|date:"F j, Y" as entries_by_date %}
+	{% for date in entries_by_date %}
+	    <div class="date" id="{{date.grouper|slugify}}">{{ date.grouper }}</div>
+	    {% for entry in date.list %}
+			{% include "entry_data.html" %}
+	    {% endfor %}
+	{% endfor %}
+{% endblock %}
+
+{% block pagination %}
+{% if prev %}
+	<a href="{{ base_url }}?p={{ prev }}">Prev</a>
+{% endif %}
+{% if next %}
+	<a href="{{ base_url }}?p={{ next }}">Next</a>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+/*----------------------------- 
+RESET STYLES 
+-------------------------*/  
+  
+html, body, form, fieldset, p, div, h1, h2, h3, h4, h5, h6{  
+    margin:0;  
+    padding:0;  
+    -webkit-text-size-adjust:none;  
+    }  
+
+body {  
+    font-size: 14px;  
+	width:100%;
+	padding: 3px;
+}  
+
+ul, li, ol, dl, dd, dt {  
+    list-style:none;  
+    padding:0;  
+    margin:0;  
+}
+  
+a {  
+    text-decoration:none;  
+}
+
+div.item_content div.footnote {
+	font-size: 14px;
+}
+
+div.item_left {
+	float: left;
+	width: 14px;
+	margin-top: 10px;
+}
+
+div.item_right {
+	margin-left: 22px;
+	padding: 2px;
+}
+
+.item_wrapper {
+    padding-left: 0px;
+}
+
+.pagination {
+	font-size: 14px;
+	margin-top: 5px;
+	padding-top: 5px;
+	text-align:center;
+}

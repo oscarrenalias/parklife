@@ -1,0 +1,68 @@
+<div id="item_wrapper_{{entry.key}}" class="item_wrapper">	
+  <div id="item_{{entry.key}}" class="item">
+	<div class='item_left'>
+		<a href="{{site.base_url}}/source/{{entry.source}}">
+			<img class="icon" src="{{site.base_url}}/images/{{entry.source}}.png" width='16' height='16' />
+		</a>
+		<span id='item_time_3_40' class='time'>{{entry.created}}</span>		
+	</div>
+	<div class='item_right'>		
+		<div class="item_content">
+			<div class="item_actions" id="item_actions_{{entry.key}}">			
+				{% if user %}
+				  <div id="item_actions_wrapper_{{entry.key}}">
+					<a href="/admin/edit/{{entry.key}}" rel="{{entry.key}}" class="edit_entry">
+						<img src="/images/icon-edit.png" alt="edit" height="12" width="12" />
+					</a>
+					<a href="#" rel="{{entry.key}}" class="delete_entry">
+						<img src="/images/icon-delete.png" alt="delete" height="12" width="12" />
+					</a>					
+				  </div>
+				{% endif %}
+			</div>
+			<div class="{{ entry.source }}">
+				{% ifequal entry.source 'delicious' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
+				{%endifequal%}
+				
+				{% ifequal entry.source 'twitter' %}
+				<div class="title">{{entry.text}}</a></div>				
+				{%endifequal%}
+				
+				{% ifequal entry.source 'youtube' %}
+				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
+				{% endifequal %}
+				
+				{% ifequal entry.source 'blog' %}
+				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>				
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
+				{% endifequal %}				
+				
+				{% ifequal entry.source 'googlereader' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
+				{% endifequal %}				
+			</div>
+			<div class="footnote">
+				{% if entry.lat %}
+				<a href="http://maps.google.com?f=q&amp;source=s_q&amp;geocode=&amp;q={{entry.lat}}+{{entry.lng}}" class="geotag-link">					
+					<img src="/images/geotag.png" width="12" height="12" class="geotag-icon" alt="Geotag" />
+				</a>
+				</span>
+				{% endif %}				
+				{% if entry.tags %}
+				Tags: 
+					{% for tag in entry.tags %}
+						<a href="{{site.base_url}}/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
+					{% endfor %}
+				{% endif %}
+			</div>
+			<div class="footnote">
+				<a href="{{ entry|permalink }}">Permalink</a>
+			</div>
+		</div>		
+	</div>	
+  </div>
+</div>

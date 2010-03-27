@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>{% block page_title %}Parklife{% endblock %}</title>
+	<link href="/css/style.css" media="screen" rel="stylesheet" type="text/css" >
+	<link href="/css/iphone.css" media="screen" rel="stylesheet" type="text/css" >	
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"> 	
+	{% block admin_scripts %}
+	<script type="text/javascript" src="/js/jquery/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.js"></script>
+	<script type="text/javascript" src="{{site.base_url}}/js/parklife/core.iphone.js"></script>	
+	<script type="text/javascript">
+		parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '{{defaults.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY}}';
+	</script>	
+	{% endblock %}	
+</head>
+<body>
+  <div id="page_wrapper">
+	<div id="header">
+		<div class="titlewrapper">
+			<h1 class="title"><a href="/">{{site.title}}</a></h1>
+		</div>
+		<div class="descriptionwrapper">
+			<div class="description"></div>
+		</div>
+	</div>
+	<div id="content">	
+{% block content %}
+{% endblock %}
+	</div>
+	<div class="pagination" id="pager">
+		{% block pagination %}
+		{% endblock %}
+	</div>	
+  </div>
+</body>
