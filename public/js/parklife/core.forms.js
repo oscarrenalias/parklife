@@ -5,7 +5,7 @@ parklife.forms._getBlogFormData = function()
 {
 	// depending on whether tinymce is running or not
 	// text needs to be extracted differently
-	if(tinyMCE) 
+	if(typeof(tinyMCE) != "undefined")
 		text = tinyMCE.get('id_text').getContent();
 	else
 		text = $('#id_text').val();

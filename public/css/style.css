@@ -601,11 +601,11 @@ ul.field_errors {
 	margin:0px;
 	margin-top: 3px;
 	margin-bottom: 3px;
-	color:#CC3333;
+	color:#FF0000;
 }
 
 .success_message {
-	color:green;
+	color:#00FF00;
 }
 
 #map-container {

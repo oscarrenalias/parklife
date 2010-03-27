@@ -1,4 +1,5 @@
 {% extends "iphone_base.html" %}
+{% block page_title %}Parklife | Home{% endblock %}
 {% block content %}
 	{% regroup entries by created|date:"F j, Y" as entries_by_date %}
 	{% for date in entries_by_date %}

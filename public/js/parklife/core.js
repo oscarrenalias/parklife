@@ -249,12 +249,7 @@ $(document).ready(function(){
 		return(false);
 	});
 	
-	/*$('.edit_entry').click(function(e) {
-		// fetch the entry data
-		$.Read('/service/entry/{id}', { id: this['rel'] }, parklife.callbacks.editEntry )
-	});*/
-	
-	$('.note').each(function(i, e) {
+		/*$('.note').each(function(i, e) {
 		$(e).editable('/service/entry/' + $(e).attr('data-entry-id'), {
 	      indicator : "<img src='/images/spinner.gif'>",
 		  ajaxoptions: {type: 'PUT', dataType: 'json'},
@@ -276,7 +271,7 @@ $(document).ready(function(){
 			$(this).html(self.entry.text);
 		  }
 		})
-	});
+	});*/
 	
 	//$('.title').editable('http://localhost:8081');	
 	
