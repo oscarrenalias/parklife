@@ -86,6 +86,14 @@ indexes:
   - name: deleted
   - name: twitter_reply
   - name: created
+  - name: __key__
+    direction: desc
+
+- kind: Entry
+  properties:
+  - name: deleted
+  - name: twitter_reply
+  - name: created
     direction: desc
 
 - kind: Entry

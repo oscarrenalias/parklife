@@ -85,6 +85,15 @@
 		</div>
 		<div id="right_column">
 			<div class="sidebar">
+				{% block adminfunctions %}
+				{% if user %}
+				<div class="widget">
+					<h2 class="title">Admin</h2>
+					<a href="/admin/blog">New Entry</a><br/>
+					<a href="/admin/settings">Settings</a>
+				</div>
+				{% endif %}				
+				{% endblock %}
 				{%block search %}
 				<div class="widget search">
 					<h2 class="title">Search</h2>

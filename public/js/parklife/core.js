@@ -273,8 +273,7 @@ $(document).ready(function(){
 		})
 	});*/
 	
-	//$('.title').editable('http://localhost:8081');	
-	
+	//$('.title').editable('http://localhost:8081');
 });
 
 parklife.callbacks.editEntry = function(resp)

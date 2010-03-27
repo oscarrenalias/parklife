@@ -29,9 +29,10 @@ parklife.callbacks.updateLocation = function(loc)
 	// update the latitude and longitude fields 
 	$('#id_lat').val(loc.coords.latitude);
 	$('#id_lng').val(loc.coords.longitude);
-
-	$('#location_update_button').toggle();
-	$('.spinner').remove();
+	$('.spinner').remove();	
+	// show a link where the current location can be seen
+	$('#see_location').attr('href', 'http://maps.google.com?f=q&amp;source=s_q&amp;geocode=&amp;q=' + loc.coords.latitude + '+' + loc.coords.longitude);
+	$('#see_location').show();
 }
 
 $(document).ready(function(){
@@ -44,6 +45,16 @@ $(document).ready(function(){
 		$(this).toggle();
 		$(this).parent().append('<img src="/images/spinner.gif" class="spinner" />');
 		navigator.geolocation.getCurrentPosition(parklife.callbacks.updateLocation)
-	});		
+	});
+	
+	// show the location in google maps
+	$('#see_location').click(function() {
+		return(true);
+	});
+	
+	$('#show_admin_menu').click(function() {
+		$('#admin_menu').toggle();
+		return(false);	
+	});	
 });
 

@@ -20,7 +20,15 @@
   <div id="page_wrapper">
 	<div id="header">
 		<div class="admin_login">
-			{% if user %}<a href="{{logout_url}}">Admin Logout</a>{% else %}<a href="{{login_url}}">Admin Login</a>{% endif %}
+			{% if user %}
+			<a href="#" id="show_admin_menu" style="font-size:18px">&or;</a>&nbsp;<a href="{{logout_url}}">Logout</a>
+			<ul id="admin_menu" style="display:none">
+				<li><a href="/admin/blog">New Entry</a></li>
+				<li><a href="/admin/settings">Settings</a></li>
+			</ul>
+			{% else %}
+			<a href="{{login_url}}">Login</a>
+			{% endif %}
 		</div>		
 		<div class="titlewrapper">
 			<h1 class="title"><a href="/">{{site.title}}</a></h1>			

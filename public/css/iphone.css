@@ -10,7 +10,7 @@ html, body, form, fieldset, p, div, h1, h2, h3, h4, h5, h6{
 
 body {  
     font-size: 14px;  
-	width:100%;
+	width:98%;
 	padding: 3px;
 }  
 
@@ -53,4 +53,10 @@ div.item_right {
 .admin_login {
 	float:right;
 	text-align:right
+}
+
+#admin_menu {
+	/*left: -45px;
+	position:relative;*/
+	display:inline;
 }

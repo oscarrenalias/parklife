@@ -12,9 +12,9 @@
 
 {% block pagination %}
 {% if prev %}
-	<a href="{{ base_url }}?p={{ prev }}">Prev</a>
+	<a href="{{ base_url }}?p={{ prev }}">&laquo; Prev</a>
 {% endif %}
-{% if next %}
-	<a href="{{ base_url }}?p={{ next }}">Next</a>
+{% if next %}	
+	<a href="{{ base_url }}?p={{ next }}">Next &raquo;</a>
 {% endif %}
 {% endblock %}
