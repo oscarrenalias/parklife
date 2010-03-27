@@ -115,7 +115,7 @@ class EntryHandler(webapp.RequestHandler):
 			self.response.out.write( View(self.request).render( None, {
 				'message': 'New blog entry added successfully', 
 				'error': False,
-				'entry_link': e.permalink,				
+				'entry_link': e.permalink(),				
 				'entry': e
 			}, force_renderer='json'))
 
@@ -155,7 +155,7 @@ class EntryHandler(webapp.RequestHandler):
 				'error': False, 
 				'entry': e, 
 				'entry_id': entry_id,
-				'entry_link': e.permalink,
+				'entry_link': e.permalink(),
 				'message': 'Entry successfully updated'
 			}
 		else:
