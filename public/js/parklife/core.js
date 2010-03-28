@@ -249,31 +249,9 @@ $(document).ready(function(){
 		return(false);
 	});
 	
-		/*$('.note').each(function(i, e) {
-		$(e).editable('/service/entry/' + $(e).attr('data-entry-id'), {
-	      indicator : "<img src='/images/spinner.gif'>",
-		  ajaxoptions: {type: 'PUT', dataType: 'json'},
-	      type   : 'autogrow',
-		  method: 'PUT',
-	      select : true,
-	      submit : 'OK',
-	      cancel : 'cancel',
-	      cssclass : "editable",
-		  tooltip   : "Click to edit...",
-		  onblur    : "ignore",
-		  name: "text",
-		  autogrow : {
-		  	lineHeight : 16,
-		    minHeight  : 32
-		  },
-		  callback: function(self,data) {
-			// our restful services always return json 
-			$(this).html(self.entry.text);
-		  }
-		})
-	});*/
-	
-	//$('.title').editable('http://localhost:8081');
+	// initialize the language highlighting
+	if(typeof(SyntaxHighlighter) != "undefined")
+		SyntaxHighlighter.all()
 });
 
 parklife.callbacks.editEntry = function(resp)

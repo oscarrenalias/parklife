@@ -31,7 +31,7 @@ parklife.callbacks.updateLocation = function(loc)
 	$('#id_lng').val(loc.coords.longitude);
 	$('.spinner').remove();	
 	// show a link where the current location can be seen
-	$('#see_location').attr('href', 'http://maps.google.com?f=q&amp;source=s_q&amp;geocode=&amp;q=' + loc.coords.latitude + '+' + loc.coords.longitude);
+	$('#see_location').attr('href', 'http://maps.google.com?f=q&source=s_q&geocode=q=' + loc.coords.latitude + '+' + loc.coords.longitude);
 	$('#see_location').show();
 }
 
