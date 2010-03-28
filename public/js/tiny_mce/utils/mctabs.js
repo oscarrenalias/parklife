@@ -1,10 +1,11 @@
 /**
- * $Id: mctabs.js,v 1.1 2008-08-19 15:30:32 weshupne Exp $
+ * mctabs.js
  *
- * Moxiecode DHTML Tabs script.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 function MCTabs() {

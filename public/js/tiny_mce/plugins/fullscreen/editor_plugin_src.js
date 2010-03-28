@@ -1,8 +1,11 @@
 /**
- * $Id: editor_plugin_src.js,v 1.1 2008-08-19 15:30:32 weshupne Exp $
+ * editor_plugin_src.js
  *
- * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * Copyright 2009, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://tinymce.moxiecode.com/license
+ * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
 (function() {
@@ -59,6 +62,10 @@
 					// Fixes an IE bug where horizontal scrollbars would appear
 					if (tinymce.isIE && s.fullscreen_overflow == 'scroll')
 						s.fullscreen_overflow = 'auto';
+
+					// Fixes an IE bug where the scrollbars doesn't reappear
+					if (tinymce.isIE && (s.fullscreen_html_overflow == 'visible' || s.fullscreen_html_overflow == 'scroll'))
+						s.fullscreen_html_overflow = 'auto'; 
 
 					if (s.fullscreen_overflow == '0px')
 						s.fullscreen_overflow = '';
