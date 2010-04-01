@@ -16,6 +16,7 @@ from app.models.config import Config
 from app.view.view import View
 from defaults import Defaults
 from app.pager.pager import PagerQuery
+from app.pager.cachedquery import CachedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
 
@@ -24,7 +25,7 @@ class MainHandler(webapp.RequestHandler):
 	def get(self ):	
 
 	    # Build a paginated query.
-		query = PagerQuery(Entry).filter('deleted = ', False).order('-created')
+		query = CachedQuery(Entry).filter('deleted = ', False).order('-created')
 		
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )
@@ -68,7 +69,7 @@ class SourceHandler(webapp.RequestHandler):
 	
 	def get(self, source):
 		
-		query = PagerQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
+		query = CachedQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
 		
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )		
@@ -89,7 +90,7 @@ class SourceHandler(webapp.RequestHandler):
 class TagHandler(webapp.RequestHandler):
 	
 	def get(self, tag):
-			query = PagerQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
+			query = CachedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
 			
 			if Defaults.TWITTER_IGNORE_AT_REPLIES:
 				query = query.filter('twitter_reply = ', False )			

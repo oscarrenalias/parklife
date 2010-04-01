@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
     gaefy.db.pager
@@ -180,6 +181,8 @@ class PagerQuery(object):
           for the next and previous pages and 'res' is a list of db.Model
           instances for the current page.
         """
+
+
         # If the query has an inequality filter but no sort order:
         # appends an ASC sort order on the inequality property.
         if self._inequality_prop and not self._orderings:

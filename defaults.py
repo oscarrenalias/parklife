@@ -26,6 +26,9 @@ class Defaults:
 	COMMENTS_ENABLED = True
 	DISQUS_USER = 'renaliasnet'
 	
+	# default time to live for the memcache cached keys, in seconds
+	MEMCACHE_TTL = 3600
+	
 	# site data
 	site = {
 	  'base_url': '',
