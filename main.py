@@ -19,6 +19,7 @@ from app.pager.pager import PagerQuery
 from app.pager.cachedquery import CachedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
+from google.appengine.ext import ereporter
 
 class MainHandler(webapp.RequestHandler):	
 
@@ -114,8 +115,7 @@ class NotFoundPageHandler(webapp.RequestHandler):
 		self.response.out.write(View(self.request).render('error.html', {'message': 'The page could not be found'} ))
 
 def main():
-
-	
+	ereporter.register_logger()
 	logging.getLogger().setLevel(logging.DEBUG)	
 	
 	application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler), ('/.*', NotFoundPageHandler)], debug=True)

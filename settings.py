@@ -15,6 +15,7 @@ from app.models.config import Config
 from app.source.twitter import TwitterSource
 from django import newforms as forms
 from app.forms import Forms as parklifeforms
+from google.appengine.ext import ereporter
 
 class UserSettingsForm(forms.Form):
 	twitter_user = forms.CharField(required=False, label='Twitter user', widget=forms.widgets.TextInput(attrs={'size':60}))
@@ -92,6 +93,7 @@ class DoAdminMaintenance(webapp.RequestHandler):
 		self.response.out.write( View(self.request).render( 'admin_maintenance.html', { 'message': message } ))
 
 def main():
+  ereporter.register_logger()	
   logging.getLogger().setLevel(logging.DEBUG)		
 	
   application = webapp.WSGIApplication([('/admin/settings', UserSettings), ('/admin/maintenance', AdminMaintenance), ('/admin/maintenance/(.*)', DoAdminMaintenance)],

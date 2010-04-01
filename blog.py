@@ -18,6 +18,7 @@ from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext.db import djangoforms
 from app.forms import Forms as parklifeforms
+from google.appengine.ext import ereporter
 
 #
 # form object for the new blog entry
@@ -209,6 +210,7 @@ class EntryHandler(webapp.RequestHandler):
 		self.response.out.write( View(self.request).render( None, {'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
 def main():
+  ereporter.register_logger()	
   logging.getLogger().setLevel(logging.DEBUG)	
 	
   application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/admin/edit/(.*)', EditEntryHandler), ('/service/entry/(.*)', EntryHandler)], debug=True)

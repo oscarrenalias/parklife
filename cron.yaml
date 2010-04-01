@@ -11,3 +11,6 @@ cron:
 - description: Update the Google Reader source
   url: /tasks/update/googlereader
   schedule: every 1 hours  
+- description: Daily exception report
+  url: /_ereporter?sender=phunkphorce@gmail.com
+  schedule: every day 00:00  
