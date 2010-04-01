@@ -1,0 +1,77 @@
+
+.syntaxhighlighter {
+background-color:#000000 !important;
+padding: 0px !important;
+}
+.syntaxhighlighter .line .number {
+color:#D3D3D3 !important;
+}
+.syntaxhighlighter .line .content {
+border-left:1px solid #990000 !important;
+color:#B9BDB6 !important;
+}
+.syntaxhighlighter.printing .line .content {
+border:0 none !important;
+}
+.syntaxhighlighter .line.alt1 {
+background-color:#2E2E2E !important;
+}
+.syntaxhighlighter .line.alt2 {
+background-color:#2E2E2E !important;
+}
+.syntaxhighlighter .line.highlighted .number {
+background-color:#435A5F !important;
+color:#FFFFFF !important;
+}
+.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
+background-color:#435A5F !important;
+}
+.syntaxhighlighter .toolbar {
+background-color:#000000 !important;
+border:1px solid #000000 !important;
+}
+.syntaxhighlighter .toolbar a {
+color:#646763 !important;
+}
+.syntaxhighlighter .toolbar a:hover {
+color:#9CCFF4 !important;
+}
+.syntaxhighlighter .plain, .syntaxhighlighter .plain a {
+color:#D3D3D3 !important;
+}
+.syntaxhighlighter .comments, .syntaxhighlighter .comments a {
+color:#FF7D27 !important;
+}
+.syntaxhighlighter .string, .syntaxhighlighter .string a {
+color:#FF9E7B !important;
+}
+.syntaxhighlighter .keyword {
+color:#00FFFF !important;
+}
+.syntaxhighlighter .preprocessor {
+color:#AEC4DE !important;
+}
+.syntaxhighlighter .variable {
+color:#FFAA3E !important;
+}
+.syntaxhighlighter .value {
+color:#009900 !important;
+}
+.syntaxhighlighter .functions {
+color:#81CEF9 !important;
+}
+.syntaxhighlighter .constants {
+color:#FF9E7B !important;
+}
+.syntaxhighlighter .script {
+background-color:#990000 !important;
+}
+.syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
+color:#EBDB8D !important;
+}
+.syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
+color:#FF7D27 !important;
+}
+.syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
+color:#AEC4DE !important;
+}
