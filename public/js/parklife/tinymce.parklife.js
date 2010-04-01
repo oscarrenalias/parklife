@@ -5,11 +5,9 @@ parklife.tinymce = Object();
 parklife.tinymce.CustomCleanup = function(type, content) 
 {
 	switch (type) {
-		// gets passed when user submits the form
 		case "get_from_editor":
 			content = content.replace(/<br\s*\/>/gi, "\n");
 			break;
-		// gets passed when new content is inserted into the editor
 		case "insert_to_editor":
 		break;
 	}
