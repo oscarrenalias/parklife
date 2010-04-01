@@ -110,6 +110,10 @@ class EntryHandler(webapp.RequestHandler):
 			e.put()
 			
 			e = Entry.get(e.key())
+			
+			# reset the data cache since there's new content
+			from google.appengine.api import memcache
+			memcache.flush_all()			
 
 			# return successful creation
 			self.response.out.write( View(self.request).render( None, {
@@ -150,6 +154,10 @@ class EntryHandler(webapp.RequestHandler):
 			e.lat = form.clean_data['lat']
 			e.lng = form.clean_data['lng']			
 			e.put()
+			
+			# reset the data cache since there's new content
+			from google.appengine.api import memcache
+			memcache.flush_all()			
 			
 			data = {
 				'error': False, 
@@ -193,6 +201,11 @@ class EntryHandler(webapp.RequestHandler):
 		# otherwise, mark it as deleted and return success
 		e.deleted = True
 		e.put()
+		
+		# reset the data cache since there's been some changes
+		from google.appengine.api import memcache
+		memcache.flush_all()		
+		
 		self.response.out.write( View(self.request).render( None, {'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
 def main():

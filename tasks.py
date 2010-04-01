@@ -20,27 +20,28 @@ class UpdateSources( webapp.RequestHandler ):
 		total = 0		
 		
 		if source == "twitter":
-			from app.source.twitter import TwitterSource			
-			logging.debug('updating twitter')		
-			twitterSource = TwitterSource()
-			total = twitterSource.getLatest()
+			from app.source.twitter import TwitterSource
+			source_class = TwitterSource()
 		elif source == "delicious":
-			from app.source.delicious import DeliciousSource						
-			logging.debug('updating delicious')
-			deliciousSource = DeliciousSource()
-			total = deliciousSource.getLatest()
+			from app.source.delicious import DeliciousSource
+			source_class = DeliciousSource()
 		elif source == "youtube":
-			from app.source.youtube import YouTubeSource						
-			logging.debug('updating youtube')
-			ytSource = YouTubeSource()
-			total = ytSource.getLatest()			
+			from app.source.youtube import YouTubeSource		
+			source_class = YouTubeSource()
 		elif source == "googlereader":
-			from app.source.googlereader import GoogleReaderSource						
-			logging.debug('updating google reader')
-			grSource = GoogleReaderSource()
-			total = grSource.getLatest()			
+			from app.source.googlereader import GoogleReaderSource		
+			source_class = GoogleReaderSource()
 		else:
 			raise Exception('unrecognized source')
+			
+		# load the latest data from the soruce
+		logging.info('Updating source: ' + source)				
+		total = source_class.getLatest()			
+		# and reset the data cache if we at least added one new entry
+		if total > 0:
+			logging.info('Resetting query cache after importing ' + str(total) + ' entries from source \'' + source + '\'')
+			from google.appengine.api import memcache
+			memcache.flush_all()
 		
 		logging.debug( 'source ' + str(source) + ': ' + str(total) + ' entries updated' )
 
@@ -50,7 +51,6 @@ def main():
   application = webapp.WSGIApplication([('/tasks/update/(.*)', UpdateSources)],
                                        debug=True)
   util.run_wsgi_app(application)
-
 
 if __name__ == '__main__':
   main()
