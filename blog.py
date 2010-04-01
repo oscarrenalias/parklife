@@ -117,7 +117,7 @@ class EntryHandler(webapp.RequestHandler):
 
 			# return successful creation
 			self.response.out.write( View(self.request).render( None, {
-				'message': 'New blog entry added successfully', 
+				'message': 'New blog entry added successfully. <a href="%s">Link to the entry</a>.' % e.permalink(), 
 				'error': False,
 				'entry_link': e.permalink(),				
 				'entry': e
@@ -164,7 +164,7 @@ class EntryHandler(webapp.RequestHandler):
 				'entry': e, 
 				'entry_id': entry_id,
 				'entry_link': e.permalink(),
-				'message': 'Entry successfully updated'
+				'message': 'Entry successfully updated. <a href="%s">Link to the entry</a>.' % e.permalink(),
 			}
 		else:
 			# form not valid, must show again with the errors
