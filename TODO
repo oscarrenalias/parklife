@@ -14,10 +14,10 @@ x support for alternative outputs: json and rss/atom
 x support for /tag/ urls
 - support for displaying archived data, e.g. /archive/2010/02
 x support for free text searching
-- Implement reduced templates for mobile access, both for posting new entries (a simplified "new blog entry" screen) and for displaying the stream content
+x Implement reduced templates for mobile access, both for posting new entries (a simplified "new blog entry" screen) and for displaying the stream content
 x Ignore @ replies (pull them into the db but don't show them)
 x Possibility to update blog entries
-- Possibility to update the current location via javascript location services when adding a new post
+x Possibility to update the current location via javascript location services when adding a new post
 x Geolocated Youtube entries
 x add the gelocation data back into the Atom feed template
 x Possibility to switch comments on and off, and configurable disqus support
