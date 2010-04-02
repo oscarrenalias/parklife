@@ -36,14 +36,10 @@ class YouTubeSource(Source):
 		total = 0
 		processed = 0				
 		
-		for video in videos.entry:
-			
-			logging.debug('processing video: ' + video.id.text )
-
+		for video in videos.entry:			
 			total = total + 1
 			
 			if self.isDuplicate(video.id.text, 'youtube') == False:
-				processed = processed + 1
 				save = False
 				e = Entry()
 				if video.title != None:
@@ -70,9 +66,9 @@ class YouTubeSource(Source):
 					e.lng = str(video.geo.longitude())
 
 				if save:
-					e.put()
-			else:
-				logging.debug( 'video is duplicate: ' + video.id.text )		
+					logging.debug('saving video: ' + video.id.text )					
+					e.put()		
+					processed = processed + 1					
 				
 		return([total, processed])
 	
