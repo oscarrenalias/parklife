@@ -617,3 +617,7 @@ ul.field_errors {
 .full-width {
 	width:100%;
 }
+
+.note img {
+	display:none;
+}

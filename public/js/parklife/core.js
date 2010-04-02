@@ -157,6 +157,17 @@ parklife.closeSearch = function()
 }
 
 $(document).ready(function(){
+	
+	// resize images if they need resizing
+	containerWidth = $('.note').width();
+	$('.note img').each(function(i, img) {		
+		if(img.width > containerWidth)	{
+			$(img).css('width', containerWidth + 'px');
+			$(img).css('height', 'auto');
+		}
+		$(img).css('display', 'block');		
+	});
+	
 	// set the event handler for the deletion of entries
 	$(".delete_entry").each(function(index) {
 		$(this).click(function(e) {
