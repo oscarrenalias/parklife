@@ -21,15 +21,16 @@
 	<script type="text/javascript" src="/js/jquery/jquery.dropshadow.js"></script>	
 	<script type="text/javascript" src="/js/parklife/core.js"></script>				
 	<!-- script type="text/javascript" src="/js/shjs/sh_main.min.js"></script -->
-	<script  type="text/javascript" src="/js/sh/shCore.js"></script>
-	<script  type="text/javascript" src="/js/sh/shBrushJScript.js"></script>
-	<script  type="text/javascript" src="/js/sh/shBrushPhp.js"></script>
-	<script  type="text/javascript" src="/js/sh/shBrushPython.js"></script>	
-	<script  type="text/javascript" src="/js/sh/shBrushScala.js"></script>	
-	<script  type="text/javascript" src="/js/sh/shBrushCss.js"></script>		
-	<script  type="text/javascript" src="/js/sh/shBrushJava.js"></script>			
-	<script  type="text/javascript" src="/js/sh/shBrushBash.js"></script>		
-	<script  type="text/javascript" src="/js/sh/shBrushXml.js"></script>	
+	<script type="text/javascript" src="/js/sh/shCore.js"></script>
+	<script type="text/javascript" src="/js/sh/shBrushJScript.js"></script>
+	<script type="text/javascript" src="/js/sh/shBrushPhp.js"></script>
+	<script type="text/javascript" src="/js/sh/shBrushPython.js"></script>	
+	<script type="text/javascript" src="/js/sh/shBrushScala.js"></script>	
+	<script type="text/javascript" src="/js/sh/shBrushCss.js"></script>		
+	<script type="text/javascript" src="/js/sh/shBrushJava.js"></script>			
+	<script type="text/javascript" src="/js/sh/shBrushBash.js"></script>		
+	<script type="text/javascript" src="/js/sh/shBrushXml.js"></script>
+	<script type="text/javascript" src="/js/lastfm/last.fm.records.js"></script>
 	<link href="/js/sh/styles/shCore.css" rel="stylesheet" type="text/css" />
 	<link type="text/css" rel="Stylesheet" href="/css/shCustom.css"/>	
 	<script type="text/javascript">
@@ -37,7 +38,23 @@
 		parklife.config.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY = '{{defaults.GOOGLE_CUSTOM_SEARCH_ENGINE_KEY}}';
 	</script>	
 	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{defaults.GOOGLE_MAPS_API_KEY}}&amp;sensor=false" type="text/javascript">
-	</script>	
+	</script>
+	<script type='text/javascript'>
+	$(document).ready( function() {
+	    var _config = {
+	    username: 'phunkphorce',         // last.fm username
+	    placeholder: 'lastfmrecords',   // id of the div in HTML to use for cd covers
+	    //defaultthumb: './lastfm_logo.jpg',  // image when no cd cover or artist image is found
+	    period: 'recenttracks',         // which period/type of data do you want to show? you can choose from
+	                            // recenttracks, 7day, 3month, 6month, 12month, overall, 
+	                            // topalbums and lovedtracks
+	    count: 10,              // number of images to show
+	    refresh: 3,             // when to get new data from last.fm (in minutes)
+	    offset: 2               // difference between your timezone and GMT.
+	    };
+	    lastFmRecords.init(_config);
+	});
+	</script>		
 	{% endblock %}	
 </head>	
 <body>
@@ -111,6 +128,10 @@
 						  <input type="submit" name="search" value="Search" onClick="javascript:parklife.showSearch()" id="submitSearchButton"/>
 						  <br class="fix" />
 					</div>
+				</div>
+				<div class="widget lastfm">
+					<h2 class="title">Recently Listened</h2>
+					<div id="lastfmrecords"></div>					
 				</div>
 				{% endblock %}
 				{% block sidebarcontent %}

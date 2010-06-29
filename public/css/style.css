@@ -621,3 +621,18 @@ ul.field_errors {
 .note img {
 	display:none;
 }
+
+#lastfmrecords ol {
+	padding: 0px;
+	margin: 0px;
+	align: left;
+	list-style-type: none;
+}
+
+#lastfmrecords ol li {
+	margin-bottom: 4px;
+}
+
+#lastfmrecords a {
+	border-bottom: 0px;
+}
