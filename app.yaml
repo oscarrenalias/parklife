@@ -35,3 +35,6 @@ handlers:
   login: admin  
 - url: .*
   script: main.py
+
+derived_file_type:
+- python_precompiled
