@@ -40,4 +40,4 @@ class Defaults:
 	
 	@staticmethod
 	def isDevelopmentServer():
-		return False
+		os.environ['SERVER_SOFTWARE'].startswith('Dev')
