@@ -41,7 +41,15 @@ class JSONView(BaseView):
 	def render(self, template, view_values = []):
 		from app.json import JSONHelper		
 		del view_values['defaults']
-		return( JSONHelper().encode(view_values))
+
+		response = JSONHelper().encode(view_values)	
+
+		# check if this is a jsonp request, we can do so by checking if the 'calllback'
+		# parameter is present in the request and then we'll wrap it around the json response
+		if self.request.get('callback'):
+			response = self.request.get('callback') + "(" + response + ")"
+
+		return( response )
 		
 class AtomView(BaseView):
 	def render(self, template, view_values = []):
