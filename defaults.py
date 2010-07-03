@@ -29,15 +29,20 @@ class Defaults:
 	# default time to live for the memcache cached keys, in seconds
 	MEMCACHE_TTL = 3600
 	
+	@staticmethod
+	def isDevelopmentServer():
+		import os
+		return(os.environ['SERVER_SOFTWARE'].startswith('Dev'))
+		
 	# site data
 	site = {
-	  'base_url': '',
+	  'base_url': 'http://stream.renalias.net',
 	  'author': 'Oscar Renalias',
 	  'email': 'oscar+lifestream@renalias.net',
 	  'title': 'Oscar Renalias',
 	  'subtitle': 'Oscar Renalias'
 	}
 	
-	@staticmethod
-	def isDevelopmentServer():
-		os.environ['SERVER_SOFTWARE'].startswith('Dev')
+# makes things easier in the development setup
+if Defaults.isDevelopmentServer():
+	Defaults.site['base_url'] = 'http://localhost:8081'

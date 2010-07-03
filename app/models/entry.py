@@ -114,7 +114,7 @@ class Entry(db.Model):
 		
 	#
 	# returns a permanent link to the entry
-	#
+	#	
 	def permalink(self):
 		from defaults import Defaults
 		return( Defaults.site['base_url'] + '/entry/' + self.slug )
@@ -132,3 +132,14 @@ class Entry(db.Model):
 	#	else: 
 	#		val.tag_list = []
 	#	return val
+	
+	def __json__(self):
+		properties = self.properties().items() 
+		output = {} 
+		for field, value in properties: 
+			output[field] = getattr(self, field) 
+		
+		# this is not a real attribute of the object but we want to have it in the serialized json output
+		output['permalink'] = self.permalink()
+		
+		return output
