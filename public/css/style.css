@@ -636,3 +636,16 @@ ul.field_errors {
 #lastfmrecords a {
 	border-bottom: 0px;
 }
+
+#places-marker-buttons .marker-buttons-next {
+	float:right;
+}
+
+#places-marker-buttons .marker-buttons-prev {
+	float:left;
+}
+
+#places-marker-buttons {
+	padding-top:5px;
+	padding-bottom: 5px;
+}

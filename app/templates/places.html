@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block page_title %}
+Parklife | Places
+{% endblock %}
+{% block content %}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="/js/parklife/widgets.js"></script>
+<script type="text/javascript" src="/js/parklife/widgets.places.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		parklife.widgets.places.init("places-map")
+	});
+</script>
+<h1 class="section-title">Places</h1>
+<div id="places-map" style="width:100%;height:500px"></div>
+{% endblock %}

@@ -21,7 +21,7 @@ from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext import ereporter
 
-class MainHandler(webapp.RequestHandler):	
+class MainHandler(webapp.RequestHandler):
 
 	def get(self ):	
 
@@ -91,24 +91,37 @@ class SourceHandler(webapp.RequestHandler):
 class TagHandler(webapp.RequestHandler):
 	
 	def get(self, tag):
-			query = CachedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
+		query = CachedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
 			
-			if Defaults.TWITTER_IGNORE_AT_REPLIES:
-				query = query.filter('twitter_reply = ', False )			
+		if Defaults.TWITTER_IGNORE_AT_REPLIES:
+			query = query.filter('twitter_reply = ', False )			
 			
-			bookmark = self.request.get( 'p' )
-			prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
+		bookmark = self.request.get( 'p' )
+		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
 
-			from app.utils import StringHelper			
-			view_data = {
-				'entries': entries, 
-				'prev': prev, 
-				'next': next,
-				'tag': StringHelper.remove_html_tags(tag)
-			}			
+		from app.utils import StringHelper			
+		view_data = {
+			'entries': entries, 
+			'prev': prev, 
+			'next': next,
+			'tag': StringHelper.remove_html_tags(tag)
+		}			
 			
-			self.response.out.write(View(self.request).render('index.html', view_data ))
+		self.response.out.write(View(self.request).render('index.html', view_data ))
+			
+class PlacesHandler(webapp.RequestHandler):
+	
+	def get(self):
+		# this action generates different content depending on how it is called
+		if self.request.get('f') == 'json':
+			# select those entries that have location data
+			query = Entry.gql('WHERE lat != :lat', lat=None)						
+			view_data = { 'entries': query }
+		else:
+			view_data = {}
 
+		self.response.out.write(View(self.request).render('places.html', view_data))
+		
 class NotFoundPageHandler(webapp.RequestHandler):
 	def get(self):
 		self.error(404)
@@ -118,9 +131,16 @@ def main():
 	ereporter.register_logger()
 	logging.getLogger().setLevel(logging.DEBUG)	
 	
-	application = webapp.WSGIApplication([ ('/', MainHandler), ('/entry/(.*)', EntryHandler ), ('/source/(.*)', SourceHandler), ('/tag/(.*)', TagHandler), ('/.*', NotFoundPageHandler)], debug=True)
+	application = webapp.WSGIApplication(
+		[ 
+			('/', MainHandler), 
+			('/entry/(.*)', EntryHandler ), 
+			('/source/(.*)', SourceHandler), 
+			('/tag/(.*)', TagHandler), 
+			('/places', PlacesHandler), 
+			('/.*', NotFoundPageHandler)			
+		], debug=True)
 	util.run_wsgi_app(application)
-
 
 if __name__ == '__main__':
   main()
