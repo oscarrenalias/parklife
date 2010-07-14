@@ -115,7 +115,7 @@ class PlacesHandler(webapp.RequestHandler):
 		# this action generates different content depending on how it is called
 		if self.request.get('f') == 'json':
 			# select those entries that have location data
-			query = Entry.gql('WHERE lat != :lat', lat=None)						
+			query = Entry.gql('WHERE lat != :lat AND deleted = :deleted', lat=None, deleted=False)
 			view_data = { 'entries': query }
 		else:
 			view_data = {}
