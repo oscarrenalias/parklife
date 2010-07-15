@@ -106,7 +106,11 @@ class EntryHandler(webapp.RequestHandler):
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
 			e.lat = form.clean_data['lat']
+			if e.lat == "":
+				e.lat = None
 			e.lng = form.clean_data['lng']			
+			if e.lng == "":
+				e.lng = None
 			e.source = 'blog'
 			e.put()
 			

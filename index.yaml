@@ -54,6 +54,11 @@ indexes:
 - kind: Entry
   properties:
   - name: deleted
+  - name: lat
+
+- kind: Entry
+  properties:
+  - name: deleted
   - name: source
   - name: created
     direction: desc
