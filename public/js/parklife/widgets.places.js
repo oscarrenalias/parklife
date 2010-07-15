@@ -48,7 +48,12 @@ parklife.widgets.places = {
 	},
 	
 	setInfoWindow: function(marker, entry) {
-		var content = '<b><a href="' + e.permalink + '">' + e.title + '</a></b><br/>' + e.text;
+		// we need to handle blog entries a little differently from other entries
+		if(entry.source == "blog")
+			var content = '<b><a href="' + e.permalink + '">' + e.title + '</a></b><br/>' + e.text;
+		else
+			var content = '<b><a href="' + e.permalink + '">' + e.text + '</a></b>';
+			
 		// we attach the infowindow to the marker so that we can easily find it later
 		marker.__infoWindow = new google.maps.InfoWindow({ 
 				content: content,
@@ -56,6 +61,9 @@ parklife.widgets.places = {
 		});
 		google.maps.event.addListener(marker, 'click', function() {
 			parklife.widgets.places.current = marker.__index;
+			// increase the zoom if it's very small, otherwise we can't see anything...
+			if(parklife.widgets.places.map.getZoom() < 2)
+				parklife.widgets.places.map.setZoom(8);
 			marker.__infoWindow.open(parklife.widgets.places.map,marker);
 		});
 	},
