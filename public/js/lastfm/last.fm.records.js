@@ -207,6 +207,9 @@ var lastFmRecords = (function() {
 		jQuery('#lastfmcover' + _id).addClass('lastfm_playing_now');
 		jQuery('#lastfmcover' + _id).parent().addClass('lastfm_playing_now');
 	}
+	
+	// ORe: add a custom CSS class to identify these
+	jQuery('#lastfmcover' + _id).addClass('lastfm_cover');
 
     if ('' == _track.cdcover) {
 			// no cover for cd, do we have an image for the artist?

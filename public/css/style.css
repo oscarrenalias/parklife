@@ -630,11 +630,17 @@ ul.field_errors {
 }
 
 #lastfmrecords ol li {
-	margin-bottom: 4px;
+	margin: 2px;
+	float:left;
 }
 
 #lastfmrecords a {
 	border-bottom: 0px;
+}
+
+#lastfmrecords .lastfm_cover {
+	width: 64px;
+	height: 64px;
 }
 
 #places-marker-buttons .marker-buttons-next {
