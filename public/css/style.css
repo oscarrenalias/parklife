@@ -672,16 +672,10 @@ ul.field_errors {
 	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);	
 }
 
-.picasa a {
-
-}
-
 .picasa-entry-ul {
 	clear:both;
-}
-
-.picasa ul a:after {
-	/*content:attr(title);*/
+	margin: 0px;
+	padding: 0px;
 }
 
 .picasa img:hover{
