@@ -11,6 +11,9 @@ cron:
 - description: Update the Google Reader source
   url: /tasks/update/googlereader
   schedule: every 1 hours  
+  - description: Update the Picasa source
+    url: /tasks/update/picasa
+    schedule: every day 00:00
 - description: Daily exception report
   url: /_ereporter?sender=phunkphorce@gmail.com
   schedule: every day 00:00  
