@@ -31,6 +31,9 @@ class UpdateSources( webapp.RequestHandler ):
 		elif source == "googlereader":
 			from app.source.googlereader import GoogleReaderSource		
 			source_class = GoogleReaderSource()
+		elif source == "picasa":
+			from app.source.picasa import PicasaSource
+			source_class = PicasaSource()			
 		else:
 			raise Exception('unrecognized source')
 			

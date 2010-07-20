@@ -44,6 +44,11 @@
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
 				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
 				{% endifequal %}				
+				
+				{% ifequal entry.source 'picasa' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
+				{% endifequal %}				
 			</div>
 			<div class="footnote">
 				{% if entry.lat %}

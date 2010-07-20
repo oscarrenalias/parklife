@@ -161,6 +161,7 @@ div.item_content div.footnote {
 	color: #999;
 	margin-top: 8px;
 	line-height: 150%;
+	clear:both;
 }
 
 div.item_content div.footnote a {
@@ -654,4 +655,40 @@ ul.field_errors {
 #places-marker-buttons {
 	padding-top:5px;
 	padding-bottom: 5px;
+}
+
+.picasa li {
+	list-style-type: none;
+	float:left;
+	padding: 5px;
+	width: 82px;
+	height: 82px;	
+}
+
+.picasa img {
+	width: 72px;
+	height: 72px;
+	-webkit-box-shadow:  0 3px 6px rgba(0,0,0,.25);
+	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);	
+}
+
+.picasa a {
+
+}
+
+.picasa-entry-ul {
+	clear:both;
+}
+
+.picasa ul a:after {
+	/*content:attr(title);*/
+}
+
+.picasa img:hover{
+	-webkit-transform: scale(2.5);	
+	-webkit-transition-timing-function: ease-out;
+	-webkit-transition-duration: 200ms;
+	-moz-transform: scale(2.5);
+	-webkit-box-shadow:  0 3px 6px rgba(0,0,0,.25);
+	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);	
 }
