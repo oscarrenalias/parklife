@@ -657,7 +657,7 @@ ul.field_errors {
 	padding-bottom: 5px;
 }
 
-.picasa li {
+.picasa-entry li {
 	list-style-type: none;
 	float:left;
 	padding: 5px;
@@ -665,20 +665,20 @@ ul.field_errors {
 	height: 82px;	
 }
 
-.picasa img {
+.picasa-entry img {
 	width: 72px;
 	height: 72px;
 	-webkit-box-shadow:  0 3px 6px rgba(0,0,0,.25);
 	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);	
 }
 
-.picasa-entry-ul {
+.picasa-entry .picasa-entry-ul {
 	clear:both;
 	margin: 0px;
 	padding: 0px;
 }
 
-.picasa img:hover{
+.picasa-entry img:hover{
 	-webkit-transform: scale(2.5);	
 	-webkit-transition-timing-function: ease-out;
 	-webkit-transition-duration: 200ms;
