@@ -1,5 +1,5 @@
 from app.utils import templatehelpers
-import re
+from app.view.viewhelpers import ViewHelpers
 
 class BaseView:
 	
@@ -64,8 +64,8 @@ class AtomView(BaseView):
 		
 		path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
 		return t.render(path, view_values)
-		
-_IPHONE_UA = re.compile(r'Mobile.*Safari')		
+
+
 		
 class View:
 	
@@ -109,6 +109,7 @@ class View:
 		renderer.is_iphone = self.is_iphone()
 		renderer.request = self.request
 		return( renderer.render(template, view_values ))
-						
+		
 	def is_iphone(self):
-		return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
+		#return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
+		return ViewHelpers.is_iphone(self.request.headers['user-agent'])

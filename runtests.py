@@ -8,7 +8,8 @@
 #
 
 import unittest
-from app.tests.testutils import TestUtils
+from app.tests.test_utils import TestUtils
+from app.tests.test_viewhelpers import TestViewHelpers
 		
 # if run from command line
 if __name__ == '__main__':
