@@ -24,7 +24,7 @@ __author__ = "Morgan Craft <http://www.morgancraft.com/>"
 #   Create test suite
 
 
-_debug = 0
+_debug = 1
 
 #
 # ORe: Changed to reflect the fact that this is now part of Parklife
@@ -190,11 +190,15 @@ class PinboardAccount(UserDict):
         try:
             ## for pinboard a gzip request is made
             raw_xml = urllib2.urlopen(url)
-            compresseddata = raw_xml.read()
+            #
+            # ORe FIX: Google App Engine will automatically ungzip compressed responses
+            #
+            #compresseddata = raw_xml.read()
             ## bing unpackaging gzipped stream buffer
-            compressedstream = StringIO.StringIO(compresseddata)
-            gzipper = gzip.GzipFile(fileobj=compressedstream)
-            xml = gzipper.read()
+            #compressedstream = StringIO.StringIO(compresseddata)
+            #gzipper = gzip.GzipFile(fileobj=compressedstream)
+            #xml = gzipper.read()
+            xml = raw_xml.read()
             
         except urllib2.URLError, e:
                 raise e

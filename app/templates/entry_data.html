@@ -26,6 +26,11 @@
 				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
 				{%endifequal%}
 				
+				{% ifequal entry.source 'pinboard' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
+				{%endifequal%}				
+				
 				{% ifequal entry.source 'twitter' %}
 				<div class="title">{{entry.text}}</a></div>				
 				{%endifequal%}

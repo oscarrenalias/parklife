@@ -5,12 +5,14 @@ from app.pinboard import pinboard
 from app.dateutil.parser import *
 import logging
 
-PINBOARD_SOURCE_NAME = 'pinboard'
-
 class PinboardSource(Source):
     
+    source_id = 'pinboard'
+    
+    FETCH_ALL_MAX_LINKS = 2
+    
     def PinboardSource(self):
-        self.source_id = PINBOARD_SOURCE_NAME
+        pass
     
     #
     # generate a connection to the Pinboard API endpoint
@@ -22,7 +24,7 @@ class PinboardSource(Source):
     # returns the Entry object point to the delicious link that was most recently fetched
     #    
     def getMostRecentLink(self):
-        query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=PINBOARD_SOURCE_NAME)
+        query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
         if query.count() == 0:
             return None
             
@@ -34,18 +36,14 @@ class PinboardSource(Source):
         p = self.__getConnection()
         
         try:
-            posts = p.posts(count=100)
+            posts = p.posts(count=self.FETCH_ALL_MAX_LINKS)
         except: 
             # log the error but still throw the exception upwards
             logging.error( 'Could not retreive Pinboard posts for user: ' + str(Config.getKey('pinboard_user')))
             # re-raise the exception so that it can be processed upstream
             raise
         
-        total = self.__processLinks(posts)
-        
-        logging.debug( 'Pinboard updated ' + str(total) + ' links' )
-        
-        return total
+        return posts
         
     def getLatest(self):
         
@@ -64,39 +62,23 @@ class PinboardSource(Source):
         p = self.__getConnection()
                                 
         logging.debug('Date of the most recent pinboard link is ' + str(most_recent.created))
-        posts = p.posts(date=most_recent.created.strftime("%Y-%m-%dT%H:%M:%SZ"))
         
-        return self.__processLinks(posts)
-            
-    def __processLinks(self, posts):        
-        # process all data received from delicious
-        total = 0
-        added = 0
+        try:
+            posts = p.posts(date=most_recent.created.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        except:
+            logging.error( 'Could not retreive Pinboard posts for user: ' + str(Config.getKey('pinboard_user')))
+            raise
         
-        # remove duplicate posts
-        #toAdd = filter(lambda p: self.isDuplicate(['hash'], PINBOARD_SOURCE_NAME) == False, posts['posts'])
+        return posts
+    
+    def toEntry(self, post):
+        e = Entry()
+        e.external_id = post['hash']
+        e.url = post['href']
+        e.title = post['description']
+        e.text = post['extended']
+        e.source = self.source_id
+        e.created = parse( post['time'] )
+        e.tags = post['tags']
         
-        for post in [post for post in posts['posts'] if self.isDuplicate(post['hash'], PINBOARD_SOURCE_NAME) == False]:
-            total = total + 1
-            if self.isDuplicate(post['hash'], PINBOARD_SOURCE_NAME) == False:
-                # only persist if not duplicate
-                e = Entry()
-                e.external_id = post['hash']
-                e.url = post['href']
-                e.title = post['description']
-                e.text = post['extended']
-                e.source = PINBOARD_SOURCE_NAME
-                e.created = parse( post['time'] )
-                if post['tags'] != '':
-                    e.tags = post['tags'].split(' ')    
-                else:
-                    e.tags = []
-                
-                e.put()
-                
-                added = added + 1
-            else:
-                logging.debug( 'Pinboard source: Skipping link ' + post['hash'] + ' because it is duplicate')
-        
-        logging.debug('Pinboard source: processed ' + str(total) + ' links, ' + str(added) + ' updated' )
-        return added
+        return e
