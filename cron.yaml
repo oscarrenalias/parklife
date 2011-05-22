@@ -2,9 +2,9 @@ cron:
 - description: Update the Twitter source
   url: /tasks/update/twitter
   schedule: every 1 hours
-- description: Update the Delicious source
-  url: /tasks/update/delicious
-  schedule: every 1 hours  
+- description: Update the Pinboard source
+  url: /tasks/update/pinboard
+  schedule: every 1 hours    
 - description: Update the YouTube source
   url: /tasks/update/youtube
   schedule: every 1 hours  
