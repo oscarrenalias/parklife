@@ -24,6 +24,8 @@ class UserSettingsForm(forms.Form):
 	youtube_user = forms.CharField(required=False, label='YouTube user', widget=forms.widgets.TextInput(attrs={'size':60}))	
 	google_reader_feed = forms.CharField(required=False, label='Google Reader shared items RSS feed', widget=forms.widgets.TextInput(attrs={'size':60}))		
 	picasa_user = forms.CharField(required=False, label='Picasa user', widget=forms.widgets.TextInput(attrs={'size':60}))
+	pinboard_user = forms.CharField(required=False, label='Pinboard user', widget=forms.widgets.TextInput(attrs={'size':60}))
+	pinboard_password = forms.CharField(required=False, label='Pinboard password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
 
 #
 # updates the twitter source
@@ -37,7 +39,9 @@ class UserSettings( webapp.RequestHandler ):
 			'delicious_password': Config.getKey( 'delicious_password' ),
 			'youtube_user': Config.getKey( 'youtube_user' ),
 			'google_reader_feed': Config.getKey( 'google_reader_feed' ),
-			'picasa_user': Config.getKey('picasa_user')
+			'picasa_user': Config.getKey('picasa_user'),
+			'pinboard_user': Config.getKey('pinboard_user'),
+			'pinboard_password': Config.getKey('pinboard_password')
 		}
 	
 		self.response.out.write( View(self.request).render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
@@ -53,6 +57,8 @@ class UserSettings( webapp.RequestHandler ):
 			Config.setKey('youtube_user', form.clean_data['youtube_user'])		
 			Config.setKey('google_reader_feed', form.clean_data['google_reader_feed'])
 			Config.setKey('picasa_user', form.clean_data['picasa_user'])
+			Config.setKey('pinboard_user', form.clean_data['pinboard_user'])
+			Config.setKey('pinboard_password', form.clean_data['pinboard_password'])
 		
 			initial_data = {
 				'twitter_user': Config.getKey( 'twitter_user' ),
@@ -60,7 +66,9 @@ class UserSettings( webapp.RequestHandler ):
 				'delicious_password': Config.getKey( 'delicious_password' ),
 				'youtube_user': Config.getKey( 'youtube_user' ),
 				'google_reader_feed': Config.getKey( 'google_reader_feed' ),
-				'picasa_user': Config.getKey('picasa_user')
+				'picasa_user': Config.getKey('picasa_user'),
+				'pinboard_user': Config.getKey('pinboard_user'),
+				'pinboard_password': Config.getKey('pinboard_password')
 			}
 		
 			self.response.out.write( View(self.request).render( 'settings.html', { 

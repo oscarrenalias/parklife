@@ -10,33 +10,41 @@
 import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+from app.utils.classhelper import ClassHelper
 
 #
-# updates the twitter source
+# This is the controller class that receives requests from the cron and triggers
+# the source updates as required
 #
 class UpdateSources( webapp.RequestHandler ):
 	
+	#sources = {
+	#		'twitter': TwitterSource,
+	#		'delicious': DeliciousSource,
+	#		'youtube': YouTubeSource,
+	#		'picasa': PicasaSource,
+	#		'googlereader': GoogleReaderSource,
+	#		'pinboard': PinboardSource
+	#}
+	sources = { 
+			"twitter": "TwitterSource", 
+			"delicious": "DeliciousSource",
+			"youtube": "YouTubeSource", 
+			"picasa": "PicasaSource", 
+			"googlereader": "GoogleReaderSource", 
+			"pinboard": "PinboardSource" 
+	} 
+
+	
 	def get(self, source):	
-		total = 0		
+		total = 0
 		
-		if source == "twitter":
-			from app.source.twitter import TwitterSource
-			source_class = TwitterSource()
-		elif source == "delicious":
-			from app.source.delicious import DeliciousSource
-			source_class = DeliciousSource()
-		elif source == "youtube":
-			from app.source.youtube import YouTubeSource		
-			source_class = YouTubeSource()
-		elif source == "googlereader":
-			from app.source.googlereader import GoogleReaderSource		
-			source_class = GoogleReaderSource()
-		elif source == "picasa":
-			from app.source.picasa import PicasaSource
-			source_class = PicasaSource()			
+		if source in self.sources:
+			className = "app.source." + source + "." + self.sources[source]
+			source_class = ClassHelper.get_class(className)()
 		else:
-			raise Exception('unrecognized source')
-			
+			raise Exception("Unknown source")		
+				
 		# load the latest data from the soruce
 		logging.info('Updating source: ' + source)				
 		total = source_class.getLatest()			

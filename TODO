@@ -22,3 +22,5 @@ x Geolocated Youtube entries
 x add the gelocation data back into the Atom feed template
 x Possibility to switch comments on and off, and configurable disqus support
 x support TinyMCE as the text editor
+- Add support for Instagram
+- Add support for Pinboard
