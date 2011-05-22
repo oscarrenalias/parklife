@@ -45,4 +45,4 @@ class Defaults:
 	
 # makes things easier in the development setup
 if Defaults.isDevelopmentServer():
-	Defaults.site['base_url'] = 'http://localhost:8080'
+	Defaults.site['base_url'] = 'http://localhost:8081'

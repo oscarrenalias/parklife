@@ -47,7 +47,8 @@ class UpdateSources( webapp.RequestHandler ):
 				
 		# load the latest data from the soruce
 		logging.info('Updating source: ' + source)				
-		total = source_class.getLatest()			
+		#total = source_class.getLatest()
+		total = source_class.update()			
 		# and reset the data cache if we at least added one new entry
 		if total > 0:
 			logging.info('Resetting query cache after importing ' + str(total) + ' entries from source \'' + source + '\'')

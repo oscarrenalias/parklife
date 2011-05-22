@@ -11,8 +11,12 @@ import logging
 
 class YouTubeSource(Source):
 	
+	source_id = 'youtube'
+	
+	FETCH_ALL_MAX_ITEMS = 20
+	
 	def YouTubeSource(self):
-		self.source_id = 'youtube'
+		pass
 		
 	def getFeedUri(self, **params):
 		uri = 'http://gdata.youtube.com/feeds/api/users/' + params['user']
@@ -30,69 +34,57 @@ class YouTubeSource(Source):
 		       width="425" height="350"></embed></object>'
 
 		return code
+	
+	#
+	# Returns true if the video can be saved
+	#
+	def isValid(self, video):
+		if video.content != None:
+			if video.media.content != None:
+				return True
 		
-	def _processVideos(self, videos):
-		
-		total = 0
-		processed = 0				
-		
-		for video in videos.entry:			
-			total = total + 1
+		return False
 			
-			if self.isDuplicate(video.id.text, 'youtube') == False:
-				save = False
-				e = Entry()
-				if video.title != None:
-					e.title = video.title.text.decode('UTF-8')
-				if video.content != None:
-					if video.media.content != None:
-						e.text = '<div class="video">' + self.getFlashPlayerHTML( video.media.content[0].url ) + '</div>' + video.content.text.decode('UTF-8')
-						save = True
-					else:
-						# this video is most likely no longer available
-						save = False
-				e.source = 'youtube'
-				e.external_id = video.id.text
-				e.created = parse( video.published.text )
-				e.url = video.link[0].href
-			
-				if video.media.keywords != None:
-					# split the tags 
-					e.tags = video.media.keywords.text.replace(' ','').split(',')
-					
-				# save the location data if available
-				if video.geo:
-					e.lat = str(video.geo.latitude())
-					e.lng = str(video.geo.longitude())
+	def toEntry(self, video):
+		e = Entry()
+		if video.title != None:
+			e.title = video.title.text.decode('UTF-8')
+		if video.content != None:
+			if video.media.content != None:
+				e.text = '<div class="video">' + self.getFlashPlayerHTML( video.media.content[0].url ) + '</div>' 
+			if video.content.text != None:
+				e.text += video.content.text.decode('UTF-8')
 
-				if save:
-					logging.debug('saving video: ' + video.id.text )					
-					e.put()		
-					processed = processed + 1					
-				
-		return([total, processed])
+		e.source = self.source_id
+		e.external_id = video.id.text
+		e.created = parse( video.published.text )
+		e.url = video.link[0].href
+	
+		if video.media.keywords != None:
+			# split the tags 
+			e.tags = video.media.keywords.text.decode('UTF-8').replace(' ','').split(',')
+			
+			
+		# save the location data if available
+		if video.geo:
+			e.lat = str(video.geo.latitude())
+			e.lng = str(video.geo.longitude())
+			
+		return e
 	
 	def getAll(self):
 		client = gdata.youtube.service.YouTubeService(client_id='Parklife', developer_key=Defaults.YOUTUBE_API_KEY)		
 		gdata.alt.appengine.run_on_appengine(client)		
 		
 		# retrieve the favorites
-		favorites = client.GetYouTubeVideoFeed( self.getFeedUri( user=Config.getKey('youtube_user'), feed='favorites', count='20'))
+		favorites = client.GetYouTubeVideoFeed( self.getFeedUri( user=Config.getKey('youtube_user'), feed='favorites', count=str(self.FETCH_ALL_MAX_ITEMS)))
 		# and the uploaded
-		uploaded = client.GetYouTubeVideoFeed( self.getFeedUri( user=Config.getKey('youtube_user'), feed='uploads', count='20'))
-		# merge the arrays
-		
-		total_uploaded, processed_uploaded = self._processVideos( uploaded )
-		total_favorites, processed_favorites = self._processVideos( favorites )
-		total = total_uploaded + total_favorites
-		processed = processed_uploaded + processed_favorites
+		uploaded = client.GetYouTubeVideoFeed( self.getFeedUri( user=Config.getKey('youtube_user'), feed='uploads', count=str(self.FETCH_ALL_MAX_ITEMS)))
 
-		logging.info( 'YouTube Source: ' + str(total) + ' videos, ' + str(processed) + ' processed' )
+		# merge the arrays after we've verified that all videos are valid and should be returned
+		videos = filter(self.isValid, favorites.entry) + filter(self.isValid, uploaded.entry)
 		
-		return processed
+		return videos
 		
 	def getLatest(self):
 		return self.getAll()
-			
-	def __processLinks(self, posts):		
-		pass

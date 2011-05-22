@@ -8,20 +8,26 @@ import logging
 
 class TwitterSource(Source):
 	
+	# source identifier for this source
+	source_id = 'twitter'
+	
+	# maximum number of entries to fetch if none is found in the database
+	FETCH_ALL_MAX_ENTRIES = 40
+	
 	def TwitterSource(self):
-		self.source_id = 'twitter'
+		pass
 		
 	def getAll(self):
 		# fetch all tweets, up to 3200 as per the current API restrictions
 		# maximum amount of records per page is 200
-		print 'TwitterSource.getAll not implemented'
+		raise NotImplementedError('TwitterSource.getAll not implemented')
 
 	# 
 	# return the Entry object that corresponds to the newest tweet
 	# REturns None if none is found
 	#
 	def getNewestTweet(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source='twitter')
+		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
 		if query.count() == 0:
 			return None
 			
@@ -46,55 +52,33 @@ class TwitterSource(Source):
 		if newest_tweet == None:
 			# get everything
 			logging.debug('no newest tweet found - requesting all')
-			statuses = twitter.statuses.user_timeline(user=twitter_user,count=40)			
+			statuses = twitter.statuses.user_timeline(user=twitter_user,count=self.FETCH_ALL_MAX_ENTRIES)			
 		else:
 			# get only tweets with an id higher than the newest one
 			logging.debug('requesting tweets with id greater than ' + str(newest_tweet.external_id))			
 			statuses = twitter.statuses.user_timeline(user=twitter_user,since_id=newest_tweet.external_id,count=40)
 			
-		return self._saveTweets( statuses )
-
-	def _saveTweets( self, statuses ):	
-		from app.utils import StringHelper
-		total = 0
-		for s in statuses:
-			# create Entry objects out of tweets, but we'll be careful not to add duplicates
+		return(statuses)
+	
+	def toEntry(self, status):
+		from app.utils import StringHelper			
+		e = Entry(external_id=str(status['id']),
+		source = self.source_id,
+		text = Utils.links_to_anchors(Utils.twitpic_to_img(status['text'])),
+		title = StringHelper().remove_new_lines(status['text']),
+		url='http://twitter.com/' + str(status['user']['screen_name']) + '/statuses/' + str(status['id']))
+		e.created = parse(status['created_at'])
+		
+		# extract the tags
+		e.tags = StringHelper().extract_twitter_tags(status['text'])
+		
+		# process the location coordinates if they're available
+		if status['coordinates'] != None:
+			e.lat = str(status['coordinates']['coordinates'][1])
+			e.lng = str(status['coordinates']['coordinates'][0])	
 			
-			# is the entry a duplicate?
-			logging.debug( 'processing entry ' + str(s['id']))
-			if self.isDuplicate( s['id'], 'twitter' ) == True:
-				logging.debug( 'Skipping entry with id ' + str(s['id']) + ' because it is duplicate' )
-			else:
-				#print ('name = ' + str(s['user']['screen_name']))
-				#print ('id = ' + str(s['id']))
-				e = Entry(external_id = str(s['id']),
-				source = 'twitter',
-				text = Utils.links_to_anchors(Utils.twitpic_to_img(s['text'])),
-				title = StringHelper().remove_new_lines(s['text']),
-				url = 'http://twitter.com/' + str(s['user']['screen_name'])+'/statuses/' + str(s['id']) )
-				e.created = parse(s['created_at'])
-				
-				# extract the tags
-				e.tags = StringHelper().extract_twitter_tags(s['text'])
-				
-				# process the location coordinates if they're available
-				if s['coordinates'] != None:
-					e.lat = str(s['coordinates']['coordinates'][1])
-					e.lng = str(s['coordinates']['coordinates'][0])	
-					
-				# is this entry a reply-to?
-				logging.debug(e.text[0])
-				e.twitter_reply = (e.text[0] == '@')
-				
-				e.put()
-				total = total+1
-			
-		# return the number of rows processed
-		return total;
-			
-
-	def getLastUpdateDate(self):
-		print( 'getLastUpdateDate' )
-
-	def getLastUpdateExternalId(self):
-		print( 'getLastUpdateDate' )		
+		# is this entry a reply-to?
+		logging.debug(e.text[0])
+		e.twitter_reply = (e.text[0] == '@')
+		
+		return(e)

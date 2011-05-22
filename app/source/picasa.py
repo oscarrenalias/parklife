@@ -14,18 +14,20 @@ class PicasaSource(Source):
 	# maximum amount of pictures to retrieve from picasa
 	MAX_PHOTOS = '100'
 	
+	source_id = 'picasa'
+	
 	def PicasaSource(self):
-		self.source_id = 'picasa'
+		pass
 		
 	def getAll(self):
-		print 'PicasaSource.getAll not implemented'
+		raise NotImplementedError('PicasaSource.getAll not implemented')
 
 	# 
 	# return the Entry object with the newest Picasa entry
 	# Returns None if none is found
 	#
 	def getLatestPicasaEntry(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source='picasa')
+		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
 		if query.count() == 0:
 			return None
 			
@@ -66,51 +68,55 @@ class PicasaSource(Source):
 				
 		# create an entry only if there's something to add
 		num_new_pics = len(to_add)
+		
+		# this should will ever only add one entry, regardless of how many pictures are found		
 		logging.debug("Picasa source: new pictures to be added: " + str(num_new_pics))
+		data = []
 		if(num_new_pics > 0):
-			self._createEntry(to_add)
+			data.insert(0, to_add)
+								
+		return(data)
+	
+	def pictureHTML(self, pic, isMultiple):
+		html = ""
 		
-		return(num_new_pics)
-		
-	#
-	# Creates an entry with the given pictures
-	# @private	
-	#
-	def _createEntry(self, pictures):
+		if isMultiple == True:
+			html += '<li class=\"picasa-entry-li picasa-entry-picture\">'
+			
+		html += '<a href="%s" title="%s">\
+			       <img class="picasa-entry-img" src="%s" data:picasa-thumb72="%s" data:picasa-thumb144="%s" data:picasa-thumb288="%s" alt="%s" /> \
+			     </a>' % (pic.GetHtmlLink().href, pic.title.text, pic.media.thumbnail[2].url, pic.media.thumbnail[0].url, pic.media.thumbnail[1].url, pic.media.thumbnail[2].url, pic.title.text)
+			
+		if isMultiple == True:
+			html += '</li>'
+			
+		return(html)			
+	
+	def toEntry(self, pictures):
 		# and now create the entry
 		c = Config()
-		e = Entry(source = 'picasa',
+		e = Entry(source = self.source_id,
 			url = "http://picasaweb.google.com/" + c.getKey('picasa_user'))
 		
 		# define whether we show a matrix with pictures (in case we've got more than one) or just a bigger thumbnail)
 		if(len(pictures) > 1):
 			html = "<div class=\"picasa-entry\">"
 			html += "<ul class=\"picasa-entry-ul\">"
-			for pic in pictures:
-				# build the markup
-				html += '<li class=\"picasa-entry-li picasa-entry-picture\">\
-					  	<a href="%s" title="%s">\
-			           	<img class="picasa-entry-img" src="%s" data:picasa-thumb72="%s" data:picasa-thumb144="%s" data:picasa-thumb288="%s" alt="%s" />\
-			          	</a>\
-			         	</li>' % (pic.GetHtmlLink().href, pic.title.text, pic.media.thumbnail[2].url, pic.media.thumbnail[0].url, pic.media.thumbnail[1].url, pic.media.thumbnail[2].url, pic.title.text)
-			
-			html += "</ul>"			
+			#for pic in pictures:
+			#	html += self.pictureHTML(pic, True)
+			html += "".join(map(lambda e: self.pictureHTML(e, True), pictures))				
+			html += "</ul></div>"
+
+			e.text = html			
 			e.title = "%s new photos (%s)" % (str(len(pictures)), self._getTodayDate())
 		else:
 			pic = pictures.pop()
 			# only one picture, we can show a bigger version of the picture
 			# the markup uses different CSS classes so that we can control the styling separately
-			html = "<div class=\"picasa-single-entry\">"
 			e.title = "New photo upload (%s)" % (self._getTodayDate())
-			html += '<a href=\"%s\" title=\"%s\">\
-						<img class=\"picasa-entry-img\" src="%s" data:picasa-thumb72="%s" data:picasa-thumb144="%s" data:picasa-thumb288="%s" alt="%s" />\
-					</a>' %  (pic.GetHtmlLink().href, pic.title.text, pic.media.thumbnail[2].url, pic.media.thumbnail[0].url, pic.media.thumbnail[1].url, pic.media.thumbnail[2].url, pic.title.text)
+			e.text = "<div class=\"picasa-single-entry\">" + self.pictureHTML(pic, False) + "</div>"
 					
-		# finalize the markup
-		html += "</div>"
-		# persist the picture in the database	
-		e.text = html
-		e.put()
+		return e
 		
 	#
 	# returns today's date in a nicely formatted string

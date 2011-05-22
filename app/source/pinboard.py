@@ -72,7 +72,11 @@ class PinboardSource(Source):
         # process all data received from delicious
         total = 0
         added = 0
-        for post in posts['posts']:
+        
+        # remove duplicate posts
+        #toAdd = filter(lambda p: self.isDuplicate(['hash'], PINBOARD_SOURCE_NAME) == False, posts['posts'])
+        
+        for post in [post for post in posts['posts'] if self.isDuplicate(post['hash'], PINBOARD_SOURCE_NAME) == False]:
             total = total + 1
             if self.isDuplicate(post['hash'], PINBOARD_SOURCE_NAME) == False:
                 # only persist if not duplicate

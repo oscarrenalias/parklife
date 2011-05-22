@@ -7,11 +7,13 @@ import logging
 
 class GoogleReaderSource(Source):
 	
+	source_id = 'googlereader'
+	
 	def GoogleReaderSource(self):
-		self.source_id = 'googlereader'
+		pass
 	
 	def getAll(self):		
-		raise Exception('GoogleReaderSource::getAll() not implemented yet')
+		raise Exception('GoogleReaderSource.getAll() not implemented yet')
 		
 	def getLatest(self):
 
@@ -20,31 +22,18 @@ class GoogleReaderSource(Source):
 			raise Exception( 'Please configure your Google Reader shared items feed first!' )
 			
 		response = feedparser.parse( feed_link )
-		return self.__processEntries(response.entries)
-			
-	def __processEntries(self, entries):		
-		# process all data received from delicious
-		total = 0
-		added = 0
-		for entry in entries:
-			total = total + 1
-			if self.isDuplicate(entry.id, 'googlereader') == False:
-				e = Entry()
-				e.title = entry.title
-				e.url = entry.link
-				e.created = parse(entry.published)
-				e.source = 'googlereader'
-				e.external_id = entry.id
-				# if there's an annotation, let's use it as the body for the post
-				if 'content' in entry:
-					if len(entry.content) > 1:
-						e.text = entry.content[1].value
-						
-				e.put()
-				
-				added = added + 1
-			else:
-				logging.debug( 'Skipping item' + entry.id + ' because it is duplicate')
+		return response.entries
+	
+	def toEntry(self, item):
+		e = Entry()
+		e.title = item.title
+		e.url = item.link
+		e.created = parse(item.published)
+		e.source = self.source_id
+		e.external_id = item.id
+		# if there's an annotation, let's use it as the body for the post
+		if 'content' in item:
+			if len(item.content) > 1:
+				e.text = item.content[1].value
 		
-		logging.debug('GoogleReaderSource.__processEntries(): Processed ' + str(total) + ' links, ' + str(added) + ' updated' )
-		return added
+		return e

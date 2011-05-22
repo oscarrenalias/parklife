@@ -7,8 +7,12 @@ import logging
 
 class DeliciousSource(Source):
 	
+	source_id = 'delicious'
+	
+	FETCH_ALL_POST_COUNT = 100
+	
 	def DeliciousSource(self):
-		self.source_id = 'delicious'
+		pass
 	
 	#
 	# returns the Entry object point to the delicious link that was most recently fetched
@@ -27,17 +31,13 @@ class DeliciousSource(Source):
 		d = DeliciousAPI( Config.getKey( 'delicious_user'), Config.getKey( 'delicious_password' ))
 		
 		try:
-			posts = d.posts_all(results=100)
+			posts = d.posts_all(results=self.FETCH_ALL_POST_COUNT)
 		except PyDeliciousUnauthorized: 
 			# log the error but still throw the exception upwards
 			logging.error( 'User ' + str(Config.getKey('delicious_user')) + ' could not log into delicious.com account' )
 			raise PyDeliciousUnauthorized
 		
-		total = self.__processLinks(posts)
-		
-		logging.debug( 'delicious updated ' + str(total) + ' links' )
-		
-		return total
+		return posts
 		
 	def getLatest(self):
 		
@@ -57,33 +57,19 @@ class DeliciousSource(Source):
 		logging.debug('Date of the most recent link is ' + str(most_recent.created))
 		posts = d.posts_all(fromdt=most_recent.created.strftime("%Y-%m-%dT%H:%M:%SZ"))
 		
-		return self.__processLinks(posts)
-			
-	def __processLinks(self, posts):		
-		# process all data received from delicious
-		total = 0
-		added = 0
-		for post in posts['posts']:
-			total = total + 1
-			if self.isDuplicate(post['hash'], 'delicious') == False:
-				# only persist if not duplicate
-				e=Entry()
-				e.external_id = post['hash']
-				e.url = post['href']
-				e.title = post['description']
-				e.text = post['extended']
-				e.source = 'delicious'
-				e.created = parse( post['time'] )
-				if post['tag'] != '':
-					e.tags = post['tag'].split(' ')	
-				else:
-					e.tags = []
-				
-				e.put()
-				
-				added = added + 1
-			else:
-				logging.debug( 'Skipping link ' + post['hash'] + ' because it is duplicate')
-		
-		logging.debug('Processed ' + str(total) + ' links, ' + str(added) + ' updated' )
-		return added
+		return(map(self.toEntry, posts))
+	
+	def toEntry(self, post):
+		e=Entry()
+		e.external_id = post['hash']
+		e.url = post['href']
+		e.title = post['description']
+		e.text = post['extended']
+		e.source = 'delicious'
+		e.created = parse( post['time'] )
+		if post['tag'] != '':
+			e.tags = post['tag'].split(' ')	
+		else:
+			e.tags = []
+
+		return e
