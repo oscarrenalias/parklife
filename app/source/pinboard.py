@@ -9,7 +9,7 @@ class PinboardSource(Source):
     
     source_id = 'pinboard'
     
-    FETCH_ALL_MAX_LINKS = 2
+    FETCH_ALL_MAX_LINKS = 100
     
     def PinboardSource(self):
         pass
