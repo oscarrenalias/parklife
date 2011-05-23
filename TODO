@@ -1,6 +1,3 @@
-- Implement getAll support for the Twitter source
-- Implement getAll support for the Delicious source
-- Implement getAll support for the YouTube source
 x Add support for geolocated entries
 x Add support for deleting and updating entries
 x Add support for Delicious tags
@@ -22,5 +19,5 @@ x Geolocated Youtube entries
 x add the gelocation data back into the Atom feed template
 x Possibility to switch comments on and off, and configurable disqus support
 x support TinyMCE as the text editor
-- Add support for Instagram
-- Add support for Pinboard
+x Add support for Instagram
+x Add support for Pinboard
