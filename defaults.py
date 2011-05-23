@@ -22,6 +22,18 @@ class Defaults:
 	# ignore twitter @ replies?
 	TWITTER_IGNORE_AT_REPLIES = True
 	
+	# what image size to use from Instagram?
+	# As per the current API, it must be one of these:
+	#	'low_resolution'
+	#	'standard_resolution'
+	# 	'thumbnail'
+	INSTAGRAM_IMAGE_SIZE = 'low_resolution'
+	
+	# for the pinboard source, ignore those links whose title is "Instagram", so that
+	# we don't get multiple entries for the same Instagram picture if both the Instagram
+	# and the Pinboard sources are enabled
+	PINBOARD_IGNORE_INSTAGRAM_LINKS = True
+	
 	# enable or disable comments, as well as the disqus key
 	COMMENTS_ENABLED = True
 	DISQUS_USER = 'renaliasnet'

@@ -12,11 +12,7 @@ class GoogleReaderSource(Source):
 	def GoogleReaderSource(self):
 		pass
 	
-	def getAll(self):		
-		raise Exception('GoogleReaderSource.getAll() not implemented yet')
-		
 	def getLatest(self):
-
 		feed_link = Config.getKey( 'google_reader_feed' )
 		if feed_link == None:
 			raise Exception( 'Please configure your Google Reader shared items feed first!' )

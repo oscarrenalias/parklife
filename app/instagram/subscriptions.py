@@ -1,6 +1,6 @@
 import hmac
 import hashlib
-import app.json.simplejson
+import simplejson
 
 class SubscriptionType:
     TAG = 'tag'

@@ -72,7 +72,7 @@ class YouTubeSource(Source):
 			
 		return e
 	
-	def getAll(self):
+	def getLatest(self):
 		client = gdata.youtube.service.YouTubeService(client_id='Parklife', developer_key=Defaults.YOUTUBE_API_KEY)		
 		gdata.alt.appengine.run_on_appengine(client)		
 		
@@ -85,6 +85,3 @@ class YouTubeSource(Source):
 		videos = filter(self.isValid, favorites.entry) + filter(self.isValid, uploaded.entry)
 		
 		return videos
-		
-	def getLatest(self):
-		return self.getAll()

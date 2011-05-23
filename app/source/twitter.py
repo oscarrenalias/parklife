@@ -17,23 +17,6 @@ class TwitterSource(Source):
 	def TwitterSource(self):
 		pass
 		
-	def getAll(self):
-		# fetch all tweets, up to 3200 as per the current API restrictions
-		# maximum amount of records per page is 200
-		raise NotImplementedError('TwitterSource.getAll not implemented')
-
-	# 
-	# return the Entry object that corresponds to the newest tweet
-	# REturns None if none is found
-	#
-	def getNewestTweet(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
-		if query.count() == 0:
-			return None
-			
-		# can you do this?
-		return(query.fetch(1)[0])
-
 	def getLatest(self):
 
 		# get latest entries only
@@ -48,7 +31,7 @@ class TwitterSource(Source):
 		twitter = Twitter()
 		
 		# retrieve the newest tweet, if any
-		newest_tweet = self.getNewestTweet()
+		newest_tweet = self.getMostRecentEntry()
 		if newest_tweet == None:
 			# get everything
 			logging.debug('no newest tweet found - requesting all')

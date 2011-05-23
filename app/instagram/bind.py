@@ -1,8 +1,7 @@
 import urllib
 from oauth2 import OAuth2Request
 import re
-import app.json.simplejson
-
+import simplejson
 re_path_template = re.compile('{\w+}')
 
 def encode_string(value):

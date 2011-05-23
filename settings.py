@@ -7,13 +7,13 @@
 #
 
 import logging
-from app.view.view import View
+import app
+from view.view import View
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from app.models.config import Config
-from app.source.twitter import TwitterSource
 from django import newforms as forms
-from app.forms import Forms as parklifeforms
+from forms import Forms as parklifeforms
 from google.appengine.ext import ereporter
 
 class UserSettingsForm(forms.Form):

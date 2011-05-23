@@ -14,17 +14,6 @@ class DeliciousSource(Source):
 	def DeliciousSource(self):
 		pass
 	
-	#
-	# returns the Entry object point to the delicious link that was most recently fetched
-	#	
-	def getMostRecentLink(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source='delicious')
-		if query.count() == 0:
-			return None
-			
-		# can you do this?
-		return(query.fetch(1)[0])		
-		
 	def getAll(self):
 		# fetches all delicious links
 		#def posts_all(self, tag="", start=None, results=None, fromdt=None,		
@@ -41,7 +30,7 @@ class DeliciousSource(Source):
 		
 	def getLatest(self):
 		
-		latestLink = self.getMostRecentLink()
+		latestLink = self.getMostRecentEntry()
 		if latestLink == None:
 			# should we fetch them all?
 			logging.debug( 'Fetching all delicious links because there is none in the database')
@@ -57,7 +46,7 @@ class DeliciousSource(Source):
 		logging.debug('Date of the most recent link is ' + str(most_recent.created))
 		posts = d.posts_all(fromdt=most_recent.created.strftime("%Y-%m-%dT%H:%M:%SZ"))
 		
-		return(map(self.toEntry, posts))
+		return posts
 	
 	def toEntry(self, post):
 		e=Entry()

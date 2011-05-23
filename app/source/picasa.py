@@ -19,20 +19,6 @@ class PicasaSource(Source):
 	def PicasaSource(self):
 		pass
 		
-	def getAll(self):
-		raise NotImplementedError('PicasaSource.getAll not implemented')
-
-	# 
-	# return the Entry object with the newest Picasa entry
-	# Returns None if none is found
-	#
-	def getLatestPicasaEntry(self):
-		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
-		if query.count() == 0:
-			return None
-			
-		return(query.fetch(1)[0])		
-
 	def getLatest(self):
 		# retrieve the user
 		c = Config()
@@ -42,7 +28,7 @@ class PicasaSource(Source):
 			raise Exception( 'Picasa username missing, unable to proceed' )
 			
 		# get the most recent picasa entry from the db
-		latest_entry = self.getLatestPicasaEntry()
+		latest_entry = self.getMostRecentEntry()
 		if latest_entry == None:
 			latest_entry_created_date = parse("2000-01-01T00:00:00")
 		else:

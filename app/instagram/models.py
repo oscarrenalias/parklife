@@ -37,18 +37,28 @@ class Media(ApiModel):
         if 'user_has_liked' in entry:
             new_media.user_has_liked = entry['user_has_liked']
         new_media.like_count = entry['likes']['count']
+        new_media.likes = []
+        if entry['likes'].has_key('data'):
+            for like in entry['likes']['data']:
+                new_media.likes.append(User.object_from_dictionary(like))
 
         new_media.comment_count = entry['comments']['count']
         new_media.comments = []
         for comment in entry['comments']['data']:
             new_media.comments.append(Comment.object_from_dictionary(comment))
+        
+        new_media.caption = None
+        if entry['caption']:
+            new_media.caption = Caption.object_from_dictionary(entry['caption'])
 
         new_media.created_time = timestamp_to_datetime(entry['created_time'])
 
-        if entry['location']:
+        if entry['location'] and entry.has_key('id'):
             new_media.location = Location.object_from_dictionary(entry['location'])
 
         new_media.link = entry['link']
+        
+        new_media.filter = entry['filter']
 
         return new_media
 
@@ -72,10 +82,13 @@ class Comment(ApiModel):
         text = entry['text']
         created_at = timestamp_to_datetime(entry['created_time'])
         id = entry['id']
-        return Comment(id=id, user=user, text=text, created_at=created_at)
+        return cls(id=id, user=user, text=text, created_at=created_at)
 
     def __unicode__(self):
-        print "%s said \"%s\"" % (self.user.username, self.message)
+        return "%s said \"%s\"" % (self.user.username, self.message)
+
+class Caption(Comment): 
+    pass
 
 class Point(ApiModel):
     def __init__(self, latitude, longitude):
@@ -94,9 +107,9 @@ class Location(ApiModel):
         if entry['latitude']:
             point = Point(entry['latitude'],
                           entry['longitude'])
-        location = cls(entry['id'],
-                       point,
-                       name=entry['name'])
+        location = cls(entry.get('id', 0),
+                       point=point,
+                       name=entry.get('name', ''))
         return location
 
 class User(ApiModel):

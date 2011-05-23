@@ -35,6 +35,9 @@ class Entry(db.Model):
 	# longitude
 	lng = db.StringProperty()
 	
+	# name of the location, if any
+	location_name = db.StringProperty()
+	
 	# whether the object shouldn't be displayed
 	deleted = db.BooleanProperty(default=False)
 	

@@ -9,14 +9,6 @@ class Source:
 	source_id = ''
 	
 	#
-	# Retrieves all entries from the source.
-	# This method is to be implemented by child classes, otherwise it will throw a NotImplementedError exception
-	#
-	def getAll(self):
-		# get all entries
-		raise NotImplementedError('Source.getAll() must be implemented by child classes')
-	
-	#
 	# Retrieves only the latest entries based on the timestamp of the last entry in the database
 	# This method is to be implemented by child classes, otherwise it will throw a NotImplementedError exception
 	#
@@ -48,6 +40,16 @@ class Source:
 
 		logging.debug( 'duplicate check: source = ' + self.source_id + ', id = ' + str(entry.external_id) + ', result = ' + str(value))
 		return value
+	
+	#
+	# returns the newest Entry object if the database, or None if none are found
+	#
+	def getMostRecentEntry(self):
+		query = Entry.gql( 'WHERE source = :source ORDER BY created DESC', source=self.source_id)
+		if query.count() == 0:
+			return None
+			
+		return(query.fetch(1)[0])			
 	
 	#
 	# processes the data retrieved by the source

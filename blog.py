@@ -10,14 +10,15 @@ import sys
 import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
+import app
 from app.models.entry import Entry
-from app.models.config import Config
-from app.view.view import View
+from models.config import Config
+from view.view import View
 from defaults import Defaults
 from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext.db import djangoforms
-from app.forms import Forms as parklifeforms
+from forms import Forms as parklifeforms
 from google.appengine.ext import ereporter
 
 #

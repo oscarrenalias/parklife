@@ -7,6 +7,7 @@
 # http://www.gnu.org/licenses/gpl-3.0.txt
 #
 
+import app
 import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -32,7 +33,8 @@ class UpdateSources( webapp.RequestHandler ):
 			"youtube": "YouTubeSource", 
 			"picasa": "PicasaSource", 
 			"googlereader": "GoogleReaderSource", 
-			"pinboard": "PinboardSource" 
+			"pinboard": "PinboardSource",
+			"instagram": "InstagramSource" 
 	} 
 
 	

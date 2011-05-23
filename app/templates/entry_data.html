@@ -32,8 +32,13 @@
 				{%endifequal%}				
 				
 				{% ifequal entry.source 'twitter' %}
-				<div class="title">{{entry.text}}</a></div>				
+				<div class="title">{{entry.text}}</div>				
 				{%endifequal%}
+				
+				{% ifequal entry.source 'instagram' %}
+				<div class="title"><a href="{{entry.url}}">{{entry.title}}</a></div>
+				<div class="note">{{entry.text}}</div>				
+				{%endifequal%}				
 				
 				{% ifequal entry.source 'youtube' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
