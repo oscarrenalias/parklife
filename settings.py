@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright 2010 Oscar Renalias
@@ -18,6 +17,7 @@ from app.forms import Forms as parklifeforms
 from google.appengine.ext import ereporter
 
 class UserSettingsForm(forms.Form):
+	# TODO: is there any way to keep this shorter?
 	twitter_user = forms.CharField(required=False, label='Twitter user', widget=forms.widgets.TextInput(attrs={'size':60}))
 	delicious_user = forms.CharField(required=False, label='Delicious user', widget=forms.widgets.TextInput(attrs={'size':60}))
 	delicious_password = forms.CharField(required=False, label='Delicious password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
@@ -26,53 +26,26 @@ class UserSettingsForm(forms.Form):
 	picasa_user = forms.CharField(required=False, label='Picasa user', widget=forms.widgets.TextInput(attrs={'size':60}))
 	pinboard_user = forms.CharField(required=False, label='Pinboard user', widget=forms.widgets.TextInput(attrs={'size':60}))
 	pinboard_password = forms.CharField(required=False, label='Pinboard password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
+	instagram_token = forms.CharField(required=False, label='Instagram OAuth token', widget=forms.widgets.TextInput(attrs={'size':60}))
+
 
 #
 # updates the twitter source
 #
 class UserSettings( webapp.RequestHandler ):
-	
+
 	def get(self):	
-		initial_data = {
-			'twitter_user': Config.getKey( 'twitter_user' ),
-			'delicious_user': Config.getKey( 'delicious_user' ),
-			'delicious_password': Config.getKey( 'delicious_password' ),
-			'youtube_user': Config.getKey( 'youtube_user' ),
-			'google_reader_feed': Config.getKey( 'google_reader_feed' ),
-			'picasa_user': Config.getKey('picasa_user'),
-			'pinboard_user': Config.getKey('pinboard_user'),
-			'pinboard_password': Config.getKey('pinboard_password')
-		}
-	
-		self.response.out.write( View(self.request).render( 'settings.html', { 'form': UserSettingsForm( initial_data )} ))
+		self.response.out.write( View(self.request).render( 'settings.html', { 'form': UserSettingsForm(Config.getAllKeysAsDictionary())} ))
 		
 	def post(self):
 
 		form = UserSettingsForm( self.request )		
 		if form.is_valid():		
 			# get the values from the request and save them to the database
-			Config.setKey('twitter_user', form.clean_data['twitter_user'])
-			Config.setKey('delicious_user', form.clean_data['delicious_user'])
-			Config.setKey('delicious_password', form.clean_data['delicious_password'])
-			Config.setKey('youtube_user', form.clean_data['youtube_user'])		
-			Config.setKey('google_reader_feed', form.clean_data['google_reader_feed'])
-			Config.setKey('picasa_user', form.clean_data['picasa_user'])
-			Config.setKey('pinboard_user', form.clean_data['pinboard_user'])
-			Config.setKey('pinboard_password', form.clean_data['pinboard_password'])
-		
-			initial_data = {
-				'twitter_user': Config.getKey( 'twitter_user' ),
-				'delicious_user': Config.getKey( 'delicious_user' ),
-				'delicious_password': Config.getKey( 'delicious_password' ),
-				'youtube_user': Config.getKey( 'youtube_user' ),
-				'google_reader_feed': Config.getKey( 'google_reader_feed' ),
-				'picasa_user': Config.getKey('picasa_user'),
-				'pinboard_user': Config.getKey('pinboard_user'),
-				'pinboard_password': Config.getKey('pinboard_password')
-			}
+			Config.setKeysFromDictionary(form.clean_data)
 		
 			self.response.out.write( View(self.request).render( 'settings.html', { 
-				'form': UserSettingsForm( initial_data ), 
+				'form': UserSettingsForm(Config.getAllKeysAsDictionary()), 
 				'message': 'Settings saved successfully'
 			} ))
 		else:

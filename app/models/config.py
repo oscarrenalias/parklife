@@ -1,8 +1,9 @@
 from google.appengine.ext import db
+import logging
 
 class Config(db.Model):
 
-	# twitter settings
+	# class attributes
 	config_key = db.StringProperty()	
 	value = db.StringProperty()
 	
@@ -25,6 +26,22 @@ class Config(db.Model):
 		settings.config_key = key
 		settings.value = value
 		settings.put()		
+		
+	#
+	# Retrieves all configuration keys from the Config table and returns then
+	# as a dictionary
+	#
+	def getAllKeysAsDictionary():
+		return(dict(map(lambda i:(i.config_key, i.value), Config.all())))
+	
+	#
+	# sets the given keys from a dictionary
+	#
+	def setKeysFromDictionary(keys):
+		dict2list = lambda dic: [(k, v) for (k, v) in dic.iteritems()]
+		map(lambda c: Config.setKey(c[0], c[1]), dict2list(keys))
 			
 	getKey = staticmethod(getKey)
 	setKey = staticmethod(setKey)
+	getAllKeysAsDictionary = staticmethod(getAllKeysAsDictionary)
+	setKeysFromDictionary = staticmethod(setKeysFromDictionary)
