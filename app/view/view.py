@@ -39,7 +39,7 @@ class HTMLView(BaseView):
 		
 class JSONView(BaseView):
 	def render(self, template, view_values = []):
-		from app.json import JSONHelper		
+		from app.json.helper import JSONHelper		
 		del view_values['defaults']
 
 		response = JSONHelper().encode(view_values)	
