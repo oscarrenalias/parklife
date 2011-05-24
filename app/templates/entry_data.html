@@ -66,6 +66,9 @@
 				<a href="#" class="geotag-link">					
 					<img src="/images/geotag.png" width="12" height="12" class="geotag-icon" alt="Geotag" />
 				</a>
+				{% if entry.location_name %}
+				&nbsp;{{entry.location_name}}	
+				{% endif %}				
 				</span>
 				{% endif %}
 				{% if entry.tags %}
