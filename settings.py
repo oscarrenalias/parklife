@@ -8,13 +8,13 @@
 
 import logging
 import app
-from view.view import View
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 from app.models.config import Config
 from django import newforms as forms
 from forms import Forms as parklifeforms
 from google.appengine.ext import ereporter
+from core import BaseHandler
 
 class UserSettingsForm(forms.Form):
 	# TODO: is there any way to keep this shorter?
@@ -28,14 +28,13 @@ class UserSettingsForm(forms.Form):
 	pinboard_password = forms.CharField(required=False, label='Pinboard password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
 	instagram_token = forms.CharField(required=False, label='Instagram OAuth token', widget=forms.widgets.TextInput(attrs={'size':60}))
 
-
 #
 # updates the twitter source
 #
-class UserSettings( webapp.RequestHandler ):
+class UserSettings(BaseHandler):
 
 	def get(self):	
-		self.response.out.write( View(self.request).render( 'settings.html', { 'form': UserSettingsForm(Config.getAllKeysAsDictionary())} ))
+		self.writeResponse( 'settings.html', { 'form': UserSettingsForm(Config.getAllKeysAsDictionary())})
 		
 	def post(self):
 
@@ -44,22 +43,22 @@ class UserSettings( webapp.RequestHandler ):
 			# get the values from the request and save them to the database
 			Config.setKeysFromDictionary(form.clean_data)
 		
-			self.response.out.write( View(self.request).render( 'settings.html', { 
+			self.writeResponse( 'settings.html', { 
 				'form': UserSettingsForm(Config.getAllKeysAsDictionary()), 
 				'message': 'Settings saved successfully'
-			} ))
+			})
 		else:
 			# form not valid, must show again with the errors
-			self.response.out.write( View(self.request).render( 'settings.html', { 
+			self.writeResponse( 'settings.html', { 
 				'form': form,
 				'message': 'There were some errors'
-			} ))
+			})
 
-class AdminMaintenance(webapp.RequestHandler):
+class AdminMaintenance(BaseHandler):
 	def get(self):
-		self.response.out.write( View(self.request).render( 'admin_maintenance.html' ))
+		self.writeResponse( 'admin_maintenance.html' )
 
-class DoAdminMaintenance(webapp.RequestHandler):
+class DoAdminMaintenance(BaseHandler):
 	def get(self, op):
 		if op == "empty":
 			# empty the data store
@@ -75,7 +74,7 @@ class DoAdminMaintenance(webapp.RequestHandler):
 		else:
 			message = 'Unknown operation'
 
-		self.response.out.write( View(self.request).render( 'admin_maintenance.html', { 'message': message } ))
+		self.writeResponse( 'admin_maintenance.html', { 'message': message } )
 
 def main():
   ereporter.register_logger()	

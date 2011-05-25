@@ -12,7 +12,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
 import app
 from app.models.entry import Entry
-from models.config import Config
+from app.models.config import Config
 from view.view import View
 from defaults import Defaults
 from django import newforms as forms
@@ -20,6 +20,7 @@ from google.appengine.ext.db import BadKeyError
 from google.appengine.ext.db import djangoforms
 from forms import Forms as parklifeforms
 from google.appengine.ext import ereporter
+from core import BaseHandler
 
 #
 # form object for the new blog entry
@@ -37,11 +38,11 @@ class EntryForm(djangoforms.ModelForm):
 		fields = [ 'title', 'text', 'tags', 'lat', 'lng' ]
 	
 
-class BlogHandler(webapp.RequestHandler):	
+class BlogHandler(BaseHandler):	
 
 	def get(self):	
 		# display the form
-		self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': EntryForm() } ))
+		self.writeResponse( 'new_blog_post.html', { 'form': EntryForm() } )
 
 	# this code is only called if for some reason javascript isn't available
 	def post(self):
@@ -61,9 +62,9 @@ class BlogHandler(webapp.RequestHandler):
 			self.redirect( '/' )
 		else:
 			# form not valid, must show again with the errors
-			self.response.out.write( View(self.request).render( 'new_blog_post.html', { 'form': form } ))
+			self.writeResponse( 'new_blog_post.html', { 'form': form } )
 			
-class EditEntryHandler(webapp.RequestHandler):
+class EditEntryHandler(BaseHandler):
 		
 	def get(self, entry_id):
 		try:
@@ -72,17 +73,17 @@ class EditEntryHandler(webapp.RequestHandler):
 			entry = None
 				
 		if entry == None:
-			self.response.out.write( View(self.request).render ('error.html', { 'message': 'Entry could not be found '} ))
+			self.writeResponse('error.html', { 'message': 'Entry could not be found '} )
 		else:			
 			# if found, display it	
-			self.response.out.write( View(self.request).render('new_blog_post.html', { 'entry': entry, 'entry_id': entry.key(), 'form':EntryForm(instance=entry) } ))		
+			self.writeResponse('new_blog_post.html', { 'entry': entry, 'entry_id': entry.key(), 'form':EntryForm(instance=entry) } )		
 			
 #
 # RESTful handler for entries. Supports creation (POST), deletion (DELETE),
 # updates (UPDATE) and retrieval (GET) of entries
 # Results are always returned as JSON responses
 #
-class EntryHandler(webapp.RequestHandler):
+class EntryHandler(BaseHandler):
 	
 	#
 	# returns an entry
@@ -92,9 +93,9 @@ class EntryHandler(webapp.RequestHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			self.response.out.write(View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
 			
-		self.response.out.write( View(self.request).render( None, {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
+		self.response.out.write(View(None, self.request).render( {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
 		
 	#
 	# add an entry
@@ -122,7 +123,7 @@ class EntryHandler(webapp.RequestHandler):
 			memcache.flush_all()			
 
 			# return successful creation
-			self.response.out.write( View(self.request).render( None, {
+			self.response.out.write( View(None, self.request).render( {
 				'message': 'New blog entry added successfully. <a href="%s">Link to the entry</a>.' % e.permalink(), 
 				'error': False,
 				'entry_link': e.permalink(),				
@@ -137,7 +138,7 @@ class EntryHandler(webapp.RequestHandler):
 				if field.errors:
 					data['errors'][field.name] = field.errors
 
-			self.response.out.write( View(self.request).render( None, data, force_renderer='json'))
+			self.response.out.write( View(None, self.request).render( data, force_renderer='json'))
 
 	#
 	# update an entry
@@ -149,7 +150,7 @@ class EntryHandler(webapp.RequestHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			self.response.out.write( View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
 			
 		form = EntryForm( data=self.request.POST )
 		if form.is_valid():
@@ -181,7 +182,7 @@ class EntryHandler(webapp.RequestHandler):
 					data['errors'][field.name] = field.errors
 
 		# return the view
-		self.response.out.write( View(self.request).render( None, data, force_renderer='json'))			
+		self.response.out.write( View(None, self.request).render( data, force_renderer='json'))			
 			
 	#
 	# create or update an entry
@@ -202,7 +203,7 @@ class EntryHandler(webapp.RequestHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write( View(self.request).render( None, {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			self.response.out.write( View(None, self.request).render({'error': True, 'message': 'Entry not found'}, force_renderer='json'))
 			
 		# otherwise, mark it as deleted and return success
 		e.deleted = True
@@ -212,7 +213,7 @@ class EntryHandler(webapp.RequestHandler):
 		from google.appengine.api import memcache
 		memcache.flush_all()		
 		
-		self.response.out.write( View(self.request).render( None, {'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
+		self.response.out.write( View(None, self.request).render({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
 def main():
   ereporter.register_logger()	

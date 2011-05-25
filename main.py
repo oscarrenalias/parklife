@@ -8,6 +8,7 @@
 #
 
 import sys
+import os
 import logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import util
@@ -20,8 +21,9 @@ from app.pager.cachedquery import CachedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext import ereporter
+from core import BaseHandler
 
-class MainHandler(webapp.RequestHandler):
+class MainHandler(BaseHandler):
 
 	def get(self ):	
 
@@ -38,9 +40,9 @@ class MainHandler(webapp.RequestHandler):
 		
 		data = {'entries': entries, 'prev': prev, 'next': next }
 
-		self.response.out.write(View(self.request).render('index.html', data ))
+		self.writeResponse('index.html', data )
 			
-class EntryHandler(webapp.RequestHandler):
+class EntryHandler(BaseHandler):
 	
 	def get(self, entry_slug):
 		
@@ -64,9 +66,9 @@ class EntryHandler(webapp.RequestHandler):
 			template = 'entry.html'
 			
 		# if found, display it	
-		self.response.out.write( View(self.request).render(template, { 'entry': entry } ))
+		self.writeResponse(template, { 'entry': entry } )
 		
-class SourceHandler(webapp.RequestHandler):
+class SourceHandler(BaseHandler):
 	
 	def get(self, source):
 		
@@ -86,9 +88,9 @@ class SourceHandler(webapp.RequestHandler):
 			'source': StringHelper.remove_html_tags(source)
 		}
 
-		self.response.out.write(View(self.request).render('index.html', view_data ))		
+		self.writeResponse('index.html', view_data )		
 			
-class TagHandler(webapp.RequestHandler):
+class TagHandler(BaseHandler):
 	
 	def get(self, tag):
 		query = CachedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
@@ -107,9 +109,9 @@ class TagHandler(webapp.RequestHandler):
 			'tag': StringHelper.remove_html_tags(tag)
 		}			
 			
-		self.response.out.write(View(self.request).render('index.html', view_data ))
+		self.writeResponse('index.html', view_data )
 			
-class PlacesHandler(webapp.RequestHandler):
+class PlacesHandler(BaseHandler):
 	
 	def get(self):
 		# this action generates different content depending on how it is called
@@ -120,12 +122,12 @@ class PlacesHandler(webapp.RequestHandler):
 		else:
 			view_data = {}
 
-		self.response.out.write(View(self.request).render('places.html', view_data))
+		self.writeResponse('places.html', view_data)
 		
-class NotFoundPageHandler(webapp.RequestHandler):
+class NotFoundPageHandler(BaseHandler):
 	def get(self):
 		self.error(404)
-		self.response.out.write(View(self.request).render('error.html', {'message': 'The page could not be found'} ))
+		self.writeResponse('error.html', {'message': 'The page could not be found'} )
 
 def main():
 	ereporter.register_logger()

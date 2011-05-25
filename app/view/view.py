@@ -72,8 +72,9 @@ class View:
 	# list of renderers
 	renderers = {}
 	
-	def __init__(self, request = None):
+	def __init__(self, template, request = None):
 		self.request = request
+		self.template = template
 		
 		# set up the list of available view renderers
 		self.renderers = {
@@ -82,7 +83,7 @@ class View:
 		   'atom': AtomView
 		}
 	
-	def render(self, template, view_values = {}, **params):
+	def render(self, view_values = {}, **params):
 		if 'force_renderer' in params:
 			output = params['force_renderer']
 		else:
@@ -108,7 +109,7 @@ class View:
 		renderer = self.renderers[output]()
 		renderer.is_iphone = self.is_iphone()
 		renderer.request = self.request
-		return( renderer.render(template, view_values ))
+		return( renderer.render(self.template, view_values ))
 		
 	def is_iphone(self):
 		#return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
