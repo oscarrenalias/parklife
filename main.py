@@ -18,6 +18,7 @@ from app.view.view import View
 from defaults import Defaults
 from app.pager.pager import PagerQuery
 from app.pager.cachedquery import CachedQuery
+from app.pager.pagedquery import PagedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext import ereporter
@@ -28,19 +29,20 @@ class MainHandler(BaseHandler):
 	def get(self ):	
 
 	    # Build a paginated query.
-		query = CachedQuery(Entry).filter('deleted = ', False).order('-created')
+		query = PagedQuery(Entry).filter('deleted = ', False).order('-created')
 		
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )
 
 	    # Fetch results for the current page and bookmarks for previous and next
 	    # pages.
-		bookmark = self.request.get( 'p' )
-		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+		page = self.getCurrentPage()
+		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 		
 		data = {'entries': entries, 'prev': prev, 'next': next }
 
 		self.writeResponse('index.html', data )
+		
 			
 class EntryHandler(BaseHandler):
 	
@@ -72,13 +74,13 @@ class SourceHandler(BaseHandler):
 	
 	def get(self, source):
 		
-		query = CachedQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
+		query = PagedQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
 		
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )		
 		
-		bookmark = self.request.get( 'p' )
-		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark ) 
+		page = self.getCurrentPage()
+		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 		
 		from app.utils import StringHelper
 		view_data = {
@@ -98,8 +100,8 @@ class TagHandler(BaseHandler):
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )			
 			
-		bookmark = self.request.get( 'p' )
-		prev, entries, next = query.fetch( Defaults.POSTS_PER_PAGE, bookmark )
+		page = self.getCurrentPage()
+		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 
 		from app.utils import StringHelper			
 		view_data = {

@@ -13,17 +13,12 @@ from google.appengine.ext.db import Query
 class PagedQuery(Query):
 	
 	def fetch(self, page, items_per_page = 20 ):
-		
-		limit = page * items_per_page
-		offset = items_per_page
+		if page == 1: 
+			prev_page = page
+		else:
+			prev_page = page - 1
+			
 		next_page = page + 1
 		
-		#print 'page = %s, limit = %s, items_per_page = %s, offset = %s' % (page, limit, items_per_page, offset)
-		
-		if page == 1: 
-			prev_page = page - 1
-		else:
-			prev_page = page
-		
-		val = super(PagedQuery, self).fetch(limit, offset)		
+		val = super(PagedQuery, self).fetch(items_per_page, page * items_per_page)		
 		return prev_page, val, next_page

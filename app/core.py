@@ -20,3 +20,11 @@ class BaseHandler(webapp.RequestHandler):
         
     def writeResponse(self, template, data = {}):
         self.response.out.write(View(template, self.request).render(data))
+
+    def getCurrentPage(self):
+        try:
+            page = int(self.request.get( 'p' ))
+        except ValueError:
+            page = 1
+            
+        return page
