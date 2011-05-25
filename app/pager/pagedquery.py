@@ -20,5 +20,5 @@ class PagedQuery(Query):
 			
 		next_page = page + 1
 		
-		val = super(PagedQuery, self).fetch(items_per_page, page * items_per_page)		
+		val = super(PagedQuery, self).fetch(items_per_page, (page-1) * items_per_page)		
 		return prev_page, val, next_page
