@@ -42,6 +42,8 @@ class PinboardSource(Source):
         e.text = post['extended']
         e.source = self.source_id
         e.created = parse( post['time'] )
-        e.tags = post['tags']
+        # this is a bit weird but for some reason, the list of tags from post['tags'] will
+        #Êreport at least one element even if it's empty, so we need to protect against that
+        e.tags = [] if len(post['tags'][0]) == 0 else post['tags']
         
         return e
