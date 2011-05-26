@@ -1,5 +1,8 @@
 from google.appengine.ext import webapp
 from app.view.view import View
+from defaults import Defaults
+from app.pager.pagedquery import PagedQuery
+from app.models.entry import Entry
 
 class BaseHandler(webapp.RequestHandler):
     def get(self):
@@ -28,3 +31,7 @@ class BaseHandler(webapp.RequestHandler):
             page = 1
             
         return page
+
+    # shortcut method for retrieving a bunch of entries given a default filter    
+    def getEntryQuery(self, extraFilters = {}):        
+        return Entry.getPagedQueryWithBasicFilters(extraFilters)

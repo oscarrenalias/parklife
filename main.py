@@ -16,8 +16,6 @@ from app.models.entry import Entry
 from app.models.config import Config
 from app.view.view import View
 from defaults import Defaults
-from app.pager.pager import PagerQuery
-from app.pager.cachedquery import CachedQuery
 from app.pager.pagedquery import PagedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
@@ -27,15 +25,8 @@ from core import BaseHandler
 class MainHandler(BaseHandler):
 
 	def get(self ):	
-
-	    # Build a paginated query.
-		query = PagedQuery(Entry).filter('deleted = ', False).order('-created')
 		
-		if Defaults.TWITTER_IGNORE_AT_REPLIES:
-			query = query.filter('twitter_reply = ', False )
-
-	    # Fetch results for the current page and bookmarks for previous and next
-	    # pages.
+		query = self.getEntryQuery()
 		page = self.getCurrentPage()
 		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 		
@@ -55,6 +46,7 @@ class EntryHandler(BaseHandler):
 		
 		# see if we can find the entry by slug
 		entry = Entry.all().filter('slug =', entry_slug ).filter('deleted = ', False).get()
+		#entry = self.getEntryQuery({'slug = ': entry_slug}).get()
 		# entry not found, let's try by id
 		if entry == None:
 			try: 
@@ -78,12 +70,7 @@ class EntryHandler(BaseHandler):
 class SourceHandler(BaseHandler):
 	
 	def get(self, source):
-		
-		query = PagedQuery(Entry).filter('source =', source).filter('deleted = ', False).order('-created')
-		
-		if Defaults.TWITTER_IGNORE_AT_REPLIES:
-			query = query.filter('twitter_reply = ', False )		
-		
+		query = self.getEntryQuery({'source =':source})		
 		page = self.getCurrentPage()
 		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 		
@@ -100,11 +87,7 @@ class SourceHandler(BaseHandler):
 class TagHandler(BaseHandler):
 	
 	def get(self, tag):
-		query = PagedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
-			
-		if Defaults.TWITTER_IGNORE_AT_REPLIES:
-			query = query.filter('twitter_reply = ', False )			
-			
+		query = self.getEntryQuery({'tags = ':tag})			
 		page = self.getCurrentPage()
 		prev, entries, next = query.fetch( page, Defaults.POSTS_PER_PAGE ) 
 
@@ -135,7 +118,7 @@ class NotFoundPageHandler(BaseHandler):
 	def get(self):
 		self.error(404)
 		self.writeResponse('error.html', {'message': 'The page could not be found'} )
-
+		
 def main():
 	ereporter.register_logger()
 	logging.getLogger().setLevel(logging.DEBUG)	
@@ -145,7 +128,8 @@ def main():
 			('/', MainHandler), 
 			('/entry/(.*)', EntryHandler ), 
 			('/source/(.*)', SourceHandler), 
-			('/tag/(.*)', TagHandler), 
+			('/tag/(.*)', TagHandler),
+			('/(test)/(.*)', TestHandler), 
 			('/places', PlacesHandler), 
 			('/.*', NotFoundPageHandler)			
 		], debug=True)

@@ -146,3 +146,21 @@ class Entry(db.Model):
 		output['permalink'] = self.permalink()
 		
 		return output
+	
+	#
+	# Returns a bunch of entries based on the commonly used filters used for the public portion of the
+	# site. Returns a Query object that can be used to iterate through the results
+	#
+	@staticmethod
+	def getPagedQueryWithBasicFilters(extraFilters = {}):
+		from defaults import Defaults
+		from app.pager.pagedquery import PagedQuery		
+		query = PagedQuery(Entry).filter('deleted = ', False).order( '-created' )
+		
+		for key in extraFilters:
+			query.filter(key, extraFilters[key]) 
+		
+		if Defaults.TWITTER_IGNORE_AT_REPLIES:
+			query = query.filter('twitter_reply = ', False )
+			
+		return query
