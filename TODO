@@ -21,3 +21,6 @@ x Possibility to switch comments on and off, and configurable disqus support
 x support TinyMCE as the text editor
 x Add support for Instagram
 x Add support for Pinboard
+- Improve the current code for the public request handlers, as there's currently penty of code that can be shared
+- Add json-based page turns with support for html5 browser history updates
+- Cache entire pages in memory so that they don't need to be rendered every time

@@ -41,7 +41,12 @@ class MainHandler(BaseHandler):
 		
 		data = {'entries': entries, 'prev': prev, 'next': next }
 
-		self.writeResponse('index.html', data )
+		if self.request.get('b'):
+			template = 'index_content_block.html'
+		else:
+			template = 'index.html'
+
+		self.writeResponse(template, data )
 		
 			
 class EntryHandler(BaseHandler):
