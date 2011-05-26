@@ -30,6 +30,16 @@
 				<div class="title">{{entry.text}}</a></div>				
 				{%endifequal%}
 				
+				{% ifequal entry.source 'instagram' %}
+				<div class="title"><a href="{{entry.url}}">{{entry.title}}</a></div>
+				<div class="note">{{entry.text}}</div>				
+				{%endifequal%}
+				
+				{% ifequal entry.source 'pinboard' %}
+				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
+				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
+				{%endifequal%}				
+																
 				{% ifequal entry.source 'youtube' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
 				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>

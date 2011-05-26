@@ -3,7 +3,7 @@
 Parklife | {{entry.title}}
 {% endblock %}
 {% block content %}
-      {% include "entry_data.html" %}
+      {% include "entry_partial.html" %}
       {% if defaults.COMMENTS_ENABLED %}
 	<!-- for the disqus functionality -->
 	<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/renaliasnet/embed.js"></script><noscript><a href="http://disqus.com/forums/{{defaults.DISQUS_USER}}/?url=ref">View the discussion thread.</a></noscript><!-- a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a-->	

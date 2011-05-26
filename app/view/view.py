@@ -1,5 +1,9 @@
 from app.utils import templatehelpers
 from app.view.viewhelpers import ViewHelpers
+from google.appengine.ext.webapp import template as t
+from google.appengine.api import users
+import django.template 
+import os
 
 class BaseView:
 	
@@ -8,33 +12,51 @@ class BaseView:
 	
 	def render(self, template, view_values = []):
 		raise Exception( 'BaseView.render is an abstract method!' )
+	
+	#
+	# partial views only return a part of the page instead of one entire page. Partial views are useful
+	# for Ajax page transitions.
+	# Partial views are forced by providing "b" as a parameter in the request
+	#	
+	def isPartialView(self):
+		return self.request.get("b")
+	
+	#
+	# in case of partial views, the convetion is that the template is called template_partial.html
+	#
+	def getPartialTemplateName(self, template):
+		fileParts = template.split(".")
+		template = fileParts[0] + "_partial." + ".".join(fileParts[1:])
+		return(template)
 
-class HTMLView(BaseView):	
+	def getLoginUrl(self):
+		return users.create_login_url(self.request.url)
+	
+	def getLogoutUrl(self):
+		return users.create_logout_url(self.request.url)		
+	
+class MobileHTMLView(BaseView):
+	def render(self, template, view_values = []):
+		
+		view_values['login_url'] = self.getLoginUrl()
+		view_values['logout_url'] = self.getLogoutUrl()		
+
+		path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
+		data = t.render(path, view_values)
+		
+		return( data )
+
+class HTMLView(BaseView):
 	def render(self, template, view_values = []):		
-		from google.appengine.ext.webapp import template as t
-		from google.appengine.api import users
-		import django.template 
-		import os
-		
-		# create the login and logout urls in case they are needed in the template
-		
-		view_values['login_url'] = users.create_login_url(self.request.url);
-		view_values['logout_url'] = users.create_logout_url(self.request.url)		
+		view_values['login_url'] = self.getLoginUrl()
+		view_values['logout_url'] = self.getLogoutUrl()		
 
-		# if the device is an iphone, try to load the iphone template for the given page
-		if self.is_iphone:
-			path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
-		else:
-			path = os.path.join(os.path.dirname(__file__), '../templates/' + template)
+		if self.isPartialView(): # partial view has been requested
+			template = self.getPartialTemplateName(template)
 			
-		# if the iphone cannot be found then fallback on the normal HTML one
-		try:
-			data = t.render(path, view_values)
-		except django.template.TemplateDoesNotExist:
-			if self.is_iphone:
-				# if we were trying to render the mobile view, try without...
-				data = t.render(os.path.join(os.path.dirname(__file__), '../templates/' + template), view_values )
-				
+		path = os.path.join(os.path.dirname(__file__), '../templates/' + template)			
+		data = t.render(path, view_values)
+
 		return( data )
 		
 class JSONView(BaseView):
@@ -44,7 +66,7 @@ class JSONView(BaseView):
 
 		response = JSONHelper().encode(view_values)	
 
-		# check if this is a jsonp request, we can do so by checking if the 'calllback'
+		# check if this is a JSONP request, we can do so by checking if the 'calllback'
 		# parameter is present in the request and then we'll wrap it around the json response
 		if self.request.get('callback'):
 			response = self.request.get('callback') + "(" + response + ")"
@@ -53,10 +75,6 @@ class JSONView(BaseView):
 		
 class AtomView(BaseView):
 	def render(self, template, view_values = []):
-		from google.appengine.ext.webapp import template as t
-		from app.models.entry import Entry
-		import os
-		
 		import app.utils.templatehelpers
 		
 		data=Entry().gql("ORDER BY created DESC").fetch(1)
@@ -80,7 +98,8 @@ class View:
 		self.renderers = {
 		   'html': HTMLView,
 		   'json': JSONView,
-		   'atom': AtomView
+		   'atom': AtomView,
+		   'mobile': MobileHTMLView
 		}
 	
 	def render(self, view_values = {}, **params):
@@ -89,6 +108,8 @@ class View:
 		else:
 			if self.request == None or self.request.get('f') == '':
 				output = 'html'
+			elif self.is_iphone():
+				output = 'mobile'
 			else:
 				output = self.request.get('f')
 			

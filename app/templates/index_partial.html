@@ -2,7 +2,7 @@
 	{% for date in entries_by_date %}
 	    <div class="date" id="{{date.grouper|slugify}}">{{ date.grouper }}</div>
 	    {% for entry in date.list %}
-			{% include "entry_data.html" %}
+			{% include "entry_partial.html" %}
 	    {% endfor %}
 	{% endfor %}
 	{% if defaults.COMMENTS_ENABLED %}
