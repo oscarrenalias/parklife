@@ -95,7 +95,7 @@ class SourceHandler(BaseHandler):
 class TagHandler(BaseHandler):
 	
 	def get(self, tag):
-		query = CachedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
+		query = PagedQuery(Entry).filter('tags = ', tag).filter('deleted = ', False).order( '-created' )
 			
 		if Defaults.TWITTER_IGNORE_AT_REPLIES:
 			query = query.filter('twitter_reply = ', False )			
