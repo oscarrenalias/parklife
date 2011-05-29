@@ -1,6 +1,6 @@
 {% if prev %}
-	<a href="{{ base_url }}?p={{ prev }}">&laquo; Prev</a>
+	<a rel="ajax" href="{{ base_url }}?p={{ prev }}">&laquo; Prev</a>
 {% endif %}
 {% if next %}
-	<a href="{{ base_url }}?p={{ next }}">Next &raquo;</a>
+	<a rel="ajax" href="{{ base_url }}?p={{ next }}">Next &raquo;</a>
 {% endif %}

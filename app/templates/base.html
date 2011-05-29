@@ -20,6 +20,12 @@
 	<script type="text/javascript" src="/js/jquery/jquery.easing.1.3.js"></script>			
 	<script type="text/javascript" src="/js/jquery/jquery.dropshadow.js"></script>	
 	<script type="text/javascript" src="/js/parklife/core.js"></script>				
+	<!-- ajax history handling -->
+	<script type="text/javascript">if ( typeof window.JSON === 'undefined' ) { document.write('<script type="text/javascript" src="/js/history/json2.js"><\/script>'); }</script>
+	<script type="text/javascript" src="/js/history/history.adapter.jquery.js"></script>
+	<script type="text/javascript" src="/js/history/history.js"></script>
+	<script type="text/javascript" src="/js/history/history.html4.js"></script>
+	<script type="text/javascript" src="/js/parklife/core.history.js"></script>	
 	<!-- script type="text/javascript" src="/js/shjs/sh_main.min.js"></script -->
 	<script type="text/javascript" src="/js/sh/shCore.js"></script>
 	<script type="text/javascript" src="/js/sh/shBrushJScript.js"></script>
@@ -54,7 +60,24 @@
 	    };
 	    lastFmRecords.init(_config);
 	});
-	</script>		
+	</script>
+	
+	<script type="text/javascript">
+	/*$(document).ready( function() {
+		$('a[rel="ajax"]').click(function(e) {
+			url = this.href
+			$.get(url, "b=1", function(data, status, jqxhr) {
+				$("#content").html(data);
+				history.pushState({url:url}, 'title', url);
+			});
+			return(false);		
+		});
+		
+		$(window).bind('popstate', function(e) {
+			window.alert(e);
+		});
+	});*/
+</script>
 	{% endblock %}	
 </head>	
 <body>
@@ -155,6 +178,13 @@
    				{% block content %}
    				<!-- nothing -->
    				{% endblock %}
+	<div class="bottom_nav">
+		<div class="pagination" id="pager">
+			{% block pagination %}
+			{% endblock %}
+		</div>	
+	</div>		
+   				
 			</div>
 			<div id="searchresults-container" style="display:none">
 				<div class="date">Search Results</div>
@@ -167,12 +197,6 @@
 				</div>
 			</div>
 		</div>		
-		<div class="bottom_nav"">
-			<div class="pagination" id="pager">
-				{% block pagination %}
-				{% endblock %}
-			</div>
-		</div>
 		
 		<div id="footer-wrapper">
 			<div id="footer">

@@ -1,7 +1,7 @@
 <div id="item_wrapper_{{entry.key}}" class="item_wrapper">	
   <div id="item_{{entry.key}}" class="item">
 	<div class='item_left'>
-		<a href="{{site.base_url}}/source/{{entry.source}}">
+		<a href="{{site.base_url}}/source/{{entry.source}}" rel="ajax">
 			<img class="icon" src="{{site.base_url}}/images/{{entry.source}}.png" width='16' height='16' />
 		</a>
 		<span id='item_time_3_40' class='time'>{{entry.created}}</span>		
@@ -79,7 +79,7 @@
 				{% endif %}
 			</div>
 			<div class="footnote">
-				<a href="{{ entry|permalink }}{%if defaults.COMMENTS_ENABLED %}#disqus_thread">View comments{% else %}">Link to entry{% endif %}</a>
+				<a  rel="ajax" href="{{ entry|permalink }}{%if defaults.COMMENTS_ENABLED %}">View comments{% else %}">Link to entry{% endif %}</a>
 			</div>
 		</div>		
 	</div>	
