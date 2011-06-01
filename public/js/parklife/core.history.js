@@ -77,7 +77,7 @@
 			// Start Fade Out
 			// Animating to opacity to 0 still keeps the element's height intact
 			// Which prevents that annoying pop bang issue when loading in new content
-			$content.animate({opacity:0},800);
+			$content.animate({opacity:0},500);
 
 			// Ajax Request the Traditional Page
 			$.ajax({
@@ -101,7 +101,7 @@
 
 					// Update the content
 					$content.stop(true,true);
-					$content.html(contentHtml).ajaxify().css('opacity',100).show();
+					$content.html(contentHtml).animate({opacity:100}, 500).ajaxify(); //.show();
 
 					// Add the scripts
 					$scripts.each(function(){
