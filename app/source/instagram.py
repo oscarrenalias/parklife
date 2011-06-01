@@ -41,7 +41,7 @@ class InstagramSource(Source):
     # builds the markup for the instagram posts
     #
     def makeInstagramText(self, picture):
-        html = '<div class="instagram-entry> \
+        html = '<div class="instagram-entry"> \
                 <a class="instagram-entry-link" href="%s"><img class="instagram-entry-img" alt="%s" src="%s" /></a> \
                 </div>' % (picture.link, picture.caption.text, picture.images[Defaults.INSTAGRAM_IMAGE_SIZE].url)
                 
