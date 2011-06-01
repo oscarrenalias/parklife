@@ -156,8 +156,8 @@ parklife.closeSearch = function()
 	$('#searchresults').html('');	
 }
 
-$(document).ready(function(){
-	
+parklife.onDocumentReady = function()
+{
 	// resize images if they need resizing
 	containerWidth = $('.note').width();
 	$('.note img').each(function(i, img) {		
@@ -262,8 +262,10 @@ $(document).ready(function(){
 	
 	// initialize the language highlighting
 	if(typeof(SyntaxHighlighter) != "undefined")
-		SyntaxHighlighter.all()
-});
+		SyntaxHighlighter.all()	
+}
+
+$(document).ready(parklife.onDocumentReady);
 
 parklife.callbacks.editEntry = function(resp)
 {

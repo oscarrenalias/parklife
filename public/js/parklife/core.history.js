@@ -119,6 +119,9 @@
 					if ( typeof window.pageTracker !== 'undefined' ) {
 						window.pageTracker._trackPageview(relativeUrl);
 					}
+					
+					// re-run the remaining logic that needs to be run every time the document is ready
+					parklife.onDocumentReady()					
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					document.location.href = url;
