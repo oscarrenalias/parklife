@@ -16,8 +16,6 @@
 		var contentSelector = '#content,article:first,.article:first,.post:first';
 		var $content = $(contentSelector).filter(':first');
 		var contentNode = $content.get(0);
-		var activeClass = 'active selected current youarehere';
-		var activeSelector = '.active,.selected,.current,.youarehere';
 
 		var $body = $(document.body);
 		var rootUrl = History.getRootUrl();
@@ -63,7 +61,7 @@
 			return $this;
 		};
 
-		// Ajaxify our Internal Links
+		// Ajaxify all links marked with rel="ajax"
 		$body.ajaxify();
 
 		// Hook into State Changes
@@ -84,7 +82,7 @@
 			// Ajax Request the Traditional Page
 			$.ajax({
 				url: url,
-				data: "b=1",
+				data: "b=1",	// request Parklife to provide the content portion of the page only
 				success: function(data, textStatus, jqXHR){
 					var $data = $(documentHtml(data));
 					var $dataContent = $data.filter(':first');					
@@ -113,8 +111,8 @@
 						contentNode.appendChild(scriptNode);
 					});
 
-					// Complete the change
-					if ( $body.ScrollTo||false ) { $body.ScrollTo(scrollOptions); }
+					$('html, body').animate({ scrollTop: 0 }, 500);					
+															
 					$body.removeClass('loading');
 
 					// Inform Google Analytics of the change
