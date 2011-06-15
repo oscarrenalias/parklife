@@ -14,9 +14,9 @@ cron:
 - description: Update the Picasa source
   url: /tasks/update/picasa
   schedule: every day 00:00
-  - description: Update the Instagram source
-    url: /tasks/update/instagram
-    schedule: every day 00:00  
+- description: Update the Instagram source
+  url: /tasks/update/instagram
+  schedule: every day 00:00  
 - description: Daily exception report
   url: /_ereporter?sender=phunkphorce@gmail.com
   schedule: every day 00:00  
