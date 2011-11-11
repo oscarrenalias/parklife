@@ -1,8 +1,16 @@
 <div>
+{#
 	{% regroup entries by created|date:"F j, Y" as entries_by_date %}
 	{% for date in entries_by_date %}
 	    <div class="date" id="{{date.grouper|slugify}}">{{ date.grouper }}</div>
 	    {% for entry in date.list %}
+			{% include "entry_partial.html" %}
+	    {% endfor %}
+	{% endfor %}
+#}
+	{% for entries_by_date in entries_grouped_by_date %}
+		<div class="date" id="{{date.grouper|slugify}}">{## {{ date.grouper }} ##}</div>
+	    {% for entry in entries_by_date %}
 			{% include "entry_partial.html" %}
 	    {% endfor %}
 	{% endfor %}

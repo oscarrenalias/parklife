@@ -86,13 +86,13 @@
 							<td class="spacer">
 								&nbsp;
 							</td>
-							<td {% ifequal source "blog" %}class="active"{% endifequal %}{% ifnotequal source "blog" %}class="inactive"{% endifnotequal %}>
+							<td {% if source == "blog" %}class="active"{% endif %}{% if source != "blog" %}class="inactive"{% endif %}>
 								<a href="http://stream.renalias.net/source/blog" onfocus="this.blur()">Blog</a>
 							</td>
 							<td class="spacer">
 								&nbsp;
 							</td>
-							<td {% ifnotequal source "blog" %}class="active"{% endifnotequal %}{% ifequal source "blog" %}class="inactive"{% endifequal %}>
+							<td {% if source == "blog" %}class="active"{% endif %}{% if source != "blog" %}class="inactive"{% endif %}>
 								<a href="http://stream.renalias.net" onfocus="this.blur()">Stream</a>
 							</td>
 							<td class="spacer">

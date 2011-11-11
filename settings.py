@@ -9,7 +9,6 @@
 import logging
 import app
 import webapp2
-from google.appengine.ext.webapp import util
 from app.models.config import Config
 from django import newforms as forms
 from forms import Forms as parklifeforms
@@ -76,7 +75,6 @@ class DoAdminMaintenance(BaseHandler):
 
 		self.writeResponse( 'admin_maintenance.html', { 'message': message } )
 
-ereporter.register_logger()	
 logging.getLogger().setLevel(logging.DEBUG)		
 	
 application = webapp2.WSGIApplication([

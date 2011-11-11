@@ -11,7 +11,6 @@ import sys
 import os
 import logging
 import webapp2
-from google.appengine.ext.webapp import util
 from app.models.entry import Entry
 from app.models.config import Config
 from app.view.view import View
@@ -19,7 +18,6 @@ from defaults import Defaults
 from app.pager.pagedquery import PagedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
-from google.appengine.ext import ereporter
 from core import BaseHandler
 from utils.classhelper import DynamicDispatcherMixin
 
@@ -47,25 +45,40 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 			if self.has_method(params[0]):
 				template, view_data = self.call_method(params[0], *params[1:])
 				self.writeResponse(template, view_data)
+
+	def groupEntries(self, entries):	
+		# sort entries first
+		sortedEntries = sorted(entries, key=lambda entry: entry.created)
+		# output logic
+		results = []
+		for entry in sortedEntries:
+			dateKey = str(entry.created)
+			if(has_key(results, dateKey) == False):
+				results[dateKey] = []
+
+			results[dateKey].append(entry)
+
+		return(results)
+
 			
 	def default(self):
 		query = self.getEntryQuery()		
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 		
-		data = {'entries': entries, 'prev': prev, 'next': next }
+		data = {'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next }
 		return 'index.html', data		
 		
 	def tag(self, tag):
 		query = self.getEntryQuery({'tags = ':tag})			
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 
 		from app.utils import StringHelper			
-		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
+		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
 		return 'index.html', view_data
 		
 	def source(self, source):
 		query = self.getEntryQuery({'source =':source})		
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 		
 		from app.utils import StringHelper
-		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
+		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
 		return 'index.html', view_data
 		
 	def entry(self, entry_slug):
@@ -97,7 +110,6 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				
 		return 'places.html', view_data
 		
-ereporter.register_logger()
 logging.getLogger().setLevel(logging.DEBUG)	
 	
 application = webapp2.WSGIApplication([ 

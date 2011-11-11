@@ -9,7 +9,6 @@
 import sys
 import logging
 import webapp2
-from google.appengine.ext.webapp import util
 import app
 from app.models.entry import Entry
 from app.models.config import Config
@@ -19,7 +18,6 @@ from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext.db import djangoforms
 from forms import Forms as parklifeforms
-from google.appengine.ext import ereporter
 from core import BaseHandler
 
 #
@@ -215,7 +213,6 @@ class EntryHandler(BaseHandler):
 		
 		self.response.out.write( View(None, self.request).render({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
-ereporter.register_logger()	
 logging.getLogger().setLevel(logging.DEBUG)	
 	
 application = webapp2.WSGIApplication([

@@ -1,15 +1,19 @@
-from app.utils import templatehelpers
+from app.utils.templatehelpers import templatehelpers
 from app.view.viewhelpers import ViewHelpers
-from google.appengine.ext.webapp import template as t
+import jinja2
 from google.appengine.api import users
-import django.template 
 import os
 
 class BaseView:
+
+	jinja = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/../templates"))
+	jinja.filters['slugify'] = templatehelpers.slugify
+	jinja.filters['permalink'] = templatehelpers.permalink
+	jinja.filters['atom_date'] = templatehelpers.atom_date
 	
 	is_iphone = False
 	request = None
-	
+
 	def render(self, template, view_values = []):
 		raise Exception( 'BaseView.render is an abstract method!' )
 	
@@ -41,7 +45,7 @@ class MobileHTMLView(BaseView):
 		view_values['login_url'] = self.getLoginUrl()
 		view_values['logout_url'] = self.getLogoutUrl()		
 
-		path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
+		path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)		
 		data = t.render(path, view_values)
 		
 		return( data )
@@ -54,8 +58,10 @@ class HTMLView(BaseView):
 		if self.isPartialView(): # partial view has been requested
 			template = self.getPartialTemplateName(template)
 			
-		path = os.path.join(os.path.dirname(__file__), '../templates/' + template)			
-		data = t.render(path, view_values)
+		#path = os.path.join(os.path.dirname(__file__), '../templates/' + template)			
+		#data = t.render(path, view_values)
+		template = self.jinja.get_template(template)
+		data = template.render(view_values)
 
 		return( data )
 		

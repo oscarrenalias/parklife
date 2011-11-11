@@ -10,7 +10,6 @@
 import app
 import logging
 import webapp2
-from google.appengine.ext.webapp import util
 from app.utils.classhelper import ClassHelper
 
 #
