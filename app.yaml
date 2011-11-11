@@ -43,3 +43,5 @@ builtins:
 libraries:
 - name: jinja2
   version: "2.6"
+- name: django
+  version: "1.2"

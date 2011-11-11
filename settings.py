@@ -10,10 +10,42 @@ import logging
 import app
 import webapp2
 from app.models.config import Config
-from django import newforms as forms
-from forms import Forms as parklifeforms
-from google.appengine.ext import ereporter
+#from django import forms
 from core import BaseHandler
+from abc import ABCMeta
+
+class forms:
+
+	class CharField:
+		def __init__(self, required, label, widget):
+			self.required = required
+			self.label = label
+			self.widget = widget
+
+	class widgets:
+
+		class BaseWidget:
+			__metaclass__ = ABCMeta
+
+			def __init__(self, attrs):
+				self.attrs = attrs
+
+			def render(self):
+				raise("Method must be implemented by child classes")
+
+		class TextInput(BaseWidget):
+			pass
+
+		class PasswordInput(BaseWidget):
+			pass			
+
+	class Form:
+		def __init__(self, values):
+			pass
+
+		def render(self):
+			"form"
+
 
 class UserSettingsForm(forms.Form):
 	# TODO: is there any way to keep this shorter?
