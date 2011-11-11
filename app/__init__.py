@@ -15,4 +15,3 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'json/simplejson'))
 
 # Must set this env var before importing any part of Django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-

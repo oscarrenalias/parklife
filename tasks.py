@@ -9,7 +9,7 @@
 
 import app
 import logging
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import util
 from app.utils.classhelper import ClassHelper
 
@@ -17,7 +17,7 @@ from app.utils.classhelper import ClassHelper
 # This is the controller class that receives requests from the cron and triggers
 # the source updates as required
 #
-class UpdateSources( webapp.RequestHandler ):
+class UpdateSources( webapp2.RequestHandler ):
 	
 	#sources = {
 	#		'twitter': TwitterSource,
@@ -59,12 +59,5 @@ class UpdateSources( webapp.RequestHandler ):
 		
 		logging.debug( 'source ' + str(source) + ': ' + str(total) + ' entries updated' )
 
-def main():
-  logging.getLogger().setLevel(logging.DEBUG)		
 	
-  application = webapp.WSGIApplication([('/tasks/update/(.*)', UpdateSources)],
-                                       debug=True)
-  util.run_wsgi_app(application)
-
-if __name__ == '__main__':
-  main()
+application = webapp2.WSGIApplication([('/tasks/update/(.*)', UpdateSources)], debug=True)

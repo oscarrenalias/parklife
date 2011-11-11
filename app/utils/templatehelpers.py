@@ -1,4 +1,4 @@
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import template
 
 #
@@ -22,7 +22,7 @@ def atom_date(value):
 #
 # this is all necessary so that our custom filter is registered within django's filters
 #
-register = webapp.template.create_template_register()
-register.filter(permalink)
-register.filter(atom_date)
-webapp.template.register_template_library('app.utils.templatehelpers')
+#register = webapp2.template.create_template_register()
+#register.filter(permalink)
+#register.filter(atom_date)
+#webapp2.template.register_template_library('app.utils.templatehelpers')

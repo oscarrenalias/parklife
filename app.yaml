@@ -1,7 +1,8 @@
 application: oscar-parklife
 version: 3
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: true
 
 handlers:
 - url: /css
@@ -11,33 +12,39 @@ handlers:
 - url: /images
   static_dir: public/images
 - url: /tasks/.*
-  script: tasks.py
+  script: tasks.application
 - url: /admin/settings
-  script: settings.py  
+  script: settings.application  
   login: admin
 - url: /admin/blog
-  script: blog.py  
+  script: blog.application
   login: admin
 - url: /admin/maintenance
-  script: settings.py
+  script: settings.application
   login: admin    
 - url: /admin/maintenance/(.*)
-  script: settings.py
+  script: settings.application
   login: admin  
 - url: /admin/edit/.*
-  script: blog.py
+  script: blog.application
   login: admin
 - url: /service/entry/.*
-  script: blog.py
+  script: blog.application
   login: admin  
-- url: /_ereporter.*
-  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.py
-  login: admin  
+#- url: /_ereporter.*
+#  script: $PYTHON_LIB/google/appengine/ext/ereporter/report_generator.application
+#  login: admin  
 - url: .*
-  script: main.py
+  script: main.application
 
 derived_file_type:
 - python_precompiled
 
 builtins:
 - datastore_admin: on
+
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: django
+  version: "1.2"

@@ -8,7 +8,7 @@
 
 import logging
 import app
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import util
 from app.models.config import Config
 from django import newforms as forms
@@ -76,14 +76,11 @@ class DoAdminMaintenance(BaseHandler):
 
 		self.writeResponse( 'admin_maintenance.html', { 'message': message } )
 
-def main():
-  ereporter.register_logger()	
-  logging.getLogger().setLevel(logging.DEBUG)		
+ereporter.register_logger()	
+logging.getLogger().setLevel(logging.DEBUG)		
 	
-  application = webapp.WSGIApplication([('/admin/settings', UserSettings), ('/admin/maintenance', AdminMaintenance), ('/admin/maintenance/(.*)', DoAdminMaintenance)],
-                                       debug=True)
-  util.run_wsgi_app(application)
-
-
-if __name__ == '__main__':
-  main()
+application = webapp2.WSGIApplication([
+	('/admin/settings', UserSettings), 
+	('/admin/maintenance', AdminMaintenance), 
+	('/admin/maintenance/(.*)', DoAdminMaintenance)],
+	debug=True)

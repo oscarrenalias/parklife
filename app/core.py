@@ -1,10 +1,10 @@
-from google.appengine.ext import webapp
+import webapp2
 from app.view.view import View
 from defaults import Defaults
 from app.pager.pagedquery import PagedQuery
 from app.models.entry import Entry
 
-class BaseHandler(webapp.RequestHandler):
+class BaseHandler(webapp2.RequestHandler):
     def get(self):
         self.__notImplemented("GET")
     

@@ -10,7 +10,7 @@
 import sys
 import os
 import logging
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import util
 from app.models.entry import Entry
 from app.models.config import Config
@@ -97,12 +97,10 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				
 		return 'places.html', view_data
 		
-def main():
-	ereporter.register_logger()
-	logging.getLogger().setLevel(logging.DEBUG)	
+ereporter.register_logger()
+logging.getLogger().setLevel(logging.DEBUG)	
 	
-	application = webapp.WSGIApplication(
-		[ 
+application = webapp2.WSGIApplication([ 
 			('/', FrontHandler), 
 			('/(entry)/(.*)', FrontHandler ), 
 			('/(source)/(.*)', FrontHandler), 
@@ -110,8 +108,4 @@ def main():
 			('/(test)/(.*)', FrontHandler), 
 			('/(places)', FrontHandler), 
 			('/.*', NotFoundPageHandler)			
-		], debug=True)
-	util.run_wsgi_app(application)
-
-if __name__ == '__main__':
-  main()
+], debug=True)

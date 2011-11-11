@@ -8,7 +8,7 @@
 
 import sys
 import logging
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import util
 import app
 from app.models.entry import Entry
@@ -215,12 +215,11 @@ class EntryHandler(BaseHandler):
 		
 		self.response.out.write( View(None, self.request).render({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
 
-def main():
-  ereporter.register_logger()	
-  logging.getLogger().setLevel(logging.DEBUG)	
+ereporter.register_logger()	
+logging.getLogger().setLevel(logging.DEBUG)	
 	
-  application = webapp.WSGIApplication([('/admin/blog', BlogHandler), ('/admin/edit/(.*)', EditEntryHandler), ('/service/entry/(.*)', EntryHandler)], debug=True)
-  util.run_wsgi_app(application)
-
-if __name__ == '__main__':
-  main()
+application = webapp2.WSGIApplication([
+	('/admin/blog', BlogHandler), 
+	('/admin/edit/(.*)', EditEntryHandler), 
+	('/service/entry/(.*)', EntryHandler)], 
+	debug=True)
