@@ -57,7 +57,6 @@ class forms:
 				if self.__class__.__dict__.has_key(k):
 					self.__class__.__dict__[k].value = v
 
-				# save the cleaned up value, but only if it's one of the ones defined for the form
 				if k[0:3] == "id_":
 					k = k[3:]
 				
