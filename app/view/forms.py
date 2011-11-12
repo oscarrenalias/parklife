@@ -34,9 +34,14 @@ class forms:
 		class TextInput(BaseWidget):
 			type = "text"
 			def childRender(self, field):
-				widget = '<input type="' + self.type + '" '
+				widget = '<input type="' + self.type + '" name="id_' + field.name + '" '
 				# process all field attributes, if any
 				attributes = " ".join(map(lambda key: key + '="' + str(self.attrs[key]) + '" ', self.attrs.keys()))
+				# set the value, if any
+				if field.value != "":
+					attributes += 'value ="' + field.value + '"'
+
+				# close the form
 				widget += attributes + ' />\n'
 
 				return(widget)
@@ -47,10 +52,16 @@ class forms:
 	class Form:
 		def __init__(self, values={}):
 			self.values = values
-			self.clean_data = values			
+			self.clean_data = {}
 			for (k,v) in values.items():
 				if self.__class__.__dict__.has_key(k):
 					self.__class__.__dict__[k].value = v
+
+				# save the cleaned up value, but only if it's one of the ones defined for the form
+				if k[0:3] == "id_":
+					k = k[3:]
+				
+				self.clean_data[k] = v
 
 		def render(self):
 			# retrieve all fields
@@ -64,3 +75,6 @@ class forms:
 					form += fieldObj.render()
 
 			return(form)
+
+		def is_valid(self):
+			return(True)	# TODO: this will do for now!

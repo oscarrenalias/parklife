@@ -35,8 +35,8 @@ class UserSettings(BaseHandler):
 		self.writeResponse( 'settings.html', { 'form': form.render()})
 		
 	def post(self):
-
-		form = UserSettingsForm( self.request )		
+		logging.debug("POST data:" + str(self.request.POST))
+		form = UserSettingsForm( self.request.POST )		
 		if form.is_valid():		
 			# get the values from the request and save them to the database
 			Config.setKeysFromDictionary(form.clean_data)

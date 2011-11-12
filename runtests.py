@@ -10,6 +10,7 @@
 import unittest
 from app.tests.test_utils import TestUtils
 from app.tests.test_viewhelpers import TestViewHelpers
+from app.tests.test_forms import TestForms
 		
 # if run from command line
 if __name__ == '__main__':
