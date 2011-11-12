@@ -49,6 +49,10 @@ class forms:
 	class Form:
 		def __init__(self, values={}):
 			self.values = values
+			self.clean_data = values			
+			for (k,v) in values.items():
+				if self.__class__.__dict__.has_key(k):
+					self.__class__.__dict__[k].value = v
 
 		def render(self):
 			# retrieve all fields
