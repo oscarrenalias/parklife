@@ -34,12 +34,10 @@ class forms:
 		class TextInput(BaseWidget):
 			type = "text"
 			def childRender(self, field):
-				widget = '<input type="' + self.type + '"'
-				if field.value:
-					 widget += 'value="' + str(field.value) + '"'
-				if self.attrs.has_key('size'):
-					widget += ' size="' + str(self.attrs['size']) + '"'
-				widget += ' />\n'
+				widget = '<input type="' + self.type + '" '
+				# process all field attributes, if any
+				attributes = " ".join(map(lambda key: key + '="' + str(self.attrs[key]) + '" ', self.attrs.keys()))
+				widget += attributes + ' />\n'
 
 				return(widget)
 
