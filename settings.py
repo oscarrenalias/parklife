@@ -10,42 +10,8 @@ import logging
 import app
 import webapp2
 from app.models.config import Config
-#from django import forms
 from core import BaseHandler
-from abc import ABCMeta
-
-class forms:
-
-	class CharField:
-		def __init__(self, required, label, widget):
-			self.required = required
-			self.label = label
-			self.widget = widget
-
-	class widgets:
-
-		class BaseWidget:
-			__metaclass__ = ABCMeta
-
-			def __init__(self, attrs):
-				self.attrs = attrs
-
-			def render(self):
-				raise("Method must be implemented by child classes")
-
-		class TextInput(BaseWidget):
-			pass
-
-		class PasswordInput(BaseWidget):
-			pass			
-
-	class Form:
-		def __init__(self, values):
-			pass
-
-		def render(self):
-			"form"
-
+from app.view.forms import forms
 
 class UserSettingsForm(forms.Form):
 	# TODO: is there any way to keep this shorter?
@@ -65,7 +31,8 @@ class UserSettingsForm(forms.Form):
 class UserSettings(BaseHandler):
 
 	def get(self):	
-		self.writeResponse( 'settings.html', { 'form': UserSettingsForm(Config.getAllKeysAsDictionary())})
+		form = UserSettingsForm(Config.getAllKeysAsDictionary())
+		self.writeResponse( 'settings.html', { 'form': form.render()})
 		
 	def post(self):
 
@@ -73,9 +40,10 @@ class UserSettings(BaseHandler):
 		if form.is_valid():		
 			# get the values from the request and save them to the database
 			Config.setKeysFromDictionary(form.clean_data)
+			form = UserSettingsForm(Config.getAllKeysAsDictionary())
 		
 			self.writeResponse( 'settings.html', { 
-				'form': UserSettingsForm(Config.getAllKeysAsDictionary()), 
+				'form': form.render(), 
 				'message': 'Settings saved successfully'
 			})
 		else:
