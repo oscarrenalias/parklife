@@ -82,14 +82,15 @@ class JSONView(BaseView):
 class AtomView(BaseView):
 	def render(self, template, view_values = []):
 		import app.utils.templatehelpers
+		from app.models.entry import Entry
 		
 		data=Entry().gql("ORDER BY created DESC").fetch(1)
 		view_values['site']['last_updated'] = data[0].created		
 		
-		path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
-		return t.render(path, view_values)
-
-
+		#path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
+		#return t.render(path, view_values)
+		template = self.jinja.get_template("atom.xml")
+		data = template.render(view_values)
 		
 class View:
 	
