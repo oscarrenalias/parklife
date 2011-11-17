@@ -25,6 +25,7 @@ class templatehelpers:
 	#
 	@staticmethod	
 	def slugify(value):
-		aslug = re.sub('[^\w\s-]', '', aslug).strip().lower()
+		import re
+		aslug = re.sub('[^\w\s-]', '', value).strip().lower()
 		aslug = re.sub('\s+', '-', aslug)
 		return aslug

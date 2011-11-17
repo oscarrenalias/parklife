@@ -47,17 +47,21 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				self.writeResponse(template, view_data)
 
 	def groupEntries(self, entries):	
+		# will be used to parse dates
+		from app.dateutil.parser import *
 		# sort entries first
 		sortedEntries = sorted(entries, key=lambda entry: entry.created)
+
 		# output logic
-		results = []
+		results = {}
 		for entry in sortedEntries:
-			dateKey = str(entry.created)
-			if(has_key(results, dateKey) == False):
+			dateKey = str(parse(str(entry.created)).date())
+			if(results.has_key(dateKey) == False):
 				results[dateKey] = []
 
 			results[dateKey].append(entry)
 
+		print("results = " + str(results))
 		return(results)
 
 			
