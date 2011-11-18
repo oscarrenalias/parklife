@@ -12,13 +12,11 @@ import webapp2
 import app
 from app.models.entry import Entry
 from app.models.config import Config
-from view.view import View
+from app.view.view import View
 from defaults import Defaults
-from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
-from google.appengine.ext.db import djangoforms
-from forms import Forms as parklifeforms
-from core import BaseHandler
+from app.forms import Forms as parklifeforms
+from app.core import BaseHandler
 
 #
 # form object for the new blog entry

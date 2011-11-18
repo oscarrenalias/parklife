@@ -6,12 +6,12 @@
 # http://www.gnu.org/licenses/gpl-3.0.txt
 #
 
-import logging
 import app
+import logging
 import webapp2
 from app.models.config import Config
-from core import BaseHandler
-from app.view.forms import forms
+from app.core import BaseHandler
+from app.forms.forms import forms
 
 class UserSettingsForm(forms.Form):
 	# TODO: is there any way to keep this shorter?
