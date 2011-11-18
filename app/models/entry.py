@@ -43,6 +43,12 @@ class Entry(db.Model):
 	
 	# attribute specific to the twitter source
 	twitter_reply = db.BooleanProperty(default=False)
+
+	#
+	# this is only used for grouping entries at the template level
+	#
+	def created_date(self):
+		return self.created.strftime("%B %d, %Y")
 	
 	# for date handling
 	@CalculatedProperty
@@ -56,7 +62,7 @@ class Entry(db.Model):
 	@CalculatedProperty
 	def day(self):
 		return self.created.day
-	
+
 	def _make_slug(self, append=""):
 		# It is possible to change the format of the slugs by modifying this
 		# method.

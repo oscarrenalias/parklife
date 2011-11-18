@@ -10,6 +10,7 @@ class BaseView:
 	jinja.filters['slugify'] = templatehelpers.slugify
 	jinja.filters['permalink'] = templatehelpers.permalink
 	jinja.filters['atom_date'] = templatehelpers.atom_date
+	jinja.filters['groupby_new'] = templatehelpers.do_groupby_new
 	
 	is_iphone = False
 	request = None

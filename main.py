@@ -46,31 +46,11 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				template, view_data = self.call_method(params[0], *params[1:])
 				self.writeResponse(template, view_data)
 
-	def groupEntries(self, entries):	
-		# will be used to parse dates
-		from app.dateutil.parser import parse
-
-		# output logic
-		results = {}
-		dates = []
-		for entry in entries:
-			dateKey = str(parse(str(entry.created)).date())
-			if(results.has_key(dateKey) == False):
-				results[dateKey] = []
-				dates.append(dateKey) 
-
-			results[dateKey].append(entry)
-
-		return sorted(dates, reverse=True), results
-
 	def default(self):
 		query = self.getEntryQuery()		
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 
-		dates, entries_grouped_by_date = self.groupEntries(entries)		
 		data = {
-			'entries': entries, # ungrouped dates
-			'dates': dates, # dates, used for displaying entries grouped by date
-			'entries_grouped_by_date': entries_grouped_by_date, # entries grouped by dates, as a dictionary
+			'entries': entries,
 			'prev': prev, 
 			'next': next 
 		}
