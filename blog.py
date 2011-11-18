@@ -15,30 +15,24 @@ from app.models.config import Config
 from app.view.view import View
 from defaults import Defaults
 from google.appengine.ext.db import BadKeyError
-from app.forms import Forms as parklifeforms
+from app.forms.forms import forms
 from app.core import BaseHandler
 
 #
 # form object for the new blog entry
 #	
-class EntryForm(djangoforms.ModelForm):
-	
-	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
-	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor full-width' }))
-	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
-	lat = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
-	lng = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
-	
-	class Meta:			
-		model = Entry
-		fields = [ 'title', 'text', 'tags', 'lat', 'lng' ]
-	
+class EntryForm(forms.Form):
+	title = forms.CharField(label='Title for the blog post', seq=1, widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
+	text = forms.CharField(label='Text for the blog post', seq=2, widget=forms.widgets.TextArea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor full-width' }))
+	tags = forms.CharField(required=False,label='Tags', seq=3, widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
+	lat = forms.CharField(required=False, seq=4, widget=forms.widgets.HiddenInput(attrs={'size':15}))
+	lng = forms.CharField(required=False, seq=5, widget=forms.widgets.HiddenInput(attrs={'size':15}))
 
 class BlogHandler(BaseHandler):	
 
 	def get(self):	
 		# display the form
-		self.writeResponse( 'new_blog_post.html', { 'form': EntryForm() } )
+		self.writeResponse( 'new_blog_post.html', { 'form': EntryForm().render() } )
 
 	# this code is only called if for some reason javascript isn't available
 	def post(self):
@@ -58,7 +52,7 @@ class BlogHandler(BaseHandler):
 			self.redirect( '/' )
 		else:
 			# form not valid, must show again with the errors
-			self.writeResponse( 'new_blog_post.html', { 'form': form } )
+			self.writeResponse( 'new_blog_post.html', { 'form': form.render() } )
 			
 class EditEntryHandler(BaseHandler):
 		
@@ -72,7 +66,11 @@ class EditEntryHandler(BaseHandler):
 			self.writeResponse('error.html', { 'message': 'Entry could not be found '} )
 		else:			
 			# if found, display it	
-			self.writeResponse('new_blog_post.html', { 'entry': entry, 'entry_id': entry.key(), 'form':EntryForm(instance=entry) } )		
+			self.writeResponse('new_blog_post.html', { 
+				'entry': entry, 
+				'entry_id': entry.key(), 
+				'form': EntryForm(instance=entry).render() 
+			})		
 			
 #
 # RESTful handler for entries. Supports creation (POST), deletion (DELETE),
@@ -148,7 +146,7 @@ class EntryHandler(BaseHandler):
 			# entry not found
 			self.response.out.write( View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
 			
-		form = EntryForm( data=self.request.POST )
+		form = EntryForm( self.request.POST )
 		if form.is_valid():
 			# validation succesful
 			e.title = form.clean_data['title']
