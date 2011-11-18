@@ -18,8 +18,8 @@ from defaults import Defaults
 from app.pager.pagedquery import PagedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
-from core import BaseHandler
-from utils.classhelper import DynamicDispatcherMixin
+from app.core import BaseHandler
+from app.utils.classhelper import DynamicDispatcherMixin
 
 class NotFoundPageHandler(BaseHandler):
 	def get(self):
@@ -60,14 +60,14 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 		query = self.getEntryQuery({'tags = ':tag})			
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 
 		from app.utils import StringHelper			
-		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
+		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
 		return 'index.html', view_data
 		
 	def source(self, source):
 		query = self.getEntryQuery({'source =':source})		
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 		
 		from app.utils import StringHelper
-		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
+		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
 		return 'index.html', view_data
 		
 	def entry(self, entry_slug):

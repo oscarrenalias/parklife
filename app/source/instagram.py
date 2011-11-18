@@ -1,7 +1,7 @@
-from source import Source
-from models.config import Config
-from models.entry import Entry
-from dateutil.parser import *
+from app.source import Source
+from app.models.config import Config
+from app.models.entry import Entry
+from app.dateutil.parser import *
 from app.instagram.client import InstagramAPI
 from defaults import Defaults
 import logging
