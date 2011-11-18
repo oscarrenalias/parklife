@@ -36,7 +36,7 @@ class BlogHandler(BaseHandler):
 
 	# this code is only called if for some reason javascript isn't available
 	def post(self):
-		form = EntryForm( self.request )
+		form = EntryForm( self.request.POST )
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
@@ -182,7 +182,7 @@ class EntryHandler(BaseHandler):
 	# create or update an entry
 	#
 	def post(self, entry_id):
-		form = EntryForm( self.request )
+		form = EntryForm( self.request.POST )
 		
 		if entry_id == None or entry_id == "":
 			self._addNewEntry(form)
