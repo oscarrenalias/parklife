@@ -4,7 +4,7 @@ from app.forms.forms import forms
 
 class TestForms(unittest.TestCase):
 
-	# sample form
+	# sample forms
 	class UserSettingsForm(forms.Form):
 		delicious_password = forms.CharField(required=False, label='Delicious password', seq=3, widget=forms.widgets.PasswordInput(attrs={'size':60}))
 		twitter_user = forms.CharField(required=False, label='Twitter user', seq=1, widget=forms.widgets.TextInput(attrs={'size':60, 'class':'test-class', 'id':'test-id'}))
@@ -18,10 +18,8 @@ class TestForms(unittest.TestCase):
 		lng = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))		
 
 	def testEmptyForm(self):
-		print("Empty form:\n" + self.UserSettingsForm().render() + "\n")
-
-		# let's use visual validation for now...
-		self.assertTrue(True)
+		# TODO: make sure that the rendered content is actually what we wanted
+		self.assertNotEquals("", self.UserSettingsForm().render())
 
 	def testFormWithData(self):
 		form = self.UserSettingsForm({
@@ -30,24 +28,33 @@ class TestForms(unittest.TestCase):
 			'delicious_password': 'delicious_password_value'
 		})
 
-		formContents = form.render()
-		print("Form with initial data:\n" + formContents + "\n")
-
+		self.assertNotEquals("", form.render())
 		self.assertTrue(form.clean_data['twitter_user'], 'twitter_user_value')
+		self.assertTrue(form.clean_data['delicious_user'], 'delicious_user_value')
+		self.assertTrue(form.clean_data['delicious_password'], 'delicious_password_value')
 
 	def testFormWithPOSTData(self):
 		request = Request.blank('/')
 		request.method = 'POST'
-		request.body = 'id_twitter_user=twitter_user_value&id_delicious_value=delicious_user_value&id_delicious_password=delicious_password_value'
+		request.body = 'id_twitter_user=twitter_user_value&id_delicious_user=delicious_user_value&id_delicious_password=delicious_password_value'
 
 		form = self.UserSettingsForm(request.POST)
 
 		formContents = form.render()
-		print("Form with POST data:\n" + formContents + "\n")
-
 		self.assertTrue(form.clean_data['twitter_user'], 'twitter_user_value')
+		self.assertTrue(form.clean_data['delicious_user'], 'delicious_user_value')
 
 	def testEntryForm(self):
 		form = self.EntryForm()
-		print("Entry form: " + form.render())
-		self.assertTrue(True)
+		self.assertNotEquals("", form.render())
+
+	def testEntryFormWithData(self):
+		request = Request.blank('/')
+		request.method = 'POST'
+		request.body = 'id_title=title&id_text=text&id_tags=tags'
+
+		form = self.EntryForm(request.POST)
+		self.assertNotEquals("", form.render())
+		self.assertEquals(form.clean_data['title'], 'title')
+		self.assertEquals(form.clean_data['text'], 'text')
+		self.assertEquals(form.clean_data['tags'], 'tags')
