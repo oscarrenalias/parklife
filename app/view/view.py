@@ -86,7 +86,7 @@ class JSONView(BaseView):
 		return( response )
 		
 class AtomView(BaseView):
-	content = "text/xml; charset=utf-8"
+	content = "application/atom+xml; charset=utf-8"
 
 	def render(self, template, view_values = []):
 		import app.utils.templatehelpers
