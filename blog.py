@@ -40,6 +40,7 @@ class BlogHandler(BaseHandler):
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
+			print(form.clean_data)
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
@@ -77,7 +78,14 @@ class EditEntryHandler(BaseHandler):
 # updates (UPDATE) and retrieval (GET) of entries
 # Results are always returned as JSON responses
 #
-class EntryHandler(BaseHandler):
+class BaseJSonHandler(BaseHandler):
+	def writeResponse(self, data):
+		responseContent, contentType = View(None, self.request).render(data, force_renderer='json')
+		self.response.headers['Content-type'] = contentType
+		self.response.out.write(responseContent)
+
+
+class EntryHandler(BaseJSonHandler):
 	
 	#
 	# returns an entry
@@ -87,9 +95,9 @@ class EntryHandler(BaseHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write(View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
-			
-		self.response.out.write(View(None, self.request).render( {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
+			self.writeResponse({'error': True, 'message': 'Entry not found'})
+		else:	
+			self.writeResponse({'error': False, 'entry': e, 'entry_id': entry_id})
 		
 	#
 	# add an entry
@@ -117,12 +125,13 @@ class EntryHandler(BaseHandler):
 			memcache.flush_all()			
 
 			# return successful creation
-			self.response.out.write( View(None, self.request).render( {
+			view_data = {
 				'message': 'New blog entry added successfully. <a href="%s">Link to the entry</a>.' % e.permalink(), 
 				'error': False,
-				'entry_link': e.permalink(),				
+				'entry_link': e.permalink(),							
 				'entry': e
-			}, force_renderer='json'))
+			}
+			self.writeResponse(view_data)
 
 		else:
 			# form not valid, must show again with the errors
@@ -132,7 +141,7 @@ class EntryHandler(BaseHandler):
 				if field.errors:
 					data['errors'][field.name] = field.errors
 
-			self.response.out.write( View(None, self.request).render( data, force_renderer='json'))
+			self.writeResponse(data)
 
 	#
 	# update an entry
@@ -176,7 +185,7 @@ class EntryHandler(BaseHandler):
 					data['errors'][field.name] = field.errors
 
 		# return the view
-		self.response.out.write( View(None, self.request).render( data, force_renderer='json'))			
+		self.writeResponse(data)
 			
 	#
 	# create or update an entry
@@ -197,17 +206,17 @@ class EntryHandler(BaseHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write( View(None, self.request).render({'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			self.writeResponse({'error': True, 'message': 'Entry not found'})
+		else:
+			# otherwise, mark it as deleted and return success
+			e.deleted = True
+			e.put()
 			
-		# otherwise, mark it as deleted and return success
-		e.deleted = True
-		e.put()
-		
-		# reset the data cache since there's been some changes
-		from google.appengine.api import memcache
-		memcache.flush_all()		
-		
-		self.response.out.write( View(None, self.request).render({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
+			# reset the data cache since there's been some changes
+			from google.appengine.api import memcache
+			memcache.flush_all()		
+			
+			self.writeResponse({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id})
 
 logging.getLogger().setLevel(logging.DEBUG)	
 	

@@ -124,9 +124,20 @@ class Entry(db.Model):
 	#
 	# returns a permanent link to the entry
 	#	
-	def permalink(self):
+	def permalink(self, f=None):
 		from defaults import Defaults
-		return( Defaults.site['base_url'] + '/entry/' + self.slug )
+		if f:
+			f = "?f=" + f
+		else:
+			f = ""
+		return( Defaults.site['base_url'] + '/entry/' + self.slug + f )
+
+	#
+	# link to this entry in admin interface, via REST
+	#
+	def service_link(self):
+		from defaults import Defaults
+		return( Defaults.site['base_url'] + '/service/entry/' + str(self.key()))
 				
 	#
 	# for this specific model, the value of tag_list is calculated dynamically
@@ -150,6 +161,9 @@ class Entry(db.Model):
 		
 		# this is not a real attribute of the object but we want to have it in the serialized json output
 		output['permalink'] = self.permalink()
+		output['service_link'] = self.service_link()
+		output['permalink_json'] = self.permalink('json')
+		output['permalink_atom'] = self.permalink('atom')
 		
 		return output
 	
