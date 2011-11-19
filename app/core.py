@@ -22,7 +22,9 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.out.write("Requested method %s not supported" % method)
         
     def writeResponse(self, template, data = {}):
-        self.response.out.write(View(template, self.request).render(data))
+        responseContent, contentType = View(template, self.request).render(data)
+        self.response.headers['Content-type'] = contentType
+        self.response.out.write(responseContent)
 
     def getCurrentPage(self):
         try:

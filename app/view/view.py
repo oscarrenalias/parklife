@@ -15,6 +15,9 @@ class BaseView:
 	is_iphone = False
 	request = None
 
+	# specialized view rendereds can use this to ovewrite the default content type
+	content = "text/html; charset=utf-8"
+
 	def render(self, template, view_values = []):
 		raise Exception( 'BaseView.render is an abstract method!' )
 	
@@ -67,6 +70,8 @@ class HTMLView(BaseView):
 		return( data )
 		
 class JSONView(BaseView):
+	content = "application/json; charset=utf-8"
+
 	def render(self, template, view_values = []):
 		from app.json.helper import JSONHelper		
 		del view_values['defaults']
@@ -81,6 +86,8 @@ class JSONView(BaseView):
 		return( response )
 		
 class AtomView(BaseView):
+	content = "text/xml; charset=utf-8"
+
 	def render(self, template, view_values = []):
 		import app.utils.templatehelpers
 		from app.models.entry import Entry
@@ -138,7 +145,8 @@ class View:
 		renderer = self.renderers[output]()
 		renderer.is_iphone = self.is_iphone()
 		renderer.request = self.request
-		return( renderer.render(self.template, view_values ))
+		# return the rendered content as well as the correct content type
+		return( renderer.render(self.template, view_values ), renderer.content)
 		
 	def is_iphone(self):
 		#return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
