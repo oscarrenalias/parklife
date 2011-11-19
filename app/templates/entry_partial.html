@@ -79,7 +79,7 @@
 				{% endif %}
 			</div>
 			<div class="footnote">				
-				<a  rel="ajax" href="{## { entry.permalink() } ##}{%if defaults.COMMENTS_ENABLED %}">View comments{% else %}">Link to entry{% endif %}</a>
+				<a  rel="ajax" href="{{ entry.permalink() }}{%if defaults.COMMENTS_ENABLED %}">View comments{% else %}">Link to entry{% endif %}</a>
 			</div>
 		</div>		
 	</div>	
