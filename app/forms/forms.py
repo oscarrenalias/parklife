@@ -29,7 +29,11 @@ class forms:
 
 				return(widget)
 
-			def joinAttributes(self):
+			def joinAttributes(self, field):
+				self.attrs['name'] = 'id_' + field.name
+				if self.attrs.has_key('id') == False:
+					self.attrs['id'] = 'id_' + field.name
+
 				return " ".join(map(lambda key: key + '="' + str(self.attrs[key]) + '" ', self.attrs.keys()))
 
 			def childRender(self, field):
@@ -38,9 +42,9 @@ class forms:
 		class TextInput(BaseWidget):
 			type = "text"
 			def childRender(self, field):
-				widget = '<input type="' + self.type + '" name="id_' + field.name + '" '
+				widget = '<input type="' + self.type + '" '
 				# process all field attributes, if any
-				attributes = self.joinAttributes()
+				attributes = self.joinAttributes(field)
 				# set the value, if any
 				if field.value != "":
 					attributes += 'value ="' + field.value + '"'
@@ -56,14 +60,14 @@ class forms:
 		class TextArea(BaseWidget):
 			def childRender(self, field):
 				widget = '<textarea name="id_' + field.name + '" '
-				widget += self.joinAttributes() + ' />' + field.value + '</textarea>'
+				widget += self.joinAttributes(field) + ' />' + field.value + '</textarea>'
 				return(widget)
 
 		class HiddenInput(TextInput):
 			type ="hidden"
 			def render(self, field):
-				widget = '<input type="' + self.type + '" name="id_' + field.name + '" '
-				attributes = self.joinAttributes()
+				widget = '<input type="' + self.type + '" '
+				attributes = self.joinAttributes(field)
 				# set the value, if any
 				if field.value != "":
 					attributes += 'value ="' + field.value + '"'
