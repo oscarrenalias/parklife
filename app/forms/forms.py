@@ -34,7 +34,6 @@ class forms:
 			# child classes could provide a better implementation
 			if self.required == True and self.clean_value == "":
 				self.errors = [ self.error ]
-				self.is_valid = False
 				raise ValueError(self.error)
 
 			return True
