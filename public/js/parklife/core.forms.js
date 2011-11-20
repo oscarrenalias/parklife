@@ -60,19 +60,26 @@ parklife.forms.blogClickHandler = function()
 	entry_id = $('#id_entry').val();
 	if( !entry_id ) 
 		$.ajax({
-				type:"POST",
-				url: "/service/entry/", 
-		       	data: parklife.forms._getBlogFormData(),
-		       	success: function(resp) {
-		          parklife.forms.callbacks.submitBlogForm(resp);
-		          if( !resp.error) 
-		          	$('#id_new_blog_entry')[0].reset();
-		       	}, 
-		       	error: parklife.forms.callbacks.ajaxError,
-		       	dataType:"json"
-		       } );	
+			type:"POST",
+			url: "/service/entry/", 
+	       	data: parklife.forms._getBlogFormData(),
+	       	success: function(resp) {
+	          parklife.forms.callbacks.submitBlogForm(resp);
+	          if( !resp.error) 
+	          	$('#id_new_blog_entry')[0].reset();
+	       	}, 
+	       	error: parklife.forms.callbacks.ajaxError,
+	       	dataType:"json"
+		});	
 	else 
-		$.post("/service/entry/" + entry_id, parklife.forms._getBlogFormData(), parklife.forms.callbacks.submitBlogForm, "json" );	
+		$.ajax({
+			type: "POST",
+			url: "/service/entry/" + entry_id,
+			data: parklife.forms._getBlogFormData(),
+			success: parklife.forms.callbacks.submitBlogForm,
+			error: parklife.forms.callbacks.ajaxError,
+			dataType: "json"
+		});	
 		
 	// show the spinner
 	$('#submit_blog_entry').after('<img src="/images/spinner.gif" id="spinner" />');
