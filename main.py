@@ -83,8 +83,8 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				entry = None
 				
 			if entry == None:
-				self.response.out.write( View(self.request, 'error.html').render ({ 'message': 'Entry could not be found '} ))
-				return
+				#self.response.out.write( View(self.request, 'error.html').render ({ 'message': 'Entry could not be found '} ))
+				return 'error.html', { 'message': 'Entry could not be found ', 'error': True}
 					
 		# if found, display it
 		return 'entry.html', { 'entry': entry } 	

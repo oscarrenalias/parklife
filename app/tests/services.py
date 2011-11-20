@@ -46,6 +46,13 @@ class TestJSonBlogServices(RestTestCase):
 		resp, data = HttpTestKit.doRest(self.uri("/source/twitter?f=json"))
 		self.assertResponse(resp)
 
+	def testNonExistantEntry(self):
+		resp, data = HttpTestKit.doRest(self.uri("/entry/123daf34q324qrasf?f=json"))
+		
+		self.assertResponse(resp)
+		self.assertTrue(data['error'])
+		self.assertTrue(len(data['message']) > 0)
+
 #
 # Tests for the Atom services
 #
