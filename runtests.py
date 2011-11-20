@@ -8,11 +8,18 @@
 #
 
 import unittest
-from app.tests.test_utils import TestUtils
-from app.tests.test_viewhelpers import TestViewHelpers
-from app.tests.test_forms import TestForms
-from app.tests.test_services import *
-		
-# if run from command line
+from app.tests.utils import TestUtils
+from app.tests.viewhelpers import TestViewHelpers
+from app.tests.forms import TestForms
+from app.tests.services import *
+
+#		
+# If run from command line, run all tests
+#
+# Alternatively, module-specific texts can be run like this:
+#	python -m unittest app.tests.forms
+#
+# Where app.tests.forms is a module with test classes
+#
 if __name__ == '__main__':
     unittest.main()

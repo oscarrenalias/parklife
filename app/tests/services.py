@@ -104,6 +104,24 @@ class TestAdminServices(RestTestCase):
 		self.assertEquals(data['entry']['title'], data2['entry']['title'])
 		self.assertEquals(data['entry']['tags'], data2['entry']['tags'])
 
+	# failure when creating an entry
+	def testFailedCreateEntry(self): 
+		# body for the request
+		import datetime
+		body = "id_title=&id_text=&id_tags=tags&lat=&lng="
+		# log in and set the cookie
+		self.login()
+		# make the call, with the auth cookie
+		resp, data = HttpTestKit.doRest(self.uri("/service/entry/"), method="POST", body=body, cookies=self.cookie)
+
+		# check the outcome
+		self.assertResponse(resp)
+
+		# there should be an error
+		self.assertTrue(data['error'])
+		# and two error messages
+		self.assertEquals(2, len(data['errors']))
+
 	# tests that entries can be deleted
 	def testDeleteEntry(self):
 		# body for the request

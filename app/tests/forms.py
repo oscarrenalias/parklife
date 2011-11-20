@@ -54,7 +54,24 @@ class TestForms(unittest.TestCase):
 		request.body = 'id_title=title&id_text=text&id_tags=tags'
 
 		form = self.EntryForm(request.POST)
+		#self.assertTrue(form.is_valid())
 		self.assertNotEquals("", form.render())
 		self.assertEquals(form.clean_data['title'], 'title')
 		self.assertEquals(form.clean_data['text'], 'text')
 		self.assertEquals(form.clean_data['tags'], 'tags')
+
+	def testInvalidForm(self):
+		request = Request.blank('/')
+		request.method = 'POST'
+		request.body = 'id_title=&id_text=&id_tags='
+
+		form = self.EntryForm(request.POST)
+		
+		# vaidation should fail
+		self.assertFalse(form.is_valid())	
+
+		# and make sure that there's errors for fields 'title' and 'text'
+		self.assertEquals(1, len(form.title.errors))
+		self.assertEquals(1, len(form.text.errors))
+		# and that there's no error for the 'tags' field
+		self.assertEquals(0, len(form.tags.errors))
