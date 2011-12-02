@@ -34,10 +34,7 @@ class TestForms(unittest.TestCase):
 		self.assertTrue(form.clean_data['delicious_password'], 'delicious_password_value')
 
 	def testFormWithPOSTData(self):
-		request = Request.blank('/')
-		request.method = 'POST'
-		request.body = 'id_twitter_user=twitter_user_value&id_delicious_user=delicious_user_value&id_delicious_password=delicious_password_value'
-
+		request = Request.blank('/', POST={'id_twitter_user':'twitter_user_value', 'id_delicious_user':'delicious_user_value','id_delicious_password':'delicious_password_value'})
 		form = self.UserSettingsForm(request.POST)
 
 		formContents = form.render()
@@ -49,21 +46,18 @@ class TestForms(unittest.TestCase):
 		self.assertNotEquals("", form.render())
 
 	def testEntryFormWithData(self):
-		request = Request.blank('/')
-		request.method = 'POST'
-		request.body = 'id_title=title&id_text=text&id_tags=tags'
+		request = Request.blank('/', POST={'id_title':'title', 'id_text':'text', 'id_tags':'tags'})
 
 		form = self.EntryForm(request.POST)
 		#self.assertTrue(form.is_valid())
 		self.assertNotEquals("", form.render())
+
 		self.assertEquals(form.clean_data['title'], 'title')
 		self.assertEquals(form.clean_data['text'], 'text')
 		self.assertEquals(form.clean_data['tags'], 'tags')
 
 	def testInvalidForm_AllFields(self):
-		request = Request.blank('/')
-		request.method = 'POST'
-		request.body = 'id_title=&id_text=a&id_tags='
+		request = Request.blank('/', POST={'id_title':'', 'id_text':'text', 'id_tags':''})
 
 		form = self.EntryForm(request.POST)
 		
