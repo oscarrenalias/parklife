@@ -18,8 +18,8 @@ from defaults import Defaults
 from app.pager.pagedquery import PagedQuery
 from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
-from core import BaseHandler
-from utils.classhelper import DynamicDispatcherMixin
+from app.core import BaseHandler
+from app.utils.classhelper import DynamicDispatcherMixin
 
 class NotFoundPageHandler(BaseHandler):
 	def get(self):
@@ -46,39 +46,28 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				template, view_data = self.call_method(params[0], *params[1:])
 				self.writeResponse(template, view_data)
 
-	def groupEntries(self, entries):	
-		# sort entries first
-		sortedEntries = sorted(entries, key=lambda entry: entry.created)
-		# output logic
-		results = []
-		for entry in sortedEntries:
-			dateKey = str(entry.created)
-			if(has_key(results, dateKey) == False):
-				results[dateKey] = []
-
-			results[dateKey].append(entry)
-
-		return(results)
-
-			
 	def default(self):
 		query = self.getEntryQuery()		
-		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 		
-		data = {'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next }
+		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 
+		data = {
+			'entries': entries,
+			'prev': prev, 
+			'next': next 
+		}
 		return 'index.html', data		
 		
 	def tag(self, tag):
 		query = self.getEntryQuery({'tags = ':tag})			
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 
 		from app.utils import StringHelper			
-		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
+		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'tag': StringHelper.remove_html_tags(tag) }		
 		return 'index.html', view_data
 		
 	def source(self, source):
 		query = self.getEntryQuery({'source =':source})		
 		prev, entries, next = query.fetch( self.page, Defaults.POSTS_PER_PAGE ) 		
 		from app.utils import StringHelper
-		view_data = { 'entries': entries, 'entries_grouped_by_date': self.groupEntries(entries), 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
+		view_data = { 'entries': entries, 'prev': prev, 'next': next, 'source': StringHelper.remove_html_tags(source) }
 		return 'index.html', view_data
 		
 	def entry(self, entry_slug):
@@ -94,8 +83,8 @@ class FrontHandler(BaseHandler, DynamicDispatcherMixin):
 				entry = None
 				
 			if entry == None:
-				self.response.out.write( View(self.request, 'error.html').render ({ 'message': 'Entry could not be found '} ))
-				return
+				#self.response.out.write( View(self.request, 'error.html').render ({ 'message': 'Entry could not be found '} ))
+				return 'error.html', { 'message': 'Entry could not be found ', 'error': True}
 					
 		# if found, display it
 		return 'entry.html', { 'entry': entry } 	

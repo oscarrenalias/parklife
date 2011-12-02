@@ -1,5 +1,5 @@
-<div id="item_wrapper_{{entry.key}}" class="item_wrapper">	
-  <div id="item_{{entry.key}}" class="item">
+<div id="item_wrapper_{{entry.key()}}" class="item_wrapper">	
+  <div id="item_{{entry.key()}}" class="item">
 	<div class='item_left'>
 		<a href="{{site.base_url}}/source/{{entry.source}}" rel="ajax">
 			<img class="icon" src="{{site.base_url}}/images/{{entry.source}}.png" width='16' height='16' />
@@ -8,61 +8,61 @@
 	</div>
 	<div class='item_right'>		
 		<div class="item_content">
-			<div class="item_actions" id="item_actions_{{entry.key}}">			
+			<div class="item_actions" id="item_actions_{{entry.key()}}">			
 				{% if user %}
-				  <div id="item_actions_wrapper_{{entry.key}}">
-					<a href="/admin/edit/{{entry.key}}" rel="{{entry.key}}" class="edit_entry">
+				  <div id="item_actions_wrapper_{{entry.key()}}">
+					<a href="/admin/edit/{{entry.key()}}" rel="{{entry.key()}}" class="edit_entry">
 						<img src="/images/icon-edit.png" alt="edit" height="12" width="12" />
 					</a>
-					<a href="#" rel="{{entry.key}}" class="delete_entry">
+					<a href="#" rel="{{entry.key()}}" class="delete_entry">
 						<img src="/images/icon-delete.png" alt="delete" height="12" width="12" />
 					</a>					
 				  </div>
 				{% endif %}
 			</div>
 			<div class="{{ entry.source }}">
-				{% ifequal entry.source 'delicious' %}
+				{% if entry.source == 'delicious' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
-				{%endifequal%}
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{{ entry.text }}</div>				
+				{% endif %}
 				
-				{% ifequal entry.source 'pinboard' %}
+				{% if entry.source == 'pinboard' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>				
-				{%endifequal%}				
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{{ entry.text }}</div>				
+				{% endif %}				
 				
-				{% ifequal entry.source 'twitter' %}
+				{% if entry.source == 'twitter' %}
 				<div class="title">{{entry.text}}</div>				
-				{%endifequal%}
+				{% endif %}
 				
-				{% ifequal entry.source 'instagram' %}
+				{% if entry.source == 'instagram' %}
 				<div class="title"><a href="{{entry.url}}">{{entry.title}}</a></div>
 				<div class="note">{{entry.text}}</div>				
-				{%endifequal%}				
+				{% endif %}				
 				
-				{% ifequal entry.source 'youtube' %}
+				{% if entry.source == 'youtube' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
-				{% endifequal %}
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{{ entry.text }}</div>
+				{% endif %}
 				
-				{% ifequal entry.source 'blog' %}
+				{% if entry.source == 'blog' %}
 				<div class="title"><a href="{{entry|permalink}}">{{ entry.title }}</a></div>				
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
-				{% endifequal %}				
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{{ entry.text }}</div>
+				{% endif %}				
 				
-				{% ifequal entry.source 'googlereader' %}
+				{% if entry.source == 'googlereader' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
-				{% endifequal %}				
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{% if entry.text %}{{ entry.text }}{% endif %}</div>
+				{% endif %}				
 				
-				{% ifequal entry.source 'picasa' %}
+				{% if entry.source == 'picasa' %}
 				<div class="title"><a href="{{entry.url}}">{{ entry.title }}</a></div>				
-				<div class="note" id="item_text_{{entry.key}}" data-entry-id="{{entry.key}}">{{ entry.text }}</div>
-				{% endifequal %}				
+				<div class="note" id="item_text_{{entry.key()}}" data-entry-id="{{entry.key()}}">{{ entry.text }}</div>
+				{% endif %}				
 			</div>
 			<div class="footnote">
 				{% if entry.lat %}
-				<span class="geotag-data" id="geotag-data-{{entry.key}}" data="[{{entry.lat}},{{entry.lng}}]">
+				<span class="geotag-data" id="geotag-data-{{entry.key()}}" data="[{{entry.lat}},{{entry.lng}}]">
 				<a href="#" class="geotag-link">					
 					<img src="/images/geotag.png" width="12" height="12" class="geotag-icon" alt="Geotag" />
 				</a>
@@ -74,12 +74,12 @@
 				{% if entry.tags %}
 				Tags: 
 					{% for tag in entry.tags %}
-						<a href="{{site.base_url}}/tag/{{tag}}" rel="tag">{{tag}}</a>{% ifequal forloop.last 0 %}, {% endifequal %}
+						<a href="{{site.base_url}}/tag/{{tag}}" rel="tag">{{tag}}</a>{% if loop.last == 0 %}, {% endif %}
 					{% endfor %}
 				{% endif %}
 			</div>
-			<div class="footnote">
-				<a  rel="ajax" href="{{ entry|permalink }}{%if defaults.COMMENTS_ENABLED %}">View comments{% else %}">Link to entry{% endif %}</a>
+			<div class="footnote">				
+				<a  rel="ajax" href="{{ entry.permalink() }}{%if defaults.COMMENTS_ENABLED %}">View comments{% else %}">Link to entry{% endif %}</a>
 			</div>
 		</div>		
 	</div>	

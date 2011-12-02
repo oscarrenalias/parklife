@@ -6,24 +6,23 @@
 # http://www.gnu.org/licenses/gpl-3.0.txt
 #
 
-import logging
 import app
+import logging
 import webapp2
 from app.models.config import Config
-from core import BaseHandler
-from app.view.forms import forms
+from app.core import BaseHandler
+from app.forms.forms import forms
 
 class UserSettingsForm(forms.Form):
-	# TODO: is there any way to keep this shorter?
-	twitter_user = forms.CharField(required=False, label='Twitter user', widget=forms.widgets.TextInput(attrs={'size':60}))
-	delicious_user = forms.CharField(required=False, label='Delicious user', widget=forms.widgets.TextInput(attrs={'size':60}))
-	delicious_password = forms.CharField(required=False, label='Delicious password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
-	youtube_user = forms.CharField(required=False, label='YouTube user', widget=forms.widgets.TextInput(attrs={'size':60}))	
-	google_reader_feed = forms.CharField(required=False, label='Google Reader shared items RSS feed', widget=forms.widgets.TextInput(attrs={'size':60}))		
-	picasa_user = forms.CharField(required=False, label='Picasa user', widget=forms.widgets.TextInput(attrs={'size':60}))
-	pinboard_user = forms.CharField(required=False, label='Pinboard user', widget=forms.widgets.TextInput(attrs={'size':60}))
-	pinboard_password = forms.CharField(required=False, label='Pinboard password', widget=forms.widgets.PasswordInput(attrs={'size':60}))
-	instagram_token = forms.CharField(required=False, label='Instagram OAuth token', widget=forms.widgets.TextInput(attrs={'size':60}))
+	twitter_user = forms.CharField(required=False, label='Twitter user', seq=1, widget=forms.widgets.TextInput(attrs={'size':60}))
+	delicious_user = forms.CharField(required=False, label='Delicious user', seq=2, widget=forms.widgets.TextInput(attrs={'size':60}))
+	delicious_password = forms.CharField(required=False, label='Delicious password', seq=3, widget=forms.widgets.PasswordInput(attrs={'size':60}))
+	youtube_user = forms.CharField(required=False, label='YouTube user', seq=4, widget=forms.widgets.TextInput(attrs={'size':60}))	
+	google_reader_feed = forms.CharField(required=False, seq=5, label='Google Reader shared items RSS feed', widget=forms.widgets.TextInput(attrs={'size':60}))		
+	picasa_user = forms.CharField(required=False, label='Picasa user', seq=6, widget=forms.widgets.TextInput(attrs={'size':60}))
+	pinboard_user = forms.CharField(required=False, label='Pinboard user', seq=7, widget=forms.widgets.TextInput(attrs={'size':60}))
+	pinboard_password = forms.CharField(required=False, label='Pinboard password', seq=8, widget=forms.widgets.PasswordInput(attrs={'size':60}))
+	instagram_token = forms.CharField(required=False, label='Instagram OAuth token', seq=9, widget=forms.widgets.TextInput(attrs={'size':60}))
 
 #
 # updates the twitter source

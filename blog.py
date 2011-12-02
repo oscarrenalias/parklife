@@ -12,42 +12,35 @@ import webapp2
 import app
 from app.models.entry import Entry
 from app.models.config import Config
-from view.view import View
+from app.view.view import View
 from defaults import Defaults
-from django import newforms as forms
 from google.appengine.ext.db import BadKeyError
-from google.appengine.ext.db import djangoforms
-from forms import Forms as parklifeforms
-from core import BaseHandler
+from app.forms.forms import forms
+from app.core import BaseHandler
 
 #
 # form object for the new blog entry
 #	
-class EntryForm(djangoforms.ModelForm):
-	
-	title = forms.CharField(label='Title for the blog post', widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
-	text = forms.CharField(label='Text for the blog post', widget=forms.widgets.Textarea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor full-width' }))
-	tags = forms.CharField(required=False,label='Tags', widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
-	lat = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
-	lng = forms.CharField(required=False, widget=forms.widgets.HiddenInput(attrs={'size':15}))
-	
-	class Meta:			
-		model = Entry
-		fields = [ 'title', 'text', 'tags', 'lat', 'lng' ]
-	
+class EntryForm(forms.Form):
+	title = forms.CharField(label='Title for the blog post', seq=1, widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
+	text = forms.CharField(label='Text for the blog post', seq=2, widget=forms.widgets.TextArea(attrs={'rows': 14, 'cols': 60, 'class': 'mceEditor full-width' }))
+	tags = forms.CharField(required=False,label='Tags', seq=3, widget=forms.widgets.TextInput(attrs={'size':60, 'class': 'full-width'}))
+	lat = forms.CharField(required=False, seq=4, widget=forms.widgets.HiddenInput(attrs={'size':15}))
+	lng = forms.CharField(required=False, seq=5, widget=forms.widgets.HiddenInput(attrs={'size':15}))
 
 class BlogHandler(BaseHandler):	
 
 	def get(self):	
 		# display the form
-		self.writeResponse( 'new_blog_post.html', { 'form': EntryForm() } )
+		self.writeResponse( 'new_blog_post.html', { 'form': EntryForm().render() } )
 
 	# this code is only called if for some reason javascript isn't available
 	def post(self):
-		form = EntryForm( self.request )
+		form = EntryForm( self.request.POST )
 		if form.is_valid():
 			# validation successful, we can save the data
 			e = Entry()
+			print(form.clean_data)
 			e.title = form.clean_data['title']
 			e.text = form.clean_data['text']
 			e.tags = form.clean_data['tags'].split(' ')
@@ -60,7 +53,7 @@ class BlogHandler(BaseHandler):
 			self.redirect( '/' )
 		else:
 			# form not valid, must show again with the errors
-			self.writeResponse( 'new_blog_post.html', { 'form': form } )
+			self.writeResponse( 'new_blog_post.html', { 'form': form.render() } )
 			
 class EditEntryHandler(BaseHandler):
 		
@@ -74,14 +67,25 @@ class EditEntryHandler(BaseHandler):
 			self.writeResponse('error.html', { 'message': 'Entry could not be found '} )
 		else:			
 			# if found, display it	
-			self.writeResponse('new_blog_post.html', { 'entry': entry, 'entry_id': entry.key(), 'form':EntryForm(instance=entry) } )		
+			self.writeResponse('new_blog_post.html', { 
+				'entry': entry, 
+				'entry_id': entry.key(), 
+				'form': EntryForm(instance=entry).render() 
+			})		
 			
 #
 # RESTful handler for entries. Supports creation (POST), deletion (DELETE),
 # updates (UPDATE) and retrieval (GET) of entries
 # Results are always returned as JSON responses
 #
-class EntryHandler(BaseHandler):
+class BaseJSonHandler(BaseHandler):
+	def writeResponse(self, data):
+		responseContent, contentType = View(None, self.request).render(data, force_renderer='json')
+		self.response.headers['Content-type'] = contentType
+		self.response.out.write(responseContent)
+
+
+class EntryHandler(BaseJSonHandler):
 	
 	#
 	# returns an entry
@@ -91,9 +95,9 @@ class EntryHandler(BaseHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write(View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
-			
-		self.response.out.write(View(None, self.request).render( {'error': False, 'entry': e, 'entry_id': entry_id}, force_renderer='json'))	
+			self.writeResponse({'error': True, 'message': 'Entry not found'})
+		else:	
+			self.writeResponse({'error': False, 'entry': e, 'entry_id': entry_id})
 		
 	#
 	# add an entry
@@ -121,12 +125,13 @@ class EntryHandler(BaseHandler):
 			memcache.flush_all()			
 
 			# return successful creation
-			self.response.out.write( View(None, self.request).render( {
+			view_data = {
 				'message': 'New blog entry added successfully. <a href="%s">Link to the entry</a>.' % e.permalink(), 
 				'error': False,
-				'entry_link': e.permalink(),				
+				'entry_link': e.permalink(),							
 				'entry': e
-			}, force_renderer='json'))
+			}
+			self.writeResponse(view_data)
 
 		else:
 			# form not valid, must show again with the errors
@@ -136,7 +141,7 @@ class EntryHandler(BaseHandler):
 				if field.errors:
 					data['errors'][field.name] = field.errors
 
-			self.response.out.write( View(None, self.request).render( data, force_renderer='json'))
+			self.writeResponse(data)
 
 	#
 	# update an entry
@@ -150,7 +155,7 @@ class EntryHandler(BaseHandler):
 			# entry not found
 			self.response.out.write( View(None, self.request).render( {'error': True, 'message': 'Entry not found'}, force_renderer='json'))
 			
-		form = EntryForm( data=self.request.POST )
+		form = EntryForm( self.request.POST )
 		if form.is_valid():
 			# validation succesful
 			e.title = form.clean_data['title']
@@ -180,13 +185,13 @@ class EntryHandler(BaseHandler):
 					data['errors'][field.name] = field.errors
 
 		# return the view
-		self.response.out.write( View(None, self.request).render( data, force_renderer='json'))			
+		self.writeResponse(data)
 			
 	#
 	# create or update an entry
 	#
 	def post(self, entry_id):
-		form = EntryForm( self.request )
+		form = EntryForm( self.request.POST )
 		
 		if entry_id == None or entry_id == "":
 			self._addNewEntry(form)
@@ -201,17 +206,17 @@ class EntryHandler(BaseHandler):
 		
 		if e == None:
 			# entry not found
-			self.response.out.write( View(None, self.request).render({'error': True, 'message': 'Entry not found'}, force_renderer='json'))
+			self.writeResponse({'error': True, 'message': 'Entry not found'})
+		else:
+			# otherwise, mark it as deleted and return success
+			e.deleted = True
+			e.put()
 			
-		# otherwise, mark it as deleted and return success
-		e.deleted = True
-		e.put()
-		
-		# reset the data cache since there's been some changes
-		from google.appengine.api import memcache
-		memcache.flush_all()		
-		
-		self.response.out.write( View(None, self.request).render({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id}, force_renderer='json'))	
+			# reset the data cache since there's been some changes
+			from google.appengine.api import memcache
+			memcache.flush_all()		
+			
+			self.writeResponse({'error': False, 'message': 'Entry successfully deleted', 'entry_id': entry_id})
 
 logging.getLogger().setLevel(logging.DEBUG)	
 	

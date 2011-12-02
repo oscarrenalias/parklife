@@ -43,6 +43,12 @@ class Entry(db.Model):
 	
 	# attribute specific to the twitter source
 	twitter_reply = db.BooleanProperty(default=False)
+
+	#
+	# this is only used for grouping entries at the template level
+	#
+	def created_date(self):
+		return self.created.strftime("%B %d, %Y")
 	
 	# for date handling
 	@CalculatedProperty
@@ -56,7 +62,7 @@ class Entry(db.Model):
 	@CalculatedProperty
 	def day(self):
 		return self.created.day
-	
+
 	def _make_slug(self, append=""):
 		# It is possible to change the format of the slugs by modifying this
 		# method.
@@ -118,9 +124,20 @@ class Entry(db.Model):
 	#
 	# returns a permanent link to the entry
 	#	
-	def permalink(self):
+	def permalink(self, f=None):
 		from defaults import Defaults
-		return( Defaults.site['base_url'] + '/entry/' + self.slug )
+		if f:
+			f = "?f=" + f
+		else:
+			f = ""
+		return( Defaults.site['base_url'] + '/entry/' + self.slug + f )
+
+	#
+	# link to this entry in admin interface, via REST
+	#
+	def service_link(self):
+		from defaults import Defaults
+		return( Defaults.site['base_url'] + '/service/entry/' + str(self.key()))
 				
 	#
 	# for this specific model, the value of tag_list is calculated dynamically
@@ -144,6 +161,9 @@ class Entry(db.Model):
 		
 		# this is not a real attribute of the object but we want to have it in the serialized json output
 		output['permalink'] = self.permalink()
+		output['service_link'] = self.service_link()
+		output['permalink_json'] = self.permalink('json')
+		output['permalink_atom'] = self.permalink('atom')
 		
 		return output
 	

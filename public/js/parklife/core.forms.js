@@ -47,22 +47,39 @@ parklife.forms.callbacks.submitBlogForm = function(resp)
 	}
 }
 
+parklife.forms.callbacks.ajaxError = function(obj, textStatus, errorThrown) {
+	$('#spinner').remove();	
+	window.alert("Ajax error:" + textStatus);
+	console.log("Ajax error: textStatus = " + textStatus + ", errorThrown = " + errorThrown);
+}
+
 parklife.forms.blogClickHandler = function()
 {
 	// if the 'id_entry' field containing the entry key exists in the form, then we're doing
 	// an update of an existing field. Otherwise we're doing an insertion
 	entry_id = $('#id_entry').val();
 	if( !entry_id ) 
-		$.post("/service/entry/", 
-		       parklife.forms._getBlogFormData(),
-		       function(resp) {
-		          parklife.forms.callbacks.submitBlogForm(resp);
-		          if( !resp.error) 
-		          	$('#id_new_blog_entry')[0].reset();
-		       }, 
-		       "json" );	
+		$.ajax({
+			type:"POST",
+			url: "/service/entry/", 
+	       	data: parklife.forms._getBlogFormData(),
+	       	success: function(resp) {
+	          parklife.forms.callbacks.submitBlogForm(resp);
+	          if( !resp.error) 
+	          	$('#id_new_blog_entry')[0].reset();
+	       	}, 
+	       	error: parklife.forms.callbacks.ajaxError,
+	       	dataType:"json"
+		});	
 	else 
-		$.post("/service/entry/" + entry_id, parklife.forms._getBlogFormData(), parklife.forms.callbacks.submitBlogForm, "json" );	
+		$.ajax({
+			type: "POST",
+			url: "/service/entry/" + entry_id,
+			data: parklife.forms._getBlogFormData(),
+			success: parklife.forms.callbacks.submitBlogForm,
+			error: parklife.forms.callbacks.ajaxError,
+			dataType: "json"
+		});	
 		
 	// show the spinner
 	$('#submit_blog_entry').after('<img src="/images/spinner.gif" id="spinner" />');
