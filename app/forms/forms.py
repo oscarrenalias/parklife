@@ -1,6 +1,8 @@
 #
 # Reimplementation of Django's newforms
 #
+import logging
+
 class forms:
 
 	field_prefix = "id_"
@@ -32,11 +34,14 @@ class forms:
 		def is_valid(self):
 			#print("is_valid = " + self.name + ", required = " + str(self.required) + ", value = " + self.value)
 			# child classes could provide a better implementation
-			if self.required == True and self.clean_value == "":
+			if self.required == True and self.value == "":
 				self.errors = [ self.error ]
 				raise ValueError(self.error)
 
 			return True
+
+		def __repr__(self):
+			return "<Field: type=%s, %s>" % (self.__class__.__name__, ", ".join(map(lambda x: str(x[0]) + ": " + str(x[1]), self.__dict__.iteritems())))
 
 	class CharField(BaseField):
 		pass
@@ -67,6 +72,9 @@ class forms:
 			
 			def addPrefix(self, name):
 				return forms.field_prefix + name
+
+			def __repr__(self):
+				return "<Widget: type = %s, %s>" % (self.__class__.__name__, str(self.attrs))
 
 		class TextInput(BaseWidget):
 			type = "text"
@@ -133,6 +141,11 @@ class forms:
 				self.data[k] = v
 				self.clean_data[k] = self.fields[k].clean(v)
 				self.fields[k].set_value(v)
+
+			logging.debug(self)
+
+		def __repr__(self):
+			return "<Form: fields: %s, values: %s, clean_data: %s, is_bound: %s >" % (str(self.fields), str(self.data), str(self.clean_data), str(self.is_bound))
 		
 		# saves the fields in an internal list
 		def _setFields(self):
