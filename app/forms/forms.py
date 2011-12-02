@@ -8,8 +8,6 @@ class forms:
 	field_prefix = "id_"
 
 	class BaseField:
-		errors = []
-		is_valid = True
 		
 		def __init__(self, required=True, label="", seq=999, widget=None, name="", value="", default_error = "This field is required."):
 			self.required = required
@@ -19,6 +17,7 @@ class forms:
 			self.value = value
 			self.seq = seq
 			self.error = default_error
+			self.errors = []
 
 		def render(self):
 			return(self.widget.render(self))
@@ -116,19 +115,17 @@ class forms:
 
 	class Form:
 
-		is_bound = False
-		fields = {}
-		data = {}
-		clean_data = {}
-
 		def __init__(self, values={}):
 
 			# set the form fields
 			self.fields = self._setFields()
+			self.is_bound = False
+			self.data = {}
+			self.clean_data = {}
 
 			# is the form bound to any data?
 			if len(values) > 0:
-				is_bound = True
+				self.is_bound = True
 
 			for (k,v) in values.items():
 				if self.__class__.__dict__.has_key(k):
