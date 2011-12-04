@@ -3,6 +3,7 @@ from app.view.viewhelpers import ViewHelpers
 import jinja2
 from google.appengine.api import users
 import os
+import logging
 
 class BaseView:
 
@@ -98,7 +99,8 @@ class AtomView(BaseView):
 		#path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
 		#return t.render(path, view_values)
 		template = self.jinja.get_template("atom.xml")
-		data = template.render(view_values)
+		
+		return(template.render(view_values))
 		
 class View:
 	
