@@ -112,27 +112,43 @@ class forms:
 		fields = {}
 		data = {}
 		clean_data = {}
+		instance = None
 
-		def __init__(self, values={}):
+		def _setInstanceValues(self, instance):
+			from app.utils.classhelper import do_call
+			for field in self.fields.itervalues(): 
+				if hasattr(instance, field.name):
+					self.data[field.name] = do_call(instance, field.name)
+					self.clean_data[field.name] = self.data[field.name]
+
+		def __init__(self, values={}, instance=None):
 
 			# set the form fields
 			self.fields = self._setFields()
 
-			# is the form bound to any data?
-			if len(values) > 0:
-				is_bound = True
+			# save the instance
+			self.instance = instance
+			if instance:
+				# fetch instance attributes from the entity that are called just like
+				# the fields in the form
+				self._setInstanceValues(self.instance)
+				pass
+			else:
+				# is the form bound to any data?
+				if len(values) > 0:
+					is_bound = True
 
-			for (k,v) in values.items():
-				if self.__class__.__dict__.has_key(k):
-					self.__class__.__dict__[k].value = v
+				for (k,v) in values.items():
+					if self.__class__.__dict__.has_key(k):
+						self.__class__.__dict__[k].value = v
 
-				# save the cleaned up value, but only if it's one of the ones defined for the form
-				if k[0:3] == forms.field_prefix:
-					k = k[3:]
+					# save the cleaned up value, but only if it's one of the ones defined for the form
+					if k[0:3] == forms.field_prefix:
+						k = k[3:]
 				
-				self.data[k] = v
-				self.clean_data[k] = self.fields[k].clean(v)
-				self.fields[k].set_value(v)
+					self.data[k] = v
+					self.clean_data[k] = self.fields[k].clean(v)
+					self.fields[k].set_value(v)
 		
 		# saves the fields in an internal list
 		def _setFields(self):
