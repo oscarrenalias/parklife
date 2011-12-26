@@ -32,3 +32,16 @@ class DynamicDispatcherMixin:
             return self.__class__.__dict__[method](self, *params)
         else:
             raise NotImplementedError("Method %s in object of class %s is not implemented" % (method, self.__class__.__name__))
+
+#
+# Calls a method or retrieves the attribute of an instance by its name, provided
+# as a string
+# TODO: where to put this?
+#
+def do_call(obj, attribute):
+    v = getattr(obj, attribute)
+    if v.__class__.__name__ == "instancemethod":
+        return v()
+    else:
+        return v
+        
