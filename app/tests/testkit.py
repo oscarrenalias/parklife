@@ -15,18 +15,17 @@ class JSonDecoder(BaseDecoder):
 	@staticmethod
 	def decode(content):
 		import simplejson as json
-
-		# return the decoded content
 		return json.loads(content)
 
 #
-# Decoder for XML responses (such as Atom)
+# Decoder for XML responses (such as Atom). Uses the ElementTree parser
 #
 class XmlDecoder(BaseDecoder):
 	@staticmethod
 	def decode(content):
-		# TODO: implement an XML parser
-		return content
+		from xml.etree import ElementTree
+		return ElementTree.fromstring(content)
+
 
 class HttpTestKit:
 
@@ -53,8 +52,8 @@ class HttpTestKit:
 		return response[0], response[1] 
 
 	#
-	# Performs a REST call and returns the content decoded in the given decoder
-	# (defaults to JSonDecoder)
+	# Performs a REST call and returns the content decoded in the given decoder.
+	# Ddefaults to JSonDecoder and GET as the method
 	#
 	@staticmethod
 	def doRest(url, decoder=JSonDecoder(), method="GET", body=None, headers=None, cookies=None, basicAuth={}):
