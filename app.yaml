@@ -1,5 +1,5 @@
 application: oscar-parklife
-version: 1
+version: 4
 runtime: python
 api_version: 1
 
@@ -35,6 +35,9 @@ handlers:
   login: admin  
 - url: .*
   script: main.py
+
+builtins:
+- remote_api: on
 
 derived_file_type:
 - python_precompiled
