@@ -1,5 +1,5 @@
-application: oscar-parklife
-version: 3
+application: oscar-parklife-hrd
+version: 1
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -39,6 +39,7 @@ derived_file_type:
 
 builtins:
 - datastore_admin: on
+- remote_api: on
 
 libraries:
 - name: jinja2
