@@ -11,5 +11,5 @@ class ViewHelpers:
 		return pattern.search(ua) is not None
 		
 	@staticmethod
-	def is_iphone(ua):
+	def is_mobile(ua):
 		return ViewHelpers._is_useragent(ua, _IPHONE_UA)

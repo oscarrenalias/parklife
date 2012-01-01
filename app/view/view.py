@@ -7,7 +7,7 @@ import os
 
 class BaseView:
 	
-	is_iphone = False
+	is_mobile = False
 	request = None
 	
 	def render(self, template, view_values = []):
@@ -41,7 +41,7 @@ class MobileHTMLView(BaseView):
 		view_values['login_url'] = self.getLoginUrl()
 		view_values['logout_url'] = self.getLogoutUrl()		
 
-		path = os.path.join(os.path.dirname(__file__), '../templates/iphone/' + template)
+		path = os.path.join(os.path.dirname(__file__), '../templates/mobile/' + template)
 		data = t.render(path, view_values)
 		
 		return( data )
@@ -108,7 +108,7 @@ class View:
 		else:
 			if self.request == None or self.request.get('f') == '':
 				output = 'html'
-			elif self.is_iphone():
+			elif self.is_mobile() or self.request.get('f') == 'mobile':
 				output = 'mobile'
 			else:
 				output = self.request.get('f')
@@ -128,10 +128,10 @@ class View:
 			
 		# call the renderer
 		renderer = self.renderers[output]()
-		renderer.is_iphone = self.is_iphone()
+		renderer.is_mobile = self.is_mobile()
 		renderer.request = self.request
 		return( renderer.render(self.template, view_values ))
 		
-	def is_iphone(self):
+	def is_mobile(self):
 		#return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
-		return ViewHelpers.is_iphone(self.request.headers['user-agent'])
+		return ViewHelpers.is_mobile(self.request.headers['user-agent'])
