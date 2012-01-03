@@ -21,7 +21,7 @@ from google.appengine.ext import db
 from google.appengine.ext.db import BadKeyError
 from google.appengine.ext import ereporter
 from core import BaseHandler
-from utils.classhelper import DynamicDispatcherMixin
+from app.utils.classhelper import DynamicDispatcherMixin
 
 class NotFoundPageHandler(BaseHandler):
 	def get(self):
