@@ -8,6 +8,30 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
 		<script type="text/javascript" src="/js/jqm/jquery.mobile-1.0.min.js"></script>
 		<script type="text/javascript">
+
+			showStreamPost = function(urlObj, options) {
+				var link = urlObj.search.replace( /.*post=/, "" ) + "?f=json";	// TODO: it probably isn't a good idea to hardcode this
+				var page = "#stream-post";
+
+				alert("link=" + link + "\npage=" + page);
+
+				$.ajax({
+					url: link,
+					dataType: "json",
+					error: function() {
+						window.alert("There was an error loading the content");
+					},
+					success: function(results) {
+						var entry = results.entry;
+						$(page).children(":jqmData(role=header)").find("h1").html(entry.title);
+						$(page).children(":jqmData(role=content)").html(entry.text);
+						options.dataUrl = urlObj.href;
+						$(page).page();
+						$.mobile.changePage($(page), options);
+					}
+				});	
+			}
+
 			$( '#main' ).live( 'pageinit',function(event){
   				$.ajax({
 	  				url:"/?f=json",
@@ -21,13 +45,13 @@
 	  					for(i=0; i<data.entries.length; i++) {
 	  						entry = data.entries[i];
 	  						text = entry.text;
-	  						url = entry.permalink + "?f=json";
+	  						url = entry.permalink;
 	  						if(entry.source=='blog') {
 	  							text = entry.title; 
 	  							//url = entry.permalink;
 	  						}
 	  						//content += '<li><a href="' + url + '">' + text + '</a></li>';
-	  						content += '<li><a href="#stream-post@' + url + '">' + text + '</a></li>';
+	  						content += '<li><a href="#stream-post?post=' + url + '">' + text + '</a></li>';
 	  					}
 	  					$('#stream-list').html(content).listview('refresh');
 	  					//$('#stream-list').listview('refresh');
@@ -35,35 +59,21 @@
 	  			})
 			});
 
-			$(document).bind( "pagebeforeload", function(e,data) {
-				alert("here");
-			});
-
 			$(document).bind( "pagebeforechange", function(e,data) {
 
-				if(typeof data.toPage !== "string")
-					return;
+				if(typeof data.toPage === "string") {
+					var u = $.mobile.path.parseUrl( data.toPage ),
+					re = /^\?post=/;
+					if ( u.search.search(re) !== -1 ) {
+						showStreamPost(u, data.options)
 
-				e.preventDefault();
-
-				// target anchor and json link
-				var page = "#" + data.toPage.substring(0,data.toPage.indexOf('@')),
-				    link = data.toPage.substring(data.toPage.indexOf('@') + 1);
-				
-				$.ajax({
-					url:link,
-					dataType:"json",
-					error: function() {
-						window.alert("There was an error loading the content");
-					},
-					success: function(results) {
-						var entry = results.entry;
-						$(page).children(":jqmData(role=header)").find("h1").html(entry.title);
-						$(page).children(":jqmData(role=content)").html(entry.text);
-						//data.dataUrl = link;
-						$.mobile.changePage($(page), data);
+						e.preventDefault();
 					}
-				}); 
+					return;
+				}
+				// target anchor and json link
+				/*var page = "#" + data.toPage.substring(0,data.toPage.indexOf('@')),
+				    link = data.toPage.substring(data.toPage.indexOf('@') + 1);*/			 
 			});
 		</script>
 	</head>
