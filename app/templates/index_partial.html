@@ -1,11 +1,4 @@
 <div>
-	{## {% for date in dates %}
-		<div class="date" id="{{date|slugify}}">{{ date|format_date() }}</div>
-	    {% for entry in entries_grouped_by_date.get(date) %}
-			{% include "entry_partial.html" %}
-	    {% endfor %}
-	{% endfor %}##}
-
 	{% for date in entries|groupby_new('created_date', True) %}
 	    <div class="date" id="{{date.grouper}}">{{ date.grouper }}</div>
 	    {% for entry in date.list %}

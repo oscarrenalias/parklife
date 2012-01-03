@@ -56,6 +56,11 @@ class TestForms(unittest.TestCase):
 		self.assertEquals(form.clean_data['text'], 'text')
 		self.assertEquals(form.clean_data['tags'], 'tags')
 
+	def testInvalidForm(self):
+		request = Request.blank('/')
+		request.method = 'POST'
+		request.body = 'id_title=&id_text=a&id_tags='
+
 	def testInvalidForm_AllFields(self):
 		request = Request.blank('/', POST={'id_title':'', 'id_text':'text', 'id_tags':''})
 
@@ -64,8 +69,26 @@ class TestForms(unittest.TestCase):
 		# vaidation should fail
 		self.assertFalse(form.is_valid())	
 
-		# and make sure that there's errors for fields where there should be
+		# and make sure that there's errors for fields where there should be errors
 		self.assertEquals(1, len(form.title.errors))
 		self.assertEquals(0, len(form.text.errors))
 		# and that there's no error for the 'tags' field
 		self.assertEquals(0, len(form.tags.errors))
+
+	def testFormWithEntity(self):
+		# create a test entity
+		class TestEntity:
+			pass
+
+		e = TestEntity()
+		e.title = "this is the title"
+		e.text = "this is the text"
+		e.tags = "tag1 tag2 tag3".split(' ')
+		e.lat = "123"
+		e.lng = "123"
+		e.source = 'blog'
+				
+		# now use it to pre-fill the form
+		form = self.EntryForm(instance=e)
+
+		self.assertNotEquals("", form.render())

@@ -52,17 +52,6 @@ class templatehelpers:
 	def do_groupby_new(value, attribute, reverse=False):
 		from jinja2.filters import _GroupTuple
 		from itertools import groupby
+		from app.utils.classhelper import do_call
 		expr = lambda x: do_call(x, attribute)
 		return sorted(map(_GroupTuple, groupby(sorted(value, key=expr), expr)), reverse=reverse)	
-
-#
-# Calls a method or retrieves the attribute of an instance by its name, provided
-# as a string
-# TODO: where to put this?
-#
-def do_call(obj, attribute):
-	v = getattr(obj, attribute)
-	if v.__class__.__name__ == "instancemethod":
-		return v()
-	else:
-		return v
