@@ -76,14 +76,13 @@ class JSONView(BaseView):
 class AtomView(BaseView):
 	def render(self, template, view_values = []):
 		import app.utils.templatehelpers
+		from app.models.entry import Entry
 		
 		data=Entry().gql("ORDER BY created DESC").fetch(1)
 		view_values['site']['last_updated'] = data[0].created		
 		
 		path = os.path.join(os.path.dirname(__file__), '../templates/atom.xml')
 		return t.render(path, view_values)
-
-
 		
 class View:
 	
@@ -106,12 +105,7 @@ class View:
 		if 'force_renderer' in params:
 			output = params['force_renderer']
 		else:
-			if self.request == None or self.request.get('f') == '':
-				output = 'html'
-			elif self.is_mobile() or self.request.get('f') == 'mobile':
-				output = 'mobile'
-			else:
-				output = self.request.get('f')
+			output = ViewHelpers.select_output(self.request)
 			
 		# is the renderer valid?
 		if output not in self.renderers:
@@ -128,10 +122,6 @@ class View:
 			
 		# call the renderer
 		renderer = self.renderers[output]()
-		renderer.is_mobile = self.is_mobile()
+		renderer.is_mobile = ViewHelpers.is_mobile(self.request.headers['user-agent'])
 		renderer.request = self.request
 		return( renderer.render(self.template, view_values ))
-		
-	def is_mobile(self):
-		#return _IPHONE_UA.search(self.request.headers['user-agent']) is not None
-		return ViewHelpers.is_mobile(self.request.headers['user-agent'])
