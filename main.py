@@ -104,7 +104,8 @@ def main():
 	application = webapp.WSGIApplication(
 		[ 
 			('/', FrontHandler), 
-			('/(entry)/(.*)', FrontHandler ), 
+			('/index', FrontHandler),
+			('/(entry)/(.*)', FrontHandler), 
 			('/(source)/(.*)', FrontHandler), 
 			('/(tag)/(.*)', FrontHandler),
 			('/(test)/(.*)', FrontHandler), 
