@@ -13,7 +13,7 @@ from google.appengine.ext.webapp import util
 import app
 from app.models.entry import Entry
 from app.models.config import Config
-from view.view import View
+from app.view.view import View
 from defaults import Defaults
 from django import newforms as forms
 from google.appengine.ext.db import BadKeyError

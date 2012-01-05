@@ -1,6 +1,8 @@
 (function(window) {
 	var app = function() {}
 
+	app.currentPage = 1;
+
 	app.prototype.init = function() {
 		console.log("Mobile Parklife initialized");	
 	}
@@ -28,31 +30,63 @@
 		});	
 	}
 
-	app.initPage = function() {
+	app.renderStreamItem = function(entry) {
+		var content = "<li>";
+
+		// icon markup
+		var icon = '<img src="/images/' + entry.source + '.png" class="ui-li-icon" />';
+		// date markup
+		var date = '<p class="date-timestamp" data-timestamp="' + entry.created.isoformat + '">' + entry.created.isoformat + '</p>';
+		
+		if(entry.source == 'blog') {
+			content += '<a href="#stream-post?post=' + entry.permalink + '">' + icon +
+					   date +	
+					   '<h3>' + entry.title + '</h3>' +
+					   '</a>';
+		}
+		else if(entry.source == 'instagram') {
+			content += '<p><a href="' + entry.url + '">' + icon + date + entry.title + entry.text + '</p>' +
+					   '</a>';			
+		}
+		else {
+			content += '<a href="' + entry.url + '">' + icon + date + entry.text + '</a>';					   
+		}
+				
+		content += "</li>"
+
+		return(content);
+	}
+
+
+	app.displayPage = function(page) {
+		
+		var url = "/?f=json";
+		if(page > 1)
+			url += "&p=" + page;
+
 		$.ajax({
-			url:"/?f=json",
-			dataType:"json",
+			url: url,
+			dataType: "json",
 			error: function() {
 				window.alert("There was an error loading the data")
 			},
 			success: function(data) {
-				var content = ""
-				//for(entry in data.entries) { -- why doesn't this work?
-				for(i=0; i<data.entries.length; i++) {
-					entry = data.entries[i];
-					text = entry.text;
-					url = entry.permalink;
-					if(entry.source=='blog') {
-						text = entry.title; 
-						//url = entry.permalink;
-					}
-					//content += '<li><a href="' + url + '">' + text + '</a></li>';
-					content += '<li><a href="#stream-post?post=' + url + '">' + text + '</a></li>';
-				}
-				$('#stream-list').html(content).listview('refresh');
-				//$('#stream-list').listview('refresh');
+				var content = "";
+				$.each(data.entries, function(key, entry) {
+					content += app.renderStreamItem(entry);
+				});				
+				//$('#stream-list').html(content).listview('refresh');
+				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
+				$('.date-timestamp').cuteTime({ refresh: 60000 });
 			}
 		})		
+	}
+
+	app.displayMore = function() {
+		app.currentPage++;
+		app.displayPage(app.currentPage);
+
+		console.log("Current page = " + app.currentPage);
 	}
 
 	app.pageBeforeChangeHandler = function(e,data) {
@@ -72,12 +106,16 @@
 })(window);
 
 $(document).ready(function(){
-  app = new app();
-  app.init();
+	app = new app();
+	app.init();		
 });
 
 // handler that loads the front page
-$( '#main' ).live( 'pageinit', app.initPage);
+$( '#main' ).live( 'pageinit', function() {
+	app.displayPage(1);
+	// "more..." button handler - TODO: if this is placed elsewhere, the event handler does not get triggered
+	$("#more-button").bind( "click", app.displayMore);
+});
 
 // handles click events
 $(document).bind( "pagebeforechange", app.pageBeforeChangeHandler);
