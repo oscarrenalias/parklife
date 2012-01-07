@@ -59,6 +59,8 @@
 
 
 	app.displayPage = function(page) {
+
+		$.mobile.showPageLoadingMsg();
 		
 		var url = "/?f=json";
 		if(page > 1)
@@ -68,7 +70,8 @@
 			url: url,
 			dataType: "json",
 			error: function() {
-				window.alert("There was an error loading the data")
+				$.mobile.hidePageLoadingMsg();
+				window.alert("There was an error loading the data");				
 			},
 			success: function(data) {
 				var content = "";
@@ -78,6 +81,7 @@
 				//$('#stream-list').html(content).listview('refresh');
 				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
 				$('.date-timestamp').cuteTime({ refresh: 60000 });
+				$.mobile.hidePageLoadingMsg();
 			}
 		})		
 	}
