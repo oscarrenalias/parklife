@@ -45,7 +45,7 @@
 					   '</a>';
 		}
 		else if(entry.source == 'instagram') {
-			content += '<p><a href="' + entry.url + '">' + icon + date + entry.title + entry.text + '</p>' +
+			content += '<a href="' + entry.url + '">' + icon + date + entry.title + entry.text +
 					   '</a>';			
 		}
 		else {
