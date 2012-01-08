@@ -21,8 +21,8 @@
 			},
 			success: function(results) {
 				var entry = results.entry;
-				$(page).children(":jqmData(role=header)").find("h1").html(entry.title);
-				$(page).children(":jqmData(role=content)").html(entry.text);
+				$(page).children(":jqmData(role=content)").find("h2").html(entry.title);
+				$(page).children(":jqmData(role=content)").find("div").html(entry.text);
 				options.dataUrl = urlObj.href;
 				$(page).page();
 				$.mobile.changePage($(page), options);
@@ -80,6 +80,7 @@
 				});				
 				//$('#stream-list').html(content).listview('refresh');
 				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
+				//$(content).appendTo('#stream-list').listview('refresh');
 				$('.date-timestamp').cuteTime({ refresh: 60000 });
 				$.mobile.hidePageLoadingMsg();
 			}
