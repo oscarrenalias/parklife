@@ -23,6 +23,7 @@
 				var entry = results.entry;
 				$(page).children(":jqmData(role=content)").find("h2").html(entry.title);
 				$(page).children(":jqmData(role=content)").find("div").html(entry.text);
+				$(page).children(":jqmData(role=content)").find(".date-timestamp").html(entry.created.isoformat);
 				options.dataUrl = urlObj.href;
 				$(page).page();
 				$.mobile.changePage($(page), options);
@@ -39,7 +40,7 @@
 		var date = '<p class="date-timestamp" data-timestamp="' + entry.created.isoformat + '">' + entry.created.isoformat + '</p>';
 		
 		if(entry.source == 'blog') {
-			content += '<a href="#stream-post?post=' + entry.permalink + '">' + icon +
+			content += '<a href="/#!/stream-post?post=' + entry.permalink + '">' + icon +
 					   date +	
 					   '<h3>' + entry.title + '</h3>' +
 					   '</a>';
@@ -49,7 +50,7 @@
 					   '</a>';			
 		}
 		else {
-			content += '<a href="' + entry.url + '">' + icon + date + entry.text + '</a>';					   
+			content += '<a href="' + entry.url + '">' + icon + date + app.removeHTML(entry.text) + '</a>';					   
 		}
 				
 		content += "</li>"
@@ -105,6 +106,11 @@
 			}
 			return;
 		}
+	}
+
+	app.removeHTML = function(s) {
+		// remove all tags and multiple blank spaces
+		return(s.replace(/<(?:.|\n)*?>/gm, ' ').trim().replace(/\s+/, ' '));
 	}
 
 	window.app = app;
