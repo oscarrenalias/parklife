@@ -1,0 +1,4 @@
+/* Overrides for the jQueryMobile styles */
+.ui-li .ui-btn-text a.ui-link-inherit {
+	white-space: normal;
+}
