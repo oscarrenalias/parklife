@@ -22,7 +22,8 @@
 			success: function(results) {
 				var entry = results.entry;
 				$(page).children(":jqmData(role=content)").find("h2").html(entry.title);
-				$(page).children(":jqmData(role=content)").find("div").html(entry.text);
+				$(page).children(":jqmData(role=content)").find("#content").html(entry.text);
+				$(page).children(":jqmData(role=content)").find("#tags").html("#" + entry.tags.join(" #"));
 				$(page).children(":jqmData(role=content)").find(".date-timestamp").html(entry.created.isoformat);
 				options.dataUrl = urlObj.href;
 				$(page).page();
@@ -81,7 +82,6 @@
 				});				
 				//$('#stream-list').html(content).listview('refresh');
 				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
-				//$(content).appendTo('#stream-list').listview('refresh');
 				$('.date-timestamp').cuteTime({ refresh: 60000 });
 				$.mobile.hidePageLoadingMsg();
 			}
