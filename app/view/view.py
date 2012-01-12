@@ -41,7 +41,8 @@ class MobileHTMLView(BaseView):
 		view_values['login_url'] = self.getLoginUrl()
 		view_values['logout_url'] = self.getLogoutUrl()		
 
-		path = os.path.join(os.path.dirname(__file__), '../templates/mobile/' + template)
+		#path = os.path.join(os.path.dirname(__file__), '../templates/mobile/' + template)
+		path = os.path.join(os.path.dirname(__file__), '../templates/mobile/index.html')
 		data = t.render(path, view_values)
 		
 		return( data )
