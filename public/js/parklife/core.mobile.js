@@ -8,8 +8,11 @@
 	}
 
 	app.showStreamPost = function(urlObj, options) {
-		var link = urlObj.search.replace( /.*post=/, "" ) + "?f=json";	// TODO: it probably isn't a good idea to hardcode this
+		//var link = urlObj.search.replace( /.*post=/, "" ) + "?f=json";	// TODO: it probably isn't a good idea to hardcode this
+		//var page = "#stream-post";
+
 		var page = "#stream-post";
+		var link = urlObj.pathname.replace("/!", "") + "?f=json";
 
 		console.log("link=" + link + "\npage=" + page);
 
@@ -32,8 +35,12 @@
 		});	
 	}
 
-	app.renderStreamItem = function(entry) {
+	app.renderStreamItem = function(entry) {		
 		var content = "<li>";
+
+		buildMobileLink = function(url) {
+			return(/*"/!" + */$.mobile.path.parseUrl(url).pathname);
+		}
 
 		// icon markup
 		var icon = '<img src="/images/' + entry.source + '.png" class="ui-li-icon" />';
@@ -41,7 +48,7 @@
 		var date = '<p class="date-timestamp" data-timestamp="' + entry.created.isoformat + '">' + entry.created.isoformat + '</p>';
 		
 		if(entry.source == 'blog') {
-			content += '<a href="/#!/stream-post?post=' + entry.permalink + '">' + icon +
+			content += '<a href="' + buildMobileLink(entry.permalink) + '">' + icon +
 					   date +	
 					   '<h3>' + entry.title + '</h3>' +
 					   '</a>';
@@ -95,15 +102,42 @@
 		console.log("Current page = " + app.currentPage);
 	}
 
+	var routes = {
+		post: {
+			match: /\/entry\//,
+			handler: function(params) {
+				app.showStreamPost(params.u, params.data.options);
+			}
+		}
+	}
+
+	// This is our mini controller - if no route matches the list, it will be given
+	// to jQueryMobile for standard processing
 	app.pageBeforeChangeHandler = function(e,data) {
 		if(typeof data.toPage === "string") {
-			var u = $.mobile.path.parseUrl( data.toPage ),
-			re = /^\?post=/;
-			if ( u.search.search(re) !== -1 ) {
-				app.showStreamPost(u, data.options)
 
-				e.preventDefault();
+			console.log("Looking for route to match: " + data.toPage);
+
+			var u = $.mobile.path.parseUrl( data.toPage );
+			var routeFound = false;
+			for(route in routes) {				
+				if(u.pathname.search(routes[route].match) > -1) {
+					// call the handler
+					console.log("Found match with route: " + route);
+					routes[route].handler({u: u, data:data, event:e});
+					// prevent execution of the default event and exit the loop
+					e.preventDefault();
+					routeFound = true;
+					break;
+				}
 			}
+
+			// TODO: is this needed?
+			/*if(!routeFound) {
+				routes.default.handler({u: u, data:data, event:e});
+				e.preventDefault();
+			}*/
+
 			return;
 		}
 	}
@@ -124,6 +158,7 @@ $(document).ready(function(){
 // handler that loads the front page
 $( '#main' ).live( 'pageinit', function() {
 	app.displayPage(1);
+
 	// "more..." button handler - TODO: if this is placed elsewhere, the event handler does not get triggered
 	$("#more-button").bind( "click", app.displayMore);
 });
