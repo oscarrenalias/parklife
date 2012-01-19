@@ -1,20 +1,73 @@
 (function(window) {
+
 	var app = function() {}
+	var Router = function() {}
+
+	/**
+	 * The internal router handles click events between pages. Please note that this router
+	 * only supports the pagebeforechange event
+	 *
+	 * Routes are defined in Router.routes. Make sure that the 'default' route is always
+	 * the last one!
+	 */
+	Router.routes = {
+		post: {
+			match: /\/entry\//,
+			handler: function(params) {
+				app.showStreamPost(params.u, params.data.options);
+			}
+		},
+		default: {	// the default handler simply shows the current page, whatever it is
+			handler: function(params) {
+				console.log("Executing default route - page: " + app.currentPage);
+				app.displayPage(app.currentPage);
+			}
+		}
+	}
+
+	// this hooks up our route handler to jQueryMobile's pageBeforeChangeHandler
+	Router.pageBeforeChangeHandler = function(e, data) {
+		if(typeof data.toPage === "string") {
+			Router.handler(e, data);
+			return;
+		}	
+	}	
+
+	Router.handler = function(e,data) {
+		console.log("Looking for route to match: " + data.toPage);
+
+		var u = $.mobile.path.parseUrl( data.toPage );
+		var routeFound = false;
+		for(route in Router.routes) {				
+			if(u.pathname.search(Router.routes[route].match) > -1) {
+				// call the handler
+				console.log("Found match with route: " + route);
+				Router.routes[route].handler({u: u, data:data, event:e});
+				// prevent execution of the default event and exit the loop
+				e.preventDefault();
+				routeFound = true;
+				break;
+			}
+		}
+	}
 
 	app.currentPage = 1;
 
 	app.prototype.init = function() {
-		console.log("Mobile Parklife initialized");	
+		console.log("Mobile Parklife initialized");
+		$(document).bind( "pagebeforechange", Router.pageBeforeChangeHandler);
+
+		$("#more-button").bind( "click", function() {
+			// increase the current page
+			app.currentPage++;
+			// and then jump into our router to take care of calling the right handler
+			Router.handler(document.createEvent("Event"), {toPage: window.location.href, options:{}});
+		});
 	}
 
 	app.showStreamPost = function(urlObj, options) {
-		//var link = urlObj.search.replace( /.*post=/, "" ) + "?f=json";	// TODO: it probably isn't a good idea to hardcode this
-		//var page = "#stream-post";
-
 		var page = "#stream-post";
 		var link = urlObj.pathname.replace("/!", "") + "?f=json";
-
-		console.log("link=" + link + "\npage=" + page);
 
 		$.ajax({
 			url: link,
@@ -35,37 +88,49 @@
 		});	
 	}
 
-	app.renderStreamItem = function(entry) {		
-		var content = "<li>";
+	app.renderItem = function(entry) {
 
-		buildMobileLink = function(url) {
+		// generates links
+		var buildMobileLink = function(url) {
 			return(/*"/!" + */$.mobile.path.parseUrl(url).pathname);
 		}
-
-		// icon markup
+		// default icon markup
 		var icon = '<img src="/images/' + entry.source + '.png" class="ui-li-icon" />';
-		// date markup
+		// default date markup
 		var date = '<p class="date-timestamp" data-timestamp="' + entry.created.isoformat + '">' + entry.created.isoformat + '</p>';
-		
-		if(entry.source == 'blog') {
-			content += '<a href="' + buildMobileLink(entry.permalink) + '">' + icon +
+
+		// The functions in here render specific entry types, or simply default to the standard renderer if
+		// they don't have any specific rendering needs
+		var renderers = {
+			// specific entry markup generators
+			default: function(entry) {
+				return(
+					'<a href="' + entry.url + '">' + icon + date + app.removeHTML(entry.text) + '</a>'
+				)
+			},
+			blog: function(entry) {
+				return(
+					'<a href="' + buildMobileLink(entry.permalink) + '">' + icon +
 					   date +	
 					   '<h3>' + entry.title + '</h3>' +
-					   '</a>';
-		}
-		else if(entry.source == 'instagram') {
-			content += '<a href="' + entry.url + '">' + icon + date + entry.title + entry.text +
-					   '</a>';			
-		}
-		else {
-			content += '<a href="' + entry.url + '">' + icon + date + app.removeHTML(entry.text) + '</a>';					   
-		}
-				
-		content += "</li>"
+					   '</a>'
+				)
+			},
+			instagram: function(entry) {
+				return(
+					'<a href="' + entry.url + '">' + icon + date + entry.title + entry.text + '</a>'
+				)
+			},
+			// all these use the default 
+			twitter: function(entry) { return(renderers.default(entry)) },
+			youtube: function(entry) { return(renderers.default(entry)) },
+			picasa: function(entry) { return(renderers.default(entry)) },
+			pinboard: function(entry) { return(renderers.default(entry)) },
+			delicious: function(entry) { return(renderers.default(entry)) },
+		};
 
-		return(content);
+		return("<li>" + renderers[entry.source](entry) + "</li>");
 	}
-
 
 	app.displayPage = function(page) {
 
@@ -85,83 +150,40 @@
 			success: function(data) {
 				var content = "";
 				$.each(data.entries, function(key, entry) {
-					content += app.renderStreamItem(entry);
+					content += app.renderItem(entry);
 				});				
 				//$('#stream-list').html(content).listview('refresh');
 				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
 				$('.date-timestamp').cuteTime({ refresh: 60000 });
+				$.mobile.changePage($("#main"));
 				$.mobile.hidePageLoadingMsg();
 			}
 		})		
 	}
 
-	app.displayMore = function() {
-		app.currentPage++;
-		app.displayPage(app.currentPage);
-
-		console.log("Current page = " + app.currentPage);
-	}
-
-	var routes = {
-		post: {
-			match: /\/entry\//,
-			handler: function(params) {
-				app.showStreamPost(params.u, params.data.options);
-			}
-		}
-	}
-
-	// This is our mini controller - if no route matches the list, it will be given
-	// to jQueryMobile for standard processing
-	app.pageBeforeChangeHandler = function(e,data) {
-		if(typeof data.toPage === "string") {
-
-			console.log("Looking for route to match: " + data.toPage);
-
-			var u = $.mobile.path.parseUrl( data.toPage );
-			var routeFound = false;
-			for(route in routes) {				
-				if(u.pathname.search(routes[route].match) > -1) {
-					// call the handler
-					console.log("Found match with route: " + route);
-					routes[route].handler({u: u, data:data, event:e});
-					// prevent execution of the default event and exit the loop
-					e.preventDefault();
-					routeFound = true;
-					break;
-				}
-			}
-
-			// TODO: is this needed?
-			/*if(!routeFound) {
-				routes.default.handler({u: u, data:data, event:e});
-				e.preventDefault();
-			}*/
-
-			return;
-		}
-	}
-
-	app.removeHTML = function(s) {
-		// remove all tags and multiple blank spaces
+	/**
+	 * Utility method to remove all HTML tags
+	 */
+	app.removeHTML = function(s) {	
 		return(s.replace(/<(?:.|\n)*?>/gm, ' ').trim().replace(/\s+/, ' '));
 	}
 
+	app.run = function() {		
+		// redirect all requests straight away to our route handler
+		Router.handler(
+			document.createEvent("Event") /* TODO: is this enough? */, 
+			{ toPage: window.location.href, options: {}}	/* TODO: this a bit hackish... */
+		);
+	}
+
 	window.app = app;
+
 })(window);
 
-$(document).ready(function(){
+$(document).ready(function() {
 	app = new app();
 	app.init();		
 });
 
 // handler that loads the front page
-$( '#main' ).live( 'pageinit', function() {
-	app.displayPage(1);
-
-	// "more..." button handler - TODO: if this is placed elsewhere, the event handler does not get triggered
-	$("#more-button").bind( "click", app.displayMore);
-});
-
-// handles click events
-$(document).bind( "pagebeforechange", app.pageBeforeChangeHandler);
+$( '#main' ).live( 'pageinit', app.run);
