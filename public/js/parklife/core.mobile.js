@@ -18,6 +18,7 @@
 			}
 		},
 		default: {	// the default handler simply shows the current page, whatever it is
+			match: ".*",
 			handler: function(params) {
 				console.log("Executing default route - page: " + app.currentPage);
 				app.displayPage(app.currentPage);
