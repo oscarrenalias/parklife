@@ -17,6 +17,15 @@
 				app.showStreamPost(params.u, params.data.options);
 			}
 		},
+		newpost: {
+			match: /\/admin\/blog/,
+			handler: function(params) {
+				var page = "#new-post";
+				$(page).page();
+				params.data.options.toPage = "/admin/blog";
+				$.mobile.changePage($(page), params.data.options);
+			}
+		},
 		default: {	// the default handler simply shows the current page, whatever it is
 			match: ".*",
 			handler: function(params) {
@@ -71,6 +80,9 @@
 			// and then jump into our router to take care of calling the right handler
 			Router.handler(document.createEvent("Event"), {toPage: window.location.href, options:{}});
 		});
+
+		// bind the "new post" button
+		$("#newpost-button").bind("click", posting.add);
 
 		// increase the refresh date for the timestamps
 		$.timeago.settings.refreshMillis = 6000;
@@ -187,6 +199,83 @@
 			}
 		})		
 	}
+
+	/**
+	 * This part handles the addition of new posts to the blog via the REST interface
+	 */
+	var posting = function() {}	
+	
+	// id of the page within the structure
+	posting.page = "#new-post";
+	posting.defaultDelay = 5000;
+
+	posting.add = function() {
+		// retrieve the values from our fields
+		var data = {
+			'text': $('#newpost-text').val(),
+			'title': $('#newpost-title').val(),
+			'tags': $('#newpost-tags').val(),
+			'lat': '',
+			'lng': '' 
+		};
+
+		var updateFieldMessage = function(field, value, delay) {
+			var f = $(posting.page).children(":jqmData(role=content)").find(field).html(value).show();	
+			if(delay)
+				f.delay(delay).hide('slow');
+		}
+
+		var resetFormFields = function() {
+			var fields = [ "#newpost-text", "#newpost-title", "#newpost-tags" ];
+			$.each(fields, function(i, v) {
+				$(posting.page).children(":jqmData(role=content)").find(fields[i]).val('')
+			})
+		}
+
+		var resetFormMessages = function() {
+			var fields = [ "#newpost-message", "#newpost-text-messages", "#newpost-title-messages" ];
+			$.each(fields, function(i, v) {
+				updateFieldMessage(fields[i], "")
+			})
+		}
+
+		// otherwise continue with the REST interface
+		$.mobile.showPageLoadingMsg();
+		$.ajax({
+			url: "/service/entry/",		// URL
+			data: data,					// data to send			
+			dataType: "json",
+			type: "POST",
+			beforeSend: resetFormMessages,		// reset the current messages, if any
+			success: function(data, textStatus, jqXHR) {		// success function
+				$.mobile.hidePageLoadingMsg();
+				//$('#newpost-messages').html("Post added successfully");
+				console.log("Data received: " + data);
+
+				if(data.errors) { // if there's any errows, show them in the right place
+					if(data.errors.text) 
+						updateFieldMessage("#newpost-text-messages", data.errors.text.join("<br/>"), posting.defaultDelay);
+					if(data.errors.title)
+						updateFieldMessage("#newpost-title-messages", data.errors.title.join("<br/>"), posting.defaultDelay);
+					
+					updateFieldMessage("#newpost-messages", "There was an error adding the post");
+				}
+				else {
+					// no errors, everything is fine, show a success message
+					$("#newpost-messages").html(data.message).show('slow').delay(posting.defaultDelay).hide('slow');;
+					// and clean up everything else
+					resetFormMessages();
+					resetFormFields();
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+					$.mobile.hidePageLoadingMsg();
+					$("#newpost-messages").html("There was an error adding the post");
+					console.log("Text status =" + textStatus + ", error thrown = " + errorThrown);				
+			}
+		});
+	}
+
 
 	/**
 	 * Utility method to remove all HTML tags

@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="/js/jqm/jquery.mobile-1.0.min.css" />
 		<link rel="stylesheet" href="/css/style.mobile.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.1.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.cuteTime.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.rest.js"></script>
 		<script type="text/javascript" src="/js/jqm/jquery.mobile-1.0.min.js"></script>
 		<script type="text/javascript" src="/js/parklife/core.mobile.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.timeago.js"></script>	
@@ -41,6 +41,29 @@
 				<p id="tags" class="ui-li-desc"><!-- tags --></p>
 			</div> 
 		</div>
+
+		<!-- new blog post -->
+		<div id="new-post" data-role="page"  data-theme="a" data-content-theme="a" data-add-back-btn="true">
+			<div data-role="header" data-position="inline">
+				<h1>New post</h1>
+			</div> 
+			<div data-role="content">
+				<div id="newpost-messages"><!-- some space for messages from the application --></div>
+				
+				<label for="title">Title:</label>
+				<div id="newpost-title-messages"></div>
+				<input type="text" name="title" id="newpost-title" />
+				
+				<label for="text">Text:</label>				
+				<div id="newpost-text-messages"></div>
+				<textarea name="text" id="newpost-text"></textarea>
+
+				<label for="text">Tags:</label>	
+				<input type="text" id="newpost-tags"></textarea>
+				
+				<input type="button" name="add" value="Add" id="newpost-button" />
+			</div> 
+		</div>		
 
 	</body>
 </html>
