@@ -72,16 +72,17 @@
 	 */
 	app.prototype.init = function() {
 		console.log("Mobile Parklife initialized");
+
+		// bind our router
 		$(document).bind( "pagebeforechange", Router.pageBeforeChangeHandler);
 
+		// bind the different buttons that we have in the application
 		$("#more-button").bind( "click", function() {
 			// increase the current page
 			app.currentPage++;
 			// and then jump into our router to take care of calling the right handler
 			Router.handler(document.createEvent("Event"), {toPage: window.location.href, options:{}});
 		});
-
-		// bind the "new post" button
 		$("#newpost-button").bind("click", posting.add);
 		$("#newpost-cancel").bind("click", function() {
 			$.mobile.changePage($("#main"), {});
@@ -264,7 +265,7 @@
 					if(data.errors.title)
 						updateFieldMessage("#newpost-title-messages", data.errors.title.join("<br/>"), posting.defaultDelay);
 					
-					updateFieldMessage("#newpost-messages", "There was an error adding the post");
+					updateFieldMessage("#newpost-messages", "There was an error adding the post", posting.defaultDelay);
 				}
 				else {
 					// no errors, everything is fine, show a success message
