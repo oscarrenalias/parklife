@@ -269,7 +269,8 @@
 				}
 				else {
 					// no errors, everything is fine, show a success message
-					$("#newpost-messages").html(data.message).show('slow').delay(posting.defaultDelay).hide('slow');;
+					//$("#newpost-messages").html(data.message).show('slow').delay(posting.defaultDelay).hide('slow');;
+					updateFieldMessage("#newpost-messages", data.message, posting.defaultDelay);
 					// and clean up everything else
 					resetFormMessages();
 					resetFormFields();
@@ -277,7 +278,8 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 					$.mobile.hidePageLoadingMsg();
-					$("#newpost-messages").html("There was an error adding the post");
+					//$("#newpost-messages").html("There was an error adding the post");
+					updateFieldMessage("#newpost-messages", "There was an error adding the post: " + textStatus, posting.defaultDelay);
 					console.log("Text status =" + textStatus + ", error thrown = " + errorThrown);				
 			}
 		});
