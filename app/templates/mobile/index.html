@@ -17,6 +17,7 @@
 		<div id="main" data-role="page" data-theme="a" data-content-theme="a">
 			<div data-role="header" data-position="inline">
 				<h1>Parklife</h1>
+				<a href="#" class="ui-btn-right newpost-toolbar-button">+</a>
 			</div> 
 			<div data-role="content">
 				<ul id="stream-list" data-role="listview" data-filter="true" data-theme="g">
@@ -33,6 +34,7 @@
 		<div id="stream-post" data-role="page"  data-theme="a" data-content-theme="a" data-add-back-btn="true">
 			<div data-role="header" data-position="inline">
 				<h1>Parklife</h1>
+				<a href="#" class="ui-btn-right">+</a>
 			</div> 
 			<div id="content" data-role="content">
 				<h2><!-- post title --></h2>
@@ -44,8 +46,10 @@
 
 		<!-- new blog post -->
 		<div id="new-post" data-role="page"  data-theme="a" data-content-theme="a" data-add-back-btn="true">
-			<div data-role="header" data-position="inline">
+			<div data-role="header" data-position="inline">				
+				<a href="#" data-icon="delete" id="newpost-cancel">Cancel</a>
 				<h1>New post</h1>
+				<a href="#" data-icon="check" id="newpost-button">Add</a>
 			</div> 
 			<div data-role="content">
 				<div id="newpost-messages"><!-- some space for messages from the application --></div>
@@ -60,8 +64,6 @@
 
 				<label for="text">Tags:</label>	
 				<input type="text" id="newpost-tags"></textarea>
-				
-				<input type="button" name="add" value="Add" id="newpost-button" />
 			</div> 
 		</div>		
 

@@ -83,6 +83,12 @@
 
 		// bind the "new post" button
 		$("#newpost-button").bind("click", posting.add);
+		$("#newpost-cancel").bind("click", function() {
+			$.mobile.changePage($("#main"), {});
+		});
+		$(".newpost-toolbar-button").bind("click", function() {
+			$.mobile.changePage($("#new-post"), {});
+		});
 
 		// increase the refresh date for the timestamps
 		$.timeago.settings.refreshMillis = 6000;
