@@ -81,10 +81,10 @@
         substitute($l.years, Math.floor(years));
 
       return $.trim([prefix, words, suffix].join(" "));
-    },
+    },  
     parse: function(iso8601) {
       var s = $.trim(iso8601);
-      s = s.replace(/\.\d\d\d/,""); // remove milliseconds
+      s = s.replace(/\.\d+/,""); // remove milliseconds
       s = s.replace(/-/,"/").replace(/-/,"/");
       s = s.replace(/T/," ").replace(/Z/," UTC");
       s = s.replace(/([\+-]\d\d)\:?(\d\d)/," $1$2"); // -04:00 -> -0400
