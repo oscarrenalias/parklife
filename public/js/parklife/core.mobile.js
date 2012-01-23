@@ -77,7 +77,8 @@
 	}
 
 	/**
-	 * Retrieves a post from the REST endpoint
+	 * Retrieves a post from the REST endpoint. This is only used to show blog posts, since
+	 * anything else points to the permalink from the source (twitter, instagram, etc)
 	 *
 	 * TODO: move this into a proper model-based structure
 	 */
@@ -96,12 +97,16 @@
 				$(page).children(":jqmData(role=content)").find("h2").html(entry.title);
 				$(page).children(":jqmData(role=content)").find("#content").html(entry.text);
 				$(page).children(":jqmData(role=content)").find("#tags").html("#" + entry.tags.join(" #"));
-				$(page).children(":jqmData(role=content)").find(".date-timestamp").html(entry.created.isoformat);
+				$(page).children(":jqmData(role=content)").find("#timestamp").html(app.renderHTML5Date(entry.created.isoformat));
 				options.dataUrl = urlObj.href;
 				$(page).page();
 				$.mobile.changePage($(page), options);
 			}
 		});	
+	}
+
+	app.renderHTML5Date = function(isoDate) {
+		return('<time class="date-timestamp" datetime="' + isoDate + '">' + $.timeago(isoDate) + '</time>');
 	}
 
 	/**
@@ -119,7 +124,7 @@
 		// default icon markup
 		var icon = '<img src="/images/' + entry.source + '.png" class="ui-li-icon" />';
 		// default date markup
-		var date = '<p><time class="date-timestamp" datetime="' + entry.created.isoformat + '">' + $.timeago(entry.created.isoformat) + '</time></p>';
+		var date = '<p>' + app.renderHTML5Date(entry.created.isoformat) + '</p>';
 
 		// The functions in here render specific entry types, or simply default to the standard renderer if
 		// they don't have any specific rendering needs
