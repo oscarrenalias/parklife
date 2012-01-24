@@ -22,7 +22,7 @@
 			handler: function(params) {
 				var page = "#new-post";
 				$(page).page();
-				params.data.options.toPage = "/admin/blog";
+				params.data.options.dataUrl = "/admin/blog";
 				$.mobile.changePage($(page), params.data.options);
 			}
 		},
@@ -81,14 +81,11 @@
 			// increase the current page
 			app.currentPage++;
 			// and then jump into our router to take care of calling the right handler
-			Router.handler(document.createEvent("Event"), {toPage: window.location.href, options:{}});
+			Router.handler(document.createEvent("Event"), {toPage: "#main", options:{}});
 		});
 		$("#newpost-button").bind("click", posting.add);
-		$("#newpost-cancel").bind("click", function() {
-			$.mobile.changePage($("#main"), {});
-		});
 		$(".newpost-toolbar-button").bind("click", function() {
-			$.mobile.changePage($("#new-post"), {});
+			$.mobile.changePage($("#new-post"), {}); // TODO: hack - can we get this through the route handler?
 		});
 
 		// increase the refresh date for the timestamps
@@ -198,10 +195,9 @@
 				$.each(data.entries, function(key, entry) {
 					content += app.renderItem(entry);
 				});
-				//$('#stream-list').html(content).listview('refresh');
 				$('#stream-list').html($('#stream-list').html() + content).listview('refresh');
 				$("time.date-timestamp").timeago();	// this will automatically update timestamps
-				$.mobile.changePage($("#main"));
+				$.mobile.changePage($("#main"), {dataUrl:"/"}); 
 				$.mobile.hidePageLoadingMsg();
 			}
 		})		
