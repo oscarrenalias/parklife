@@ -235,7 +235,7 @@
 		var resetFormFields = function() {
 			var fields = [ "#newpost-text", "#newpost-title", "#newpost-tags" ];
 			$.each(fields, function(i, v) {
-				$(posting.page).children(":jqmData(role=content)").find(fields[i]).val('')
+				$(posting.page).children(":jqmData(role=content)").find(fields[i]).reset()
 			})
 		}
 
@@ -256,7 +256,6 @@
 			beforeSend: resetFormMessages,		// reset the current messages, if any
 			success: function(data, textStatus, jqXHR) {		// success function
 				$.mobile.hidePageLoadingMsg();
-				//$('#newpost-messages').html("Post added successfully");
 				console.log("Data received: " + data);
 
 				if(data.errors) { // if there's any errows, show them in the right place
@@ -269,7 +268,6 @@
 				}
 				else {
 					// no errors, everything is fine, show a success message
-					//$("#newpost-messages").html(data.message).show('slow').delay(posting.defaultDelay).hide('slow');;
 					updateFieldMessage("#newpost-messages", data.message, posting.defaultDelay);
 					// and clean up everything else
 					resetFormMessages();
@@ -278,7 +276,6 @@
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 					$.mobile.hidePageLoadingMsg();
-					//$("#newpost-messages").html("There was an error adding the post");
 					updateFieldMessage("#newpost-messages", "There was an error adding the post: " + textStatus, posting.defaultDelay);
 					console.log("Text status =" + textStatus + ", error thrown = " + errorThrown);				
 			}
